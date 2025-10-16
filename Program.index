@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interaktiver Zeitplan</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts (Inter as a replacement for Neue Haas Grotesk) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <!-- Google Material Icons (Outlined) -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+
+    <script>
+        // Custom Tailwind configuration to implement the "Planet UI" design system
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'planet-blue': '#0000FF',
+                        'planet-lime': '#D4FF00',
+                        'light-gray': '#F5F5F5',
+                        'medium-gray': '#CCCCCC',
+                        'dark-gray': '#333333',
+                    },
+                    fontFamily: {
+                        // Per user request, using a Google Font alternative
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Small adjustments for a cleaner look */
+        .timeline-item:last-child .timeline-line {
+            display: none;
+        }
+    </style>
+</head>
+<body class="bg-light-gray font-sans text-dark-gray">
+
+    <!-- Header -->
+    <header class="bg-planet-blue text-white p-4 shadow-md">
+        <div class="max-w-7xl mx-auto flex items-baseline space-x-4">
+            <h1 class="text-2xl font-bold tracking-wider">Planet</h1>
+            <span class="text-xl font-light tracking-wide">Mission Team Tagung</span>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="max-w-4xl mx-auto p-4 sm:p-6 md:p-8">
+        
+        <div class="bg-white rounded-xl border border-medium-gray shadow-md p-6 sm:p-8">
+            <div class="mb-6">
+                <h2 class="text-3xl font-bold text-dark-gray">Team Offsite Zeitplan</h2>
+                <p class="text-gray-500 mt-1">Ein Überblick über die geplanten Aktivitäten und Termine.</p>
+            </div>
+
+            <!-- Timeline Day: Montag -->
+            <div class="day-container mb-6">
+                <div id="day-header-1" class="flex justify-between items-center cursor-pointer p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                    <div>
+                        <h3 class="text-xl font-bold text-planet-blue">Montag</h3>
+                        <p class="text-sm text-gray-500">20.10.25</p>
+                    </div>
+                    <span class="material-icons-outlined transition-transform transform">expand_more</span>
+                </div>
+                <div id="day-content-1" class="day-content overflow-hidden transition-all duration-500 ease-in-out" style="max-height: 500px;">
+                    <div class="pt-6 pl-4">
+                        <!-- Timeline Item -->
+                        <div class="timeline-item flex">
+                            <div class="flex flex-col items-center mr-4">
+                                <div class="flex-shrink-0 w-10 h-10 rounded-full bg-planet-blue/10 flex items-center justify-center">
+                                    <span class="material-icons-outlined text-planet-blue">groups</span>
+                                </div>
+                                <div class="w-px h-full bg-medium-gray timeline-line"></div>
+                            </div>
+                            <div class="pb-8">
+                                <p class="mb-1 text-sm text-gray-500">bis 13:45 Uhr</p>
+                                <h4 class="font-semibold text-lg">Treffen & Ankommen</h4>
+                                <p class="text-gray-600 mt-1">Balkan Bäckerei Darmstadt, Adelungstraße 24, 64283 Darmstadt</p>
+                            </div>
+                        </div>
+                        <!-- Timeline Item -->
+                        <div class="timeline-item flex">
+                            <div class="flex flex-col items-center mr-4">
+                                <div class="flex-shrink-0 w-10 h-10 rounded-full bg-planet-blue/10 flex items-center justify-center">
+                                    <span class="material-icons-outlined text-planet-blue">fitness_center</span>
+                                </div>
+                                <div class="w-px h-full bg-medium-gray timeline-line"></div>
+                            </div>
+                            <div class="pb-8">
+                                <p class="mb-1 text-sm text-gray-500">14:00 - 15:00 Uhr</p>
+                                <h4 class="font-semibold text-lg">Aktivität</h4>
+                                <p class="text-gray-600 mt-1">“Hier zählt die richtige Haltung und die passende Einstellung 💪🏼“</p>
+                            </div>
+                        </div>
+                        <!-- Timeline Item -->
+                         <div class="timeline-item flex">
+                            <div class="flex flex-col items-center mr-4">
+                                <div class="flex-shrink-0 w-10 h-10 rounded-full bg-planet-blue/10 flex items-center justify-center">
+                                    <span class="material-icons-outlined text-planet-blue">hotel</span>
+                                </div>
+                                <div class="w-px h-full bg-medium-gray timeline-line"></div>
+                            </div>
+                            <div class="pb-8">
+                                <p class="mb-1 text-sm text-gray-500">15:00 - 16:00 Uhr</p>
+                                <h4 class="font-semibold text-lg">Anreise Unterkunft</h4>
+                            </div>
+                        </div>
+                        <!-- Timeline Item -->
+                        <div class="timeline-item flex">
+                            <div class="flex flex-col items-center mr-4">
+                                <div class="flex-shrink-0 w-10 h-10 rounded-full bg-planet-blue/10 flex items-center justify-center">
+                                    <span class="material-icons-outlined text-planet-blue">integration_instructions</span>
+                                </div>
+                                <div class="w-px h-full bg-medium-gray timeline-line"></div>
+                            </div>
+                            <div class="pb-8">
+                                <p class="mb-1 text-sm text-gray-500">17:00 - 19:00 Uhr</p>
+                                <h4 class="font-semibold text-lg">Programm C+P</h4>
+                            </div>
+                        </div>
+                        <!-- Timeline Item -->
+                        <div class="timeline-item flex">
+                            <div class="flex flex-col items-center mr-4">
+                                <div class="flex-shrink-0 w-10 h-10 rounded-full bg-planet-blue/10 flex items-center justify-center">
+                                    <span class="material-icons-outlined text-planet-blue">restaurant_menu</span>
+                                </div>
+                                <div class="w-px h-full bg-medium-gray timeline-line"></div>
+                            </div>
+                            <div class="pb-8">
+                                <p class="mb-1 text-sm text-gray-500">ab 19:00 Uhr</p>
+                                <h4 class="font-semibold text-lg">Gemeinsames Kochen & Abendessen</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Timeline Day: Dienstag -->
+            <div class="day-container mb-6">
+                <div id="day-header-2" class="flex justify-between items-center cursor-pointer p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                    <div>
+                        <h3 class="text-xl font-bold text-planet-blue">Dienstag</h3>
+                        <p class="text-sm text-gray-500">21.10.25</p>
+                    </div>
+                    <span class="material-icons-outlined transition-transform transform rotate-180">expand_more</span>
+                </div>
+                <div id="day-content-2" class="day-content overflow-hidden transition-all duration-500 ease-in-out" style="max-height: 0px;">
+                     <div class="pt-6 pl-4">
+                        <!-- Timeline Item -->
+                        <div class="timeline-item flex">
+                            <div class="flex flex-col items-center mr-4">
+                                <div class="flex-shrink-0 w-10 h-10 rounded-full bg-planet-blue/10 flex items-center justify-center">
+                                    <span class="material-icons-outlined text-planet-blue">free_breakfast</span>
+                                </div>
+                                <div class="w-px h-full bg-medium-gray timeline-line"></div>
+                            </div>
+                            <div class="pb-8">
+                                <p class="mb-1 text-sm text-gray-500">08:00 - 09:00 Uhr</p>
+                                <h4 class="font-semibold text-lg">Frühstück</h4>
+                            </div>
+                        </div>
+                        <!-- Timeline Item -->
+                        <div class="timeline-item flex">
+                            <div class="flex flex-col items-center mr-4">
+                                <div class="flex-shrink-0 w-10 h-10 rounded-full bg-planet-blue/10 flex items-center justify-center">
+                                    <span class="material-icons-outlined text-planet-blue">work</span>
+                                </div>
+                                <div class="w-px h-full bg-medium-gray timeline-line"></div>
+                            </div>
+                            <div class="pb-8">
+                                <p class="mb-1 text-sm text-gray-500">09:00 - 12:00 Uhr</p>
+                                <h4 class="font-semibold text-lg">Programm</h4>
+                            </div>
+                        </div>
+                        <!-- Timeline Item -->
+                         <div class="timeline-item flex">
+                            <div class="flex flex-col items-center mr-4">
+                                <div class="flex-shrink-0 w-10 h-10 rounded-full bg-planet-blue/10 flex items-center justify-center">
+                                    <span class="material-icons-outlined text-planet-blue">lunch_dining</span>
+                                </div>
+                                <div class="w-px h-full bg-medium-gray timeline-line"></div>
+                            </div>
+                            <div class="pb-8">
+                                <p class="mb-1 text-sm text-gray-500">13:00 Uhr</p>
+                                <h4 class="font-semibold text-lg">Mittagessen</h4>
+                            </div>
+                        </div>
+                        <!-- Timeline Item -->
+                        <div class="timeline-item flex">
+                            <div class="flex flex-col items-center mr-4">
+                                <div class="flex-shrink-0 w-10 h-10 rounded-full bg-planet-blue/10 flex items-center justify-center">
+                                    <span class="material-icons-outlined text-planet-blue">celebration</span>
+                                </div>
+                                <div class="w-px h-full bg-medium-gray timeline-line"></div>
+                            </div>
+                            <div class="pb-8">
+                                <p class="mb-1 text-sm text-gray-500">14:00 - 17:00 Uhr</p>
+                                <h4 class="font-semibold text-lg">Teamevent Aktivität</h4>
+                            </div>
+                        </div>
+                        <!-- Timeline Item -->
+                        <div class="timeline-item flex">
+                            <div class="flex flex-col items-center mr-4">
+                                <div class="flex-shrink-0 w-10 h-10 rounded-full bg-planet-blue/10 flex items-center justify-center">
+                                    <span class="material-icons-outlined text-planet-blue">dinner_dining</span>
+                                </div>
+                                <div class="w-px h-full bg-medium-gray timeline-line"></div>
+                            </div>
+                            <div class="pb-8">
+                                <p class="mb-1 text-sm text-gray-500">ab 17:30 Uhr</p>
+                                <h4 class="font-semibold text-lg">Gemeinsames Kochen & Abendessen</h4>
+                            </div>
+                        </div>
+                         <!-- Timeline Item -->
+                         <div class="timeline-item flex">
+                            <div class="flex flex-col items-center mr-4">
+                                <div class="flex-shrink-0 w-10 h-10 rounded-full bg-planet-blue/10 flex items-center justify-center">
+                                    <span class="material-icons-outlined text-planet-blue">nightlife</span>
+                                </div>
+                                <div class="w-px h-full bg-medium-gray timeline-line"></div>
+                            </div>
+                            <div class="pb-8">
+                                <p class="mb-1 text-sm text-gray-500">ab 20:00 Uhr</p>
+                                <h4 class="font-semibold text-lg">Teamevent Aktivität</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Timeline Day: Mittwoch -->
+            <div class="day-container">
+                <div id="day-header-3" class="flex justify-between items-center cursor-pointer p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                    <div>
+                        <h3 class="text-xl font-bold text-planet-blue">Mittwoch</h3>
+                        <p class="text-sm text-gray-500">22.10.25</p>
+                    </div>
+                    <span class="material-icons-outlined transition-transform transform rotate-180">expand_more</span>
+                </div>
+                <div id="day-content-3" class="day-content overflow-hidden transition-all duration-500 ease-in-out" style="max-height: 0px;">
+                    <div class="pt-6 pl-4">
+                        <!-- Timeline Item -->
+                        <div class="timeline-item flex">
+                            <div class="flex flex-col items-center mr-4">
+                                <div class="flex-shrink-0 w-10 h-10 rounded-full bg-planet-blue/10 flex items-center justify-center">
+                                    <span class="material-icons-outlined text-planet-blue">free_breakfast</span>
+                                </div>
+                                <div class="w-px h-full bg-medium-gray timeline-line"></div>
+                            </div>
+                            <div class="pb-8">
+                                <p class="mb-1 text-sm text-gray-500">08:00 - 09:00 Uhr</p>
+                                <h4 class="font-semibold text-lg">Frühstück</h4>
+                            </div>
+                        </div>
+                        <!-- Timeline Item -->
+                        <div class="timeline-item flex">
+                            <div class="flex flex-col items-center mr-4">
+                                <div class="flex-shrink-0 w-10 h-10 rounded-full bg-planet-blue/10 flex items-center justify-center">
+                                    <span class="material-icons-outlined text-planet-blue">fact_check</span>
+                                </div>
+                                <div class="w-px h-full bg-medium-gray timeline-line"></div>
+                            </div>
+                            <div class="pb-8">
+                                <p class="mb-1 text-sm text-gray-500">09:00 - 10:30 Uhr</p>
+                                <h4 class="font-semibold text-lg">Programm</h4>
+                            </div>
+                        </div>
+                        <!-- Timeline Item -->
+                         <div class="timeline-item flex">
+                            <div class="flex flex-col items-center mr-4">
+                                <div class="flex-shrink-0 w-10 h-10 rounded-full bg-planet-blue/10 flex items-center justify-center">
+                                    <span class="material-icons-outlined text-planet-blue">logout</span>
+                                </div>
+                                <div class="w-px h-full bg-medium-gray timeline-line"></div>
+                            </div>
+                            <div class="pb-8">
+                                <p class="mb-1 text-sm text-gray-500">11:00 Uhr</p>
+                                <h4 class="font-semibold text-lg">Abreise / Check Out</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </main>
+    
+    <script>
+        // JavaScript for interactive collapsible sections
+        document.addEventListener('DOMContentLoaded', function () {
+            const dayHeaders = document.querySelectorAll('[id^="day-header-"]');
+
+            dayHeaders.forEach(header => {
+                header.addEventListener('click', () => {
+                    const contentId = header.id.replace('header', 'content');
+                    const content = document.getElementById(contentId);
+                    const icon = header.querySelector('.material-icons-outlined');
+
+                    if (content.style.maxHeight === '0px' || content.style.maxHeight === '') {
+                        // Expand the content
+                        content.style.maxHeight = content.scrollHeight + 'px';
+                        icon.classList.remove('rotate-180');
+                    } else {
+                        // Collapse the content
+                        content.style.maxHeight = '0px';
+                        icon.classList.add('rotate-180');
+                    }
+                });
+            });
+        });
+    </script>
+
+</body>
+</html>
+
