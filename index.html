@@ -1,325 +1,455 @@
-<!DOCTYPE html>
-<html lang="de">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interaktiver Zeitplan</title>
-    
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- Google Fonts (Inter as a replacement for Neue Haas Grotesk) -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+import React, { useEffect, useMemo, useState } from "react";
 
-    <!-- Google Material Icons (Outlined) -->
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+// Accent color
+const ACCENT = "#78b41b"; // Inuvet Green
 
-    <script>
-        // Custom Tailwind configuration to implement the "Planet UI" design system
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        'planet-blue': '#0000FF',
-                        'planet-lime': '#D4FF00',
-                        'light-gray': '#F5F5F5',
-                        'medium-gray': '#CCCCCC',
-                        'dark-gray': '#333333',
-                    },
-                    fontFamily: {
-                        // Per user request, using a Google Font alternative
-                        sans: ['Inter', 'sans-serif'],
-                    }
-                }
-            }
-        }
-    </script>
-    <style>
-        /* Small adjustments for a cleaner look */
-        .timeline-item:last-child .timeline-line {
-            display: none;
-        }
-    </style>
-</head>
-<body class="bg-light-gray font-sans text-dark-gray">
+// Simple Countdown (deadline in ISO format)
+function useCountdown(deadlineISO) {
+  const deadline = useMemo(() => new Date(deadlineISO).getTime(), [deadlineISO]);
+  const [now, setNow] = useState(Date.now());
+  useEffect(() => {
+    const id = setInterval(() => setNow(Date.now()), 1000);
+    return () => clearInterval(id);
+  }, []);
+  const diff = Math.max(0, deadline - now);
+  const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+  const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+  const minutes = Math.floor((diff / (1000 * 60)) % 60);
+  const seconds = Math.floor((diff / 1000) % 60);
+  return { days, hours, minutes, seconds, expired: diff <= 0 };
+}
 
-    <!-- Header -->
-    <header class="bg-planet-blue text-white p-4 shadow-md">
-        <div class="max-w-7xl mx-auto flex items-baseline space-x-4">
-            <h1 class="text-2xl font-bold tracking-wider">Planet</h1>
-            <span class="text-xl font-light tracking-wide">Mission Team Tagung</span>
-        </div>
-    </header>
+export default function App() {
+  // Set a default deadline 7 days from now
+  const defaultDeadline = useMemo(() => {
+    const d = new Date();
+    d.setDate(d.getDate() + 7);
+    return d.toISOString();
+  }, []);
+  const { days, hours, minutes, seconds, expired } = useCountdown(defaultDeadline);
 
-    <!-- Main Content Container -->
-    <main class="max-w-4xl mx-auto p-4 sm:p-6 md:p-8">
-        
-        <div class="bg-white rounded-xl border border-medium-gray shadow-md p-6 sm:p-8">
-            <div class="mb-6">
-                <h2 class="text-3xl font-bold text-dark-gray">Team Offsite Zeitplan</h2>
-                <p class="text-gray-500 mt-1">Ein Überblick über die geplanten Aktivitäten und Termine.</p>
-            </div>
+  // Fake metrics (optional trust boost)
+  const [clinics, setClinics] = useState(25000);
+  useEffect(() => {
+    // gentle animated count-in
+    const start = 24500; const end = 25000; const steps = 40; const dur = 1200;
+    let i = 0; const inc = (end - start) / steps; const t = setInterval(() => {
+      i++; setClinics(Math.round(start + i * inc)); if (i >= steps) clearInterval(t);
+    }, Math.round(dur / steps));
+    return () => clearInterval(t);
+  }, []);
 
-            <!-- Timeline Day: Montag -->
-            <div class="day-container mb-6">
-                <div id="day-header-1" class="flex justify-between items-center cursor-pointer p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
-                    <div>
-                        <h3 class="text-xl font-bold text-planet-blue">Montag</h3>
-                        <p class="text-sm text-gray-500">20.10.25</p>
-                    </div>
-                    <span class="material-icons-outlined transition-transform transform">expand_more</span>
-                </div>
-                <div id="day-content-1" class="day-content overflow-hidden transition-all duration-500 ease-in-out" style="max-height: 500px;">
-                    <div class="pt-6 pl-4">
-                        <!-- Timeline Item -->
-                        <div class="timeline-item flex">
-                            <div class="flex flex-col items-center mr-4">
-                                <div class="flex-shrink-0 w-10 h-10 rounded-full bg-planet-blue/10 flex items-center justify-center">
-                                    <span class="material-icons-outlined text-planet-blue">groups</span>
-                                </div>
-                                <div class="w-px h-full bg-medium-gray timeline-line"></div>
-                            </div>
-                            <div class="pb-8">
-                                <p class="mb-1 text-sm text-gray-500">bis 13:45 Uhr</p>
-                                <h4 class="font-semibold text-lg">Treffen & Ankommen</h4>
-                                <p class="text-gray-600 mt-1">Balkan Bäckerei Darmstadt, Adelungstraße 24, 64283 Darmstadt</p>
-                            </div>
-                        </div>
-                        <!-- Timeline Item -->
-                        <div class="timeline-item flex">
-                            <div class="flex flex-col items-center mr-4">
-                                <div class="flex-shrink-0 w-10 h-10 rounded-full bg-planet-blue/10 flex items-center justify-center">
-                                    <span class="material-icons-outlined text-planet-blue">fitness_center</span>
-                                </div>
-                                <div class="w-px h-full bg-medium-gray timeline-line"></div>
-                            </div>
-                            <div class="pb-8">
-                                <p class="mb-1 text-sm text-gray-500">14:00 - 15:00 Uhr</p>
-                                <h4 class="font-semibold text-lg">Aktivität</h4>
-                                <p class="text-gray-600 mt-1">“Hier zählt die richtige Haltung und die passende Einstellung 💪🏼“</p>
-                            </div>
-                        </div>
-                        <!-- Timeline Item -->
-                         <div class="timeline-item flex">
-                            <div class="flex flex-col items-center mr-4">
-                                <div class="flex-shrink-0 w-10 h-10 rounded-full bg-planet-blue/10 flex items-center justify-center">
-                                    <span class="material-icons-outlined text-planet-blue">hotel</span>
-                                </div>
-                                <div class="w-px h-full bg-medium-gray timeline-line"></div>
-                            </div>
-                            <div class="pb-8">
-                                <p class="mb-1 text-sm text-gray-500">15:00 - 16:00 Uhr</p>
-                                <h4 class="font-semibold text-lg">Anreise Unterkunft</h4>
-                            </div>
-                        </div>
-                        <!-- Timeline Item -->
-                        <div class="timeline-item flex">
-                            <div class="flex flex-col items-center mr-4">
-                                <div class="flex-shrink-0 w-10 h-10 rounded-full bg-planet-blue/10 flex items-center justify-center">
-                                    <span class="material-icons-outlined text-planet-blue">integration_instructions</span>
-                                </div>
-                                <div class="w-px h-full bg-medium-gray timeline-line"></div>
-                            </div>
-                            <div class="pb-8">
-                                <p class="mb-1 text-sm text-gray-500">17:00 - 19:00 Uhr</p>
-                                <h4 class="font-semibold text-lg">Programm C+P</h4>
-                            </div>
-                        </div>
-                        <!-- Timeline Item -->
-                        <div class="timeline-item flex">
-                            <div class="flex flex-col items-center mr-4">
-                                <div class="flex-shrink-0 w-10 h-10 rounded-full bg-planet-blue/10 flex items-center justify-center">
-                                    <span class="material-icons-outlined text-planet-blue">restaurant_menu</span>
-                                </div>
-                                <div class="w-px h-full bg-medium-gray timeline-line"></div>
-                            </div>
-                            <div class="pb-8">
-                                <p class="mb-1 text-sm text-gray-500">ab 19:00 Uhr</p>
-                                <h4 class="font-semibold text-lg">Gemeinsames Kochen & Abendessen</h4>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+  // Pricing (placeholder until confirmed)
+  const unitPriceEUR = 39.9; // € pro Einheit (Beispiel) — bitte bestätigen
 
-            <!-- Timeline Day: Dienstag -->
-            <div class="day-container mb-6">
-                <div id="day-header-2" class="flex justify-between items-center cursor-pointer p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
-                    <div>
-                        <h3 class="text-xl font-bold text-planet-blue">Dienstag</h3>
-                        <p class="text-sm text-gray-500">21.10.25</p>
-                    </div>
-                    <span class="material-icons-outlined transition-transform transform rotate-180">expand_more</span>
-                </div>
-                <div id="day-content-2" class="day-content overflow-hidden transition-all duration-500 ease-in-out" style="max-height: 0px;">
-                     <div class="pt-6 pl-4">
-                        <!-- Timeline Item -->
-                        <div class="timeline-item flex">
-                            <div class="flex flex-col items-center mr-4">
-                                <div class="flex-shrink-0 w-10 h-10 rounded-full bg-planet-blue/10 flex items-center justify-center">
-                                    <span class="material-icons-outlined text-planet-blue">free_breakfast</span>
-                                </div>
-                                <div class="w-px h-full bg-medium-gray timeline-line"></div>
-                            </div>
-                            <div class="pb-8">
-                                <p class="mb-1 text-sm text-gray-500">08:00 - 09:00 Uhr</p>
-                                <h4 class="font-semibold text-lg">Frühstück</h4>
-                            </div>
-                        </div>
-                        <!-- Timeline Item -->
-                        <div class="timeline-item flex">
-                            <div class="flex flex-col items-center mr-4">
-                                <div class="flex-shrink-0 w-10 h-10 rounded-full bg-planet-blue/10 flex items-center justify-center">
-                                    <span class="material-icons-outlined text-planet-blue">work</span>
-                                </div>
-                                <div class="w-px h-full bg-medium-gray timeline-line"></div>
-                            </div>
-                            <div class="pb-8">
-                                <p class="mb-1 text-sm text-gray-500">09:00 - 12:00 Uhr</p>
-                                <h4 class="font-semibold text-lg">Programm</h4>
-                            </div>
-                        </div>
-                        <!-- Timeline Item -->
-                         <div class="timeline-item flex">
-                            <div class="flex flex-col items-center mr-4">
-                                <div class="flex-shrink-0 w-10 h-10 rounded-full bg-planet-blue/10 flex items-center justify-center">
-                                    <span class="material-icons-outlined text-planet-blue">lunch_dining</span>
-                                </div>
-                                <div class="w-px h-full bg-medium-gray timeline-line"></div>
-                            </div>
-                            <div class="pb-8">
-                                <p class="mb-1 text-sm text-gray-500">13:00 Uhr</p>
-                                <h4 class="font-semibold text-lg">Mittagessen</h4>
-                            </div>
-                        </div>
-                        <!-- Timeline Item -->
-                        <div class="timeline-item flex">
-                            <div class="flex flex-col items-center mr-4">
-                                <div class="flex-shrink-0 w-10 h-10 rounded-full bg-planet-blue/10 flex items-center justify-center">
-                                    <span class="material-icons-outlined text-planet-blue">celebration</span>
-                                </div>
-                                <div class="w-px h-full bg-medium-gray timeline-line"></div>
-                            </div>
-                            <div class="pb-8">
-                                <p class="mb-1 text-sm text-gray-500">14:00 - 17:00 Uhr</p>
-                                <h4 class="font-semibold text-lg">Teamevent Aktivität</h4>
-                            </div>
-                        </div>
-                        <!-- Timeline Item -->
-                        <div class="timeline-item flex">
-                            <div class="flex flex-col items-center mr-4">
-                                <div class="flex-shrink-0 w-10 h-10 rounded-full bg-planet-blue/10 flex items-center justify-center">
-                                    <span class="material-icons-outlined text-planet-blue">dinner_dining</span>
-                                </div>
-                                <div class="w-px h-full bg-medium-gray timeline-line"></div>
-                            </div>
-                            <div class="pb-8">
-                                <p class="mb-1 text-sm text-gray-500">ab 17:30 Uhr</p>
-                                <h4 class="font-semibold text-lg">Gemeinsames Kochen & Abendessen</h4>
-                            </div>
-                        </div>
-                         <!-- Timeline Item -->
-                         <div class="timeline-item flex">
-                            <div class="flex flex-col items-center mr-4">
-                                <div class="flex-shrink-0 w-10 h-10 rounded-full bg-planet-blue/10 flex items-center justify-center">
-                                    <span class="material-icons-outlined text-planet-blue">nightlife</span>
-                                </div>
-                                <div class="w-px h-full bg-medium-gray timeline-line"></div>
-                            </div>
-                            <div class="pb-8">
-                                <p class="mb-1 text-sm text-gray-500">ab 20:00 Uhr</p>
-                                <h4 class="font-semibold text-lg">Teamevent Aktivität</h4>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+  return (
+    <div className="min-h-screen bg-neutral-50 text-neutral-900 font-sans">
+      {/* NAV */}
+      <header className="sticky top-0 z-40 backdrop-blur bg-white/70 border-b border-neutral-200">
+        <div className="mx-auto max-w-6xl px-4 py-3 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <span className="font-bold text-lg">Inuvet</span>
+            <span className="font-semibold">ManukaLind®</span>
+          </div>
+          <nav className="hidden md:flex items-center gap-6 text-sm">
+            <a href="#manuka" className="hover:underline">Manuka</a>
+            <a href="#studien" className="hover:underline">Studien</a>
+            <a href="#angebot" className="hover:underline">Angebot</a>
+            <a href="#faq" className="hover:underline">FAQ</a>
+            <a href="#quiz" className="hover:underline">Quiz</a>
+            <a href="#kontakt" className="hover:underline">Kontakt</a>
+          </nav>
+        </div>
+      </header>
 
-            <!-- Timeline Day: Mittwoch -->
-            <div class="day-container">
-                <div id="day-header-3" class="flex justify-between items-center cursor-pointer p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
-                    <div>
-                        <h3 class="text-xl font-bold text-planet-blue">Mittwoch</h3>
-                        <p class="text-sm text-gray-500">22.10.25</p>
-                    </div>
-                    <span class="material-icons-outlined transition-transform transform rotate-180">expand_more</span>
-                </div>
-                <div id="day-content-3" class="day-content overflow-hidden transition-all duration-500 ease-in-out" style="max-height: 0px;">
-                    <div class="pt-6 pl-4">
-                        <!-- Timeline Item -->
-                        <div class="timeline-item flex">
-                            <div class="flex flex-col items-center mr-4">
-                                <div class="flex-shrink-0 w-10 h-10 rounded-full bg-planet-blue/10 flex items-center justify-center">
-                                    <span class="material-icons-outlined text-planet-blue">free_breakfast</span>
-                                </div>
-                                <div class="w-px h-full bg-medium-gray timeline-line"></div>
-                            </div>
-                            <div class="pb-8">
-                                <p class="mb-1 text-sm text-gray-500">08:00 - 09:00 Uhr</p>
-                                <h4 class="font-semibold text-lg">Frühstück</h4>
-                            </div>
-                        </div>
-                        <!-- Timeline Item -->
-                        <div class="timeline-item flex">
-                            <div class="flex flex-col items-center mr-4">
-                                <div class="flex-shrink-0 w-10 h-10 rounded-full bg-planet-blue/10 flex items-center justify-center">
-                                    <span class="material-icons-outlined text-planet-blue">fact_check</span>
-                                </div>
-                                <div class="w-px h-full bg-medium-gray timeline-line"></div>
-                            </div>
-                            <div class="pb-8">
-                                <p class="mb-1 text-sm text-gray-500">09:00 - 10:30 Uhr</p>
-                                <h4 class="font-semibold text-lg">Programm</h4>
-                            </div>
-                        </div>
-                        <!-- Timeline Item -->
-                         <div class="timeline-item flex">
-                            <div class="flex flex-col items-center mr-4">
-                                <div class="flex-shrink-0 w-10 h-10 rounded-full bg-planet-blue/10 flex items-center justify-center">
-                                    <span class="material-icons-outlined text-planet-blue">logout</span>
-                                </div>
-                                <div class="w-px h-full bg-medium-gray timeline-line"></div>
-                            </div>
-                            <div class="pb-8">
-                                <p class="mb-1 text-sm text-gray-500">11:00 Uhr</p>
-                                <h4 class="font-semibold text-lg">Abreise / Check Out</h4>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+      {/* HERO */}
+      <main>
+      <section className="relative overflow-hidden">
+        <div className="mx-auto max-w-6xl px-4 pt-12 pb-10 grid md:grid-cols-2 gap-10 items-center">
+          <div>
+            <span className="inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs font-medium" style={{borderColor: ACCENT, backgroundColor: "#ecf7d9", color: "#2e5400"}}>
+              Exklusiv für Tierärzt:innen auf LinkedIn · <strong>Tierarztpraxis‑Exklusiv</strong>
+            </span>
+            <h1 className="mt-4 text-4xl md:text-5xl font-extrabold leading-tight">
+              Kaufe 2, erhalte 1 gratis – <span style={{color: ACCENT}}>ManukaLind®</span>
+            </h1>
+            <p className="mt-4 text-lg text-neutral-700">
+              Natürlich antibakterielle Wundheilung mit MGO 514+ Manuka‑Honig: schnellere Heilung, weniger Infektionen, 
+              zufriedenere Tierhalter:innen. Exklusiv für Praxen in den Niederlanden.
+            </p>
+            <ul className="mt-6 space-y-2 text-sm text-neutral-800 list-disc list-inside">
+              <li>Bundle: 2 kaufen, 1 gratis (Salbe oder Spray – frei kombinierbar)</li>
+              <li>Gratis: E‑Book & Webinar „Natürliche Wundheilung in der Kleintierpraxis“</li>
+              <li><strong>Tierarztpraxis‑Exklusiv</strong> · 100 % Zufriedenheitsgarantie · schneller Versand</li>
+            </ul>
+            <div className="mt-8 flex flex-col sm:flex-row gap-3">
+              <a href="#angebot" className="inline-flex justify-center rounded-2xl px-6 py-3 text-white font-semibold shadow" style={{backgroundColor: ACCENT}}>Jetzt Bundle sichern</a>
+              <a href="#studien" className="inline-flex justify-center rounded-2xl px-6 py-3 bg-white border border-neutral-300 hover:border-neutral-400 font-semibold">Evidenz ansehen</a>
+            </div>
+            {/* Trust badges */}
+            <div className="mt-6 flex flex-wrap items-center gap-4 text-sm text-neutral-600">
+              <div className="flex items-center gap-2"><div className="h-2 w-2 rounded-full" style={{backgroundColor: ACCENT}}/> {clinics.toLocaleString("de-DE")}+ Tierärzt:innen nutzen ManukaLind®</div>
+              <div className="flex items-center gap-2"><div className="h-2 w-2 rounded-full" style={{backgroundColor: ACCENT}}/> 5,0★ Durchschnittsbewertung</div>
+              <div className="flex items-center gap-2"><div className="h-2 w-2 rounded-full" style={{backgroundColor: ACCENT}}/> Made in Germany</div>
+            </div>
+          </div>
+          <div className="relative">
+            <div className="aspect-[4/5] w-full rounded-3xl border shadow-inner" style={{background: "linear-gradient(135deg,#f3faea,white,#f0f9e4)", borderColor: "#d5eac0"}}/>
+            <div className="absolute -bottom-4 -left-4 bg-white border border-neutral-200 shadow rounded-2xl px-4 py-3 text-sm">
+              <div className="font-semibold">Countdown Angebot</div>
+              {!expired ? (
+                <div className="mt-1 font-mono text-lg">{days}d : {hours}h : {minutes}m : {seconds}s</div>
+              ) : (
+                <div className="mt-1 font-mono text-lg" style={{color: "#b91c1c"}}>Beendet – schnell kontaktieren</div>
+              )}
+            </div>
+          </div>
+        </div>
+      </section>
 
-        </div>
+      {/* VALUE STRIP */}
+      <section className="bg-white border-y border-neutral-200">
+        <div className="mx-auto max-w-6xl px-4 py-8 grid md:grid-cols-3 gap-6">
+          <Feature title="Dream Outcome" text="Schnellere Wundheilung, weniger Infektionen, zufriedenere Tierhalter:innen – nachweislich in Studien und der Praxis."/>
+          <Feature title="Minimales Risiko" text="100 % Geld‑zurück‑Garantie in den ersten 30 Tagen. Einfach testen – ohne Risiko."/>
+          <Feature title="Schnelle Ergebnisse" text="Einfache Anwendung; sichtbare Verbesserungen oft innerhalb von 24–48 Stunden."/>
+        </div>
+      </section>
 
-    </main>
-    
-    <script>
-        // JavaScript for interactive collapsible sections
-        document.addEventListener('DOMContentLoaded', function () {
-            const dayHeaders = document.querySelectorAll('[id^="day-header-"]');
+      {/* MANUKA: Einzigartigkeit & Wirkprinzip */}
+      <section id="manuka" className="bg-white scroll-mt-20">
+        <div className="mx-auto max-w-6xl px-4 py-14">
+          <h2 className="text-2xl md:text-3xl font-extrabold">Warum Manuka‑Honig? – Einzigartigkeit & Wirkprinzip</h2>
+          <p className="mt-2 text-neutral-700 max-w-3xl">ManukaLind® kombiniert die natürliche Kraft des neuseeländischen Manuka‑Honigs (MGO 514+) mit praxistauglicher Applikation. Für Tierärzt:innen, die wirksam, evidenzbasiert und gleichzeitig naturnah behandeln möchten.</p>
 
-            dayHeaders.forEach(header => {
-                header.addEventListener('click', () => {
-                    const contentId = header.id.replace('header', 'content');
-                    const content = document.getElementById(contentId);
-                    const icon = header.querySelector('.material-icons-outlined');
+          {/* Kernmechanismen */}
+          <div className="mt-8 grid md:grid-cols-3 gap-6">
+            <Feature title="Feuchtigkeits‑ & pH‑Management" text="Schafft ein pH‑optimiertes, feuchtes Milieu; unterstützt Granulation & Epithelisierung, lindert Juckreiz."/>
+            <Feature title="Antibakterielle Aktivität" text="MGO hemmt Bakterien, Viren & Pilze – auch bei problematischen Keimspektren; Reduktion von Infektionen."/>
+            <Feature title="Osmotische Reinigung" text="Entzieht überschüssige Flüssigkeit, hilft Abfallstoffe & Nekrosen zu entfernen; bereitet den Wundgrund vor."/>
+          </div>
 
-                    if (content.style.maxHeight === '0px' || content.style.maxHeight === '') {
-                        // Expand the content
-                        content.style.maxHeight = content.scrollHeight + 'px';
-                        icon.classList.remove('rotate-180');
-                    } else {
-                        // Collapse the content
-                        content.style.maxHeight = '0px';
-                        icon.classList.add('rotate-180');
-                    }
-                });
-            });
-        });
-    </script>
+          {/* Praxisnutzenliste */}
+          <div className="mt-8 grid md:grid-cols-2 gap-6">
+            <div className="rounded-2xl border border-neutral-200 bg-neutral-50 p-6">
+              <h3 className="font-semibold">Praxisrelevante Vorteile</h3>
+              <ul className="mt-3 list-disc list-inside text-sm text-neutral-800 space-y-2">
+                <li>Feuchtigkeitserhaltend & entzündungshemmend</li>
+                <li>Verklebt nicht → schmerzarme Verbandwechsel</li>
+                <li>Auch bei chronischen, schlecht heilenden oder infizierten Wunden wirksam</li>
+                <li>Wundgeruchsreduktion & angenehme Textur</li>
+                <li><strong>Tierarztpraxis‑Exklusiv</strong> – unterstützt Praxisumsatz & Compliance</li>
+              </ul>
+            </div>
+            <div className="rounded-2xl border border-neutral-200 bg-neutral-50 p-6">
+              <h3 className="font-semibold">Anwendungsgebiete (alle Tierarten außer Reptilien)</h3>
+              <p className="text-sm text-neutral-700 mt-1">u. a. Wunden (chirurgisch, infiziert, nekrotisch), Nahtdehiszenz, Abszesse, wildes Fleisch, Ekzeme/Dermatitis, Hot Spots, Mauke, Strahlfäule, Euterverletzungen, Krallenfalzentzündungen, Zahnalveolen, entzündete Zeckenbisse, Druckstellen, Liegeschwielen, Tumorhöhlen u. v. m.</p>
+            </div>
+          </div>
 
-</body>
-</html>
+          {/* Formen */}
+          <div className="mt-8 grid md:grid-cols-2 gap-6">
+            <div className="rounded-2xl border border-neutral-200 bg-white p-6">
+              <h3 className="font-semibold">Darreichungsformen</h3>
+              <ul className="mt-3 list-disc list-inside text-sm text-neutral-800 space-y-1">
+                <li><strong>Salbe</strong> – viskos, nicht klebend</li>
+                <li><strong>Spray</strong> – Glycerol‑Basis, ideal für großflächige Areale</li>
+              </ul>
+            </div>
+            <div className="rounded-2xl border border-neutral-200 bg-white p-6">
+              <h3 className="font-semibold">Herkunft & Qualität</h3>
+              <ul className="mt-3 list-disc list-inside text-sm text-neutral-800 space-y-1">
+                <li>Manuka (Leptospermum scoparium) aus Neuseeland/Australien</li>
+                <li>Hoher MGO‑Gehalt (514+, UMF 15+) – schonende Ernte, Enzyme & Antioxidantien erhalten</li>
+                <li>„Manuka“ (Māori): „Ich fühle mich gut“</li>
+              </ul>
+            </div>
+          </div>
+
+          {/* Zielgruppen‑Insight & Trust */}
+          <div className="mt-8 grid md:grid-cols-2 gap-6">
+            <div className="rounded-2xl border border-neutral-200 bg-neutral-50 p-6">
+              <h3 className="font-semibold">Für wen?</h3>
+              <p className="text-sm text-neutral-700 mt-1">Wissenschaftlich denkende, naturverbundene Tierärzt:innen, die Alternativen zu klassischen Wundsalben/Antibiotika suchen und ihren Patient:innen wirksame, gut verträgliche Optionen anbieten möchten.</p>
+            </div>
+            <div className="rounded-2xl border border-neutral-200 bg-neutral-50 p-6">
+              <h3 className="font-semibold">Trust‑Fakten</h3>
+              <ul className="mt-3 list-disc list-inside text-sm text-neutral-800 space-y-1">
+                <li>15+ Jahre im Einsatz · 2 Mio.+ Einheiten</li>
+                <li>25 000+ Tierärzt:innen in DACH</li>
+                <li>★ 5,0 / 5 Sterne (76 Bewertungen)</li>
+                <li>Made in Germany · wissenschaftlich fundiert · nachhaltig gewonnen</li>
+              </ul>
+            </div>
+          </div>
+
+          <div className="mt-10">
+            <a href="#angebot" className="inline-flex rounded-2xl px-6 py-3 text-white font-semibold" style={{backgroundColor: ACCENT}}>Jetzt 2+1‑Bundle sichern</a>
+          </div>
+        </div>
+      </section>
+
+      {/* STUDIEN */}
+      <section id="studien" className="bg-neutral-50 scroll-mt-20">
+        <div className="mx-auto max-w-6xl px-4 py-14">
+          <h2 className="text-2xl md:text-3xl font-extrabold">Wissenschaftliche Evidenz</h2>
+          <p className="mt-2 text-neutral-700">Auswahl relevanter Studien & Fachartikel, die antibakterielle Wirkung und Heilungsunterstützung von medizinischem Honig/Manuka belegen.</p>
+          <div className="mt-6 grid md:grid-cols-2 gap-6">
+            <StudyCard title="First‑Intention Incisional Wound Healing in Dogs and Cats (2024)" href="https://pubmed.ncbi.nlm.nih.gov/38393082/" summary="Schnellere Epithelisierung und geringere Infektionsraten bei Hunden/Katzen durch medizinischen Honig."/>
+            <StudyCard title="Medical‑Grade Honey vs. Wound Pathogens (2024)" href="https://avmajournals.avma.org/view/journals/ajvr/85/12/ajvr.24.07.0188.xml" summary="Breites antibakterielles Spektrum; in vitro teils besser als Standard‑Antiseptika."/>
+            <StudyCard title="Meta‑Analyse: Honey in Wound Healing (2022)" href="https://pubmed.ncbi.nlm.nih.gov/35427872/" summary="Antimikrobiell, antioxidativ, entzündungshemmend; signifikant verkürzte Heilungsdauer."/>
+            <StudyCard title="Veterinary Review & Praxisanwendung" href="https://pmc.ncbi.nlm.nih.gov/articles/PMC10778018/" summary="Reduktion bakterieller Last, weniger Exsudat, beschleunigte Granulation; praxistauglich."/>
+          </div>
+        </div>
+      </section>
+
+      {/* ANGEBOT / FORM */}
+      <section id="angebot" className="bg-white scroll-mt-20">
+        <div className="mx-auto max-w-6xl px-4 py-14 grid lg:grid-cols-2 gap-10 items-start">
+          <div className="order-1">
+            <h2 className="text-2xl md:text-3xl font-extrabold">Exklusives LinkedIn‑Angebot: Kaufe 2, erhalte 1 gratis</h2>
+            <ul className="mt-4 space-y-2 text-neutral-800 list-disc list-inside">
+              <li>Gilt für Salbe und Spray (frei kombinierbar)</li>
+              <li>Nur für neue Praxen in den Niederlanden · <strong>Tierarzt‑exklusiv</strong></li>
+              <li>Bonus: E‑Book & Webinar „Natürliche Wundheilung“ inklusive</li>
+              <li>100 % Zufriedenheitsgarantie · kostenloser Versand</li>
+            </ul>
+            {/* Pricing */}
+            <div className="mt-4 rounded-2xl border bg-neutral-50 p-4" style={{borderColor: "#dbead1"}}>
+              <div className="text-sm text-neutral-700">Einführungspreis (B2B):</div>
+              <div className="text-2xl font-extrabold mt-1">€ {unitPriceEUR.toFixed(2)} <span className="text-sm font-normal text-neutral-600">/ Einheit</span></div>
+              <div className="text-sm text-neutral-700 mt-1">Mit 2+1‑Bundle effektiv ≈ <strong>33 % Preisvorteil</strong>.</div>
+            </div>
+            <div className="mt-6 p-4 rounded-2xl border" style={{backgroundColor: "#f3faea", borderColor: "#dbead1"}}>
+              <p className="text-sm" style={{color: "#2e5400"}}><strong>Knappheit:</strong> Angebot limitiert auf die ersten 100 Praxen oder bis zum Ablauf des Countdowns – was zuerst eintritt.</p>
+            </div>
+            <div className="mt-8 flex flex-col sm:flex-row gap-3">
+              <a href="#checkout" className="inline-flex justify-center rounded-2xl px-6 py-3 text-white font-semibold shadow" style={{backgroundColor: ACCENT}}>registrieren und bestellen</a>
+              <a href="#faq" className="inline-flex justify-center rounded-2xl px-6 py-3 bg-white border border-neutral-300 hover:border-neutral-400 font-semibold">Fragen? FAQ ansehen</a>
+            </div>
+          </div>
+
+          {/* FORM */}
+          <div id="checkout" className="order-2">
+            <div className="rounded-3xl border border-neutral-200 bg-neutral-50 p-6 shadow-sm">
+              <h3 className="text-lg font-bold">Praxisdaten für B2B‑Bestellung</h3>
+              <p className="text-sm text-neutral-600 mt-1">Nur für Tierarztpraxen. Nach Absenden erhältst du deinen LinkedIn‑Aktionslink zum Shopify‑Checkout.</p>
+              <form className="mt-4 grid grid-cols-1 gap-4">
+                <Input label="Praxisname" placeholder="Tierarztpraxis Muster & Co."/>
+                <Input label="Ansprechpartner:in" placeholder="Dr. Vorname Nachname"/>
+                <Input label="E‑Mail (geschäftlich)" type="email" placeholder="praxis@beispiel.nl"/>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <Input label="Ort" placeholder="Utrecht"/>
+                  <Input label="PLZ" placeholder="1234 AB"/>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <Select label="Produkt 1" options={["Salbe 50g", "Spray 100ml"]}/>
+                  <Select label="Produkt 2" options={["Salbe 50g", "Spray 100ml"]}/>
+                </div>
+                <Checkbox label="Ich bestätige, dass ich für eine Tierarztpraxis in den Niederlanden bestelle."/>
+                <Checkbox label="Ich habe die Datenschutzhinweise gelesen und akzeptiere sie."/>
+                <button type="button" className="mt-2 inline-flex justify-center rounded-2xl px-6 py-3 text-white font-semibold shadow" style={{backgroundColor: ACCENT}}>
+                  registrieren und bestellen
+                </button>
+                <p className="text-xs text-neutral-500">Hinweis: Der Aktionslink ist personengebunden und nur über LinkedIn gültig. Missbrauch führt zum Verfall der Konditionen.</p>
+              </form>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* TESTIMONIALS */}
+      <section className="bg-neutral-50">
+        <div className="mx-auto max-w-6xl px-4 py-14">
+          <h2 className="text-2xl md:text-3xl font-extrabold">Stimmen aus der Praxis</h2>
+          <div className="mt-6 grid md:grid-cols-3 gap-6">
+            <Testimonial name="Dr. Anne de Vries" role="Fachtierärztin" text="Sichtbar schnellere Wundheilung – besonders bei Hot Spots. Die Handhabung ist unkompliziert, Verbandwechsel schmerzarm." rating={5} />
+            <Testimonial name="Dierenkliniek Utrecht" role="Kleintierklinik" text="Die 2+1‑Bundle‑Aktion war ein idealer Einstieg. Seitdem haben wir deutlich mehr Nachfrage von Tierhalter:innen." rating={5} />
+            <Testimonial name="Dr. J. Janssen" role="Tierarzt" text="Weniger Infektionen, schneller saubere Granulation – ManukaLind ist fester Bestandteil unseres Wundprotokolls." rating={4} />
+          </div>
+        </div>
+      </section>
+
+      {/* QUIZ */}
+      <section id="quiz" className="bg-white scroll-mt-20">
+        <div className="mx-auto max-w-6xl px-4 py-14">
+          <h2 className="text-2xl md:text-3xl font-extrabold">Mini‑Quiz: Natürliche Wundheilung</h2>
+          <Quiz />
+        </div>
+      </section>
+
+      {/* FAQ */}
+      <section id="faq" className="bg-white scroll-mt-20">
+        <div className="mx-auto max-w-6xl px-4 py-14">
+          <h2 className="text-2xl md:text-3xl font-extrabold">FAQ</h2>
+          <div className="mt-6 space-y-4">
+            <FAQ q="Gilt das Angebot auch außerhalb der Niederlande?" a="Nein, die LinkedIn‑Bundle‑Aktion gilt exklusiv für Tierarztpraxen in den Niederlanden."/>
+            <FAQ q="Kann ich Salbe und Spray mischen?" a="Ja, die 2 Einheiten können frei kombiniert werden. Die 3. Einheit (gratis) wählst du ebenfalls frei."/>
+            <FAQ q="Wie lange ist das Angebot gültig?" a="Bis Ablauf des Countdowns oder bis die 100 Kontingent‑Bundles vergeben sind – je nachdem, was zuerst eintritt."/>
+            <FAQ q="Wie funktioniert die Geld‑zurück‑Garantie?" a="Innerhalb von 30 Tagen nach der ersten Bestellung erstatten wir auf Wunsch den vollen Betrag – ohne Diskussion."/>
+            <FAQ q="Ist das Angebot mit anderen Aktionen kombinierbar?" a="Nein, dieses spezielle LinkedIn-Bundle ist nicht mit anderen Rabatten oder Aktionen kombinierbar."/>
+            <FAQ q="Welche Zahlungsmethoden werden akzeptiert?" a="Wir akzeptieren alle gängigen Zahlungsmethoden, einschließlich Kreditkarte, PayPal und Kauf auf Rechnung für registrierte Praxen."/>
+            <FAQ q="Wie erhalte ich das E-Book und den Webinar-Zugang?" a="Nach erfolgreicher Bestellung erhalten Sie eine E-Mail mit den Download-Links und allen Informationen zum Webinar-Zugang."/>
+          </div>
+        </div>
+      </section>
+      </main>
+      {/* FOOTER */}
+      <footer id="kontakt" className="border-t border-neutral-200 bg-neutral-50 scroll-mt-20">
+        <div className="mx-auto max-w-6xl px-4 py-10 grid md:grid-cols-3 gap-8 text-sm text-neutral-600">
+          <div>
+            <div className="font-semibold">Inuvet GmbH</div>
+            <div>Made in Germany · Tierarzt‑exklusiv</div>
+          </div>
+          <div>
+            <div className="font-semibold">Kontakt</div>
+            <div>support@inuvet.com</div>
+            <div>LinkedIn: inuvet</div>
+          </div>
+          <div>
+            <div className="font-semibold">Rechtliches</div>
+            <div>Impressum · Datenschutz</div>
+          </div>
+        </div>
+      </footer>
+    </div>
+  );
+}
+
+function Feature({ title, text }) {
+  return (
+    <div className="rounded-2xl border border-neutral-200 bg-white p-5 shadow-sm">
+      <div className="text-base font-semibold">{title}</div>
+      <p className="mt-1 text-sm text-neutral-700">{text}</p>
+    </div>
+  );
+}
+
+function StudyCard({ title, href, summary }) {
+  return (
+    <a href={href} target="_blank" rel="noreferrer" className="block rounded-2xl border border-neutral-200 bg-white p-5 hover:shadow-md transition">
+      <div className="font-semibold">{title}</div>
+      <p className="mt-1 text-sm text-neutral-700">{summary}</p>
+      <div className="mt-2 text-xs underline">Link öffnen</div>
+    </a>
+  );
+}
+
+function Input({ label, ...props }) {
+  return (
+    <label className="block">
+      <div className="text-sm font-medium text-neutral-800">{label}</div>
+      <input {...props} className="mt-1 w-full rounded-xl border border-neutral-300 bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500" style={{'--accent': ACCENT}} />
+    </label>
+  );
+}
+
+function Select({ label, options }) {
+  return (
+    <label className="block">
+      <div className="text-sm font-medium text-neutral-800">{label}</div>
+      <select className="mt-1 w-full rounded-xl border border-neutral-300 bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500" style={{'--accent' : ACCENT}}>
+        {options.map((o) => (
+          <option key={o}>{o}</option>
+        ))}
+      </select>
+    </label>
+  );
+}
+
+function Checkbox({ label }) {
+  return (
+    <label className="flex items-start gap-3 text-sm">
+      <input type="checkbox" className="mt-1 h-4 w-4 rounded border-neutral-300 text-green-600 focus:ring-green-500" />
+      <span>{label}</span>
+    </label>
+  );
+}
+
+function FAQ({ q, a }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="rounded-2xl border border-neutral-200 bg-neutral-50">
+      <button onClick={() => setOpen((v) => !v)} className="w-full flex justify-between items-center text-left px-4 py-3 font-medium">
+        <span>{q}</span>
+        <span>{open ? '−' : '+'}</span>
+      </button>
+      {open && <div className="px-4 pb-4 text-sm text-neutral-700">{a}</div>}
+    </div>
+  );
+}
+
+function Testimonial({ name, role, text, rating = 5, avatarUrl }) {
+  const r = Math.max(1, Math.min(5, Math.round(rating)));
+  const initials = name.split(" ").map(n => n[0]).slice(0,2).join("");
+  return (
+    <figure className="rounded-2xl border border-neutral-200 bg-white p-5 shadow-sm h-full">
+      <div className="flex items-center gap-3">
+        {avatarUrl ? (
+          <img src={avatarUrl} alt={name} className="h-10 w-10 rounded-full object-cover"/>
+        ) : (
+          <div className="h-10 w-10 rounded-full flex items-center justify-center text-white font-semibold" style={{backgroundColor: ACCENT}}>{initials}</div>
+        )}
+        <div>
+          <div className="text-sm font-semibold text-neutral-900">{name}</div>
+          {role && <div className="text-xs text-neutral-600">{role}</div>}
+          <div className="text-xs mt-1" aria-label={`Bewertung ${r} von 5`}>
+            {Array.from({length: 5}).map((_, i) => (
+              <span key={i} style={{color: i < r ? '#f59e0b' : "#d1d5db"}}>★</span>
+            ))}
+          </div>
+        </div>
+      </div>
+      <blockquote className="mt-3 text-sm text-neutral-800">“{text}”</blockquote>
+    </figure>
+  );
+}
+
+function Quiz() {
+  const qs = useMemo(() => [
+    { q: "Welcher Wirkstoff ist zentral für die antibakterielle Aktivität von Manuka‑Honig?", options: ["Lysozym", "MGO (Methylglyoxal)", "H2O2", "Vitamin C"], correct: 1 },
+    { q: "Welcher Praxis‑Vorteil trifft typischerweise zu?", options: ["stärkere Verklebung am Verband", "schneller saubere Granulation", "zwingend systemische AB nötig", "nur bei Pferden einsetzbar"], correct: 1 },
+    { q: "Wie groß ist der effektive Preisvorteil beim 2+1‑Bundle?", options: ["10 %", "25 %", "33 %", "50 %"], correct: 2 },
+  ], []);
+  const [step, setStep] = useState(0);
+  const [score, setScore] = useState(0);
+  const [picked, setPicked] = useState(null);
+  const done = step >= qs.length;
+
+  const onAnswer = () => {
+    if (picked === null) return;
+    if (picked === qs[step].correct) setScore((s) => s + 1);
+    setPicked(null);
+    setStep((s) => s + 1);
+  };
+
+  if (done) {
+    return (
+      <div className="rounded-2xl border border-neutral-200 bg-neutral-50 p-6">
+        <div className="text-lg font-semibold">Ergebnis: {score} / {qs.length}</div>
+        <p className="text-sm text-neutral-700 mt-1">Danke fürs Mitmachen! {score === qs.length ? "Top!" : "Schau dir gern die Studien oben an – dort findest du alle Antworten."}</p>
+        <a href="#angebot" className="mt-4 inline-flex rounded-2xl px-6 py-3 text-white font-semibold" style={{backgroundColor: ACCENT}}>Jetzt 2+1‑Bundle sichern</a>
+      </div>
+    );
+  }
+
+  const q = qs[step];
+  return (
+    <div className="rounded-2xl border border-neutral-200 bg-white p-6 max-w-2xl">
+      <div className="text-sm text-neutral-600">Frage {step + 1} von {qs.length}</div>
+      <div className="text-lg font-semibold mt-1">{q.q}</div>
+      <div className="mt-4 grid gap-2">
+        {q.options.map((opt, idx) => (
+          <button key={idx} onClick={() => setPicked(idx)} className={`w-full text-left rounded-xl border px-4 py-2 transition-colors ${picked===idx?"bg-green-100 border-green-300":"bg-white hover:bg-neutral-50 border-neutral-200"}`}>
+            {opt}
+          </button>
+        ))}
+      </div>
+      <div className="mt-4 flex gap-3">
+        <button onClick={onAnswer} disabled={picked===null} className="inline-flex rounded-2xl px-5 py-2 text-white font-semibold disabled:opacity-50 disabled:cursor-not-allowed" style={{backgroundColor: ACCENT}}>Antwort bestätigen</button>
+        <button onClick={() => {setStep(0); setScore(0); setPicked(null);}} className="inline-flex rounded-2xl px-5 py-2 border bg-white hover:bg-neutral-50">Neu starten</button>
+      </div>
+    </div>
+  );
+}
 
