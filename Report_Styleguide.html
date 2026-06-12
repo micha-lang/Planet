@@ -1,0 +1,991 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Report Styleguide — Planet</title>
+<link rel="stylesheet" href="https://use.typekit.net/phj5hyp.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined">
+<style>
+/* ============================================================
+   PLANET REPORT — DIN A4 Print/PDF System
+   Referenz-Dokument & CSS-Quelle für den planet-report Skill
+============================================================ */
+
+:root {
+  /* COLOR */
+  --planet-black:      #000000;
+  --planet-white:      #FFFFFF;
+  --planet-primary:    #0000FF;
+  --planet-secondary:  #D4FF00;
+  --planet-tint:       #DCDCDC;
+  --planet-rule:       #A6A6A6;
+  --planet-fill:       #ECECEC;
+  --planet-neutral:    #F5F5F5;
+
+  /* TYPOGRAPHY */
+  --planet-font:    "neue-haas-grotesk-display", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --weight-body:    500;   /* 55 Roman */
+  --weight-display: 600;   /* 65 Medium */
+
+  /* TYPE SCALE — fixe physische Größen für Print (pt) */
+  --doc-cover-title: 52pt;  /* Titelseite */
+  --doc-cover-sub:   16pt;
+  --doc-h1:          30pt;  /* Kapitel-Eröffnung */
+  --doc-h2:          21pt;  /* Abschnitt */
+  --doc-h3:          14pt;  /* Unterabschnitt */
+  --doc-h4:          11pt;  /* Mini-Label, fett */
+  --doc-lead:        13pt;  /* Einleitungsabsatz */
+  --doc-body:        10.5pt;
+  --doc-small:       9pt;
+  --doc-meta:        8pt;   /* Kopf-/Fußzeile, Captions */
+  --doc-stat:        40pt;  /* Kennzahl */
+  --doc-stat-xl:     110pt; /* monumentale Kennzahl (Stat-Hero) */
+  --doc-quote:       18pt;
+
+  /* SPACING — Print-Skala (pt) */
+  --s1: 4pt; --s2: 8pt;  --s3: 12pt; --s4: 16pt;
+  --s5: 20pt; --s6: 24pt; --s8: 32pt; --s10: 40pt; --s12: 48pt;
+
+  /* A4 GEOMETRIE */
+  --page-w: 210mm;
+  --page-h: 297mm;
+  --margin-x: 22mm;   /* linker/rechter Satzspiegel */
+  --margin-top: 26mm; /* Oberkante Inhalt */
+  --margin-bot: 22mm; /* Unterkante Inhalt */
+  --header-y: 13mm;   /* Position laufende Kopfzeile */
+  --footer-y: 13mm;   /* Position laufende Fußzeile */
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  background: var(--planet-tint);
+  color: var(--planet-black);
+  font-family: var(--planet-font);
+  font-weight: var(--weight-body);
+  font-size: var(--doc-body);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+img { display: block; max-width: 100%; }
+svg { display: block; }
+
+/* ============================================================
+   SEITE — A4-Blatt
+============================================================ */
+.page {
+  position: relative;
+  width: var(--page-w);
+  height: var(--page-h);
+  background: var(--planet-white);
+  overflow: hidden;
+  /* Inhalts-Satzspiegel */
+  padding: var(--margin-top) var(--margin-x) var(--margin-bot);
+}
+
+/* Bildschirm-Vorschau: Blätter gestapelt mit Schatten */
+@media screen {
+  body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12mm;
+    padding: 16mm 0;
+  }
+  .page {
+    box-shadow: 0 4mm 16mm rgba(0,0,0,0.18);
+  }
+}
+
+/* ============================================================
+   LAUFENDE KOPF- / FUSSZEILE
+============================================================ */
+.page-header {
+  position: absolute;
+  top: var(--header-y);
+  left: var(--margin-x);
+  right: var(--margin-x);
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-size: var(--doc-meta);
+  font-weight: var(--weight-body);
+  color: var(--planet-black);
+}
+.page-header .logo {
+  font-weight: var(--weight-display);
+  font-size: var(--doc-meta);
+  color: var(--planet-primary);
+  letter-spacing: 0.01em;
+}
+.page-header .header-doc { }
+
+.page-footer {
+  position: absolute;
+  bottom: var(--footer-y);
+  left: var(--margin-x);
+  right: var(--margin-x);
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-size: var(--doc-meta);
+  font-weight: var(--weight-body);
+  color: var(--planet-black);
+}
+.page-footer .footer-meta { }
+.page-footer .page-num {
+  font-weight: var(--weight-display);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Hairline unter Kopf / über Fuß */
+.page-header::after,
+.page-footer::before {
+  content: "";
+  position: absolute;
+  left: 0; right: 0;
+  height: 0.6pt;
+  background: var(--planet-rule);
+}
+.page-header::after  { bottom: -3mm; }
+.page-footer::before { top: -3mm; }
+
+/* ============================================================
+   TITELSEITE (blau, randlos)
+============================================================ */
+.page--cover {
+  background: var(--planet-primary);
+  color: var(--planet-white);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.page--cover .cover-logo {
+  font-weight: var(--weight-display);
+  font-size: 16pt;
+  color: var(--planet-white);
+}
+.page--cover .cover-main { margin-top: auto; }
+.page--cover .cover-kicker {
+  font-size: var(--doc-body);
+  font-weight: var(--weight-display);
+  color: var(--planet-white);            /* Farbregel: auf Blau nie Gelb */
+  margin-bottom: var(--s4);
+}
+.page--cover h1 {
+  font-weight: var(--weight-display);
+  font-size: var(--doc-cover-title);
+  line-height: 0.95;
+  letter-spacing: -0.02em;
+  color: var(--planet-white);
+  max-width: 150mm;
+}
+.page--cover .cover-sub {
+  font-size: var(--doc-cover-sub);
+  font-weight: var(--weight-body);
+  line-height: 1.35;
+  color: var(--planet-white);
+  max-width: 130mm;
+  margin-top: var(--s5);
+}
+.cover-meta {
+  display: flex;
+  gap: var(--s10);
+  margin-top: var(--s10);
+  padding-top: var(--s4);
+  border-top: 0.5pt solid rgba(255,255,255,0.4);
+}
+.cover-meta .cm-label {
+  font-size: var(--doc-meta);
+  font-weight: var(--weight-display);
+  color: var(--planet-white);            /* Farbregel: auf Blau nie Gelb */
+  margin-bottom: var(--s1);
+}
+.cover-meta .cm-value {
+  font-size: var(--doc-body);
+  font-weight: var(--weight-body);
+  color: var(--planet-white);
+}
+
+/* ============================================================
+   TYPOGRAFIE im Inhalt
+============================================================ */
+h1, h2, h3, h4 {
+  font-family: var(--planet-font);
+  font-weight: var(--weight-display);
+  color: var(--planet-black);
+}
+.page-body h1 { font-size: var(--doc-h1); line-height: 1.0; letter-spacing: -0.015em; }
+.page-body h2 { font-size: var(--doc-h2); line-height: 1.05; }
+.page-body h3 { font-size: var(--doc-h3); line-height: 1.2; }
+.page-body h4 { font-size: var(--doc-h4); line-height: 1.3; }
+
+p { font-size: var(--doc-body); line-height: 1.5; }
+.lead { font-size: var(--doc-lead); line-height: 1.4; font-weight: var(--weight-body); }
+.small { font-size: var(--doc-small); }
+
+ul, ol { font-size: var(--doc-body); line-height: 1.5; padding-left: var(--s4); }
+li { margin-bottom: var(--s1); }
+
+strong, b { font-weight: var(--weight-display); }
+
+a { color: var(--planet-primary); text-decoration: none; }
+
+/* Überschriften nicht am Seitenende allein lassen */
+h1, h2, h3, h4 { break-after: avoid; }
+p, li { orphans: 2; widows: 2; }
+
+/* ============================================================
+   FLOW — kontextsensitives vertikales Spacing
+============================================================ */
+.flow > * + *        { margin-top: var(--s3); }
+.flow > h1 + *       { margin-top: var(--s4); }
+.flow > h2 + *       { margin-top: var(--s3); }
+.flow > h3 + *       { margin-top: var(--s2); }
+.flow > h4 + *       { margin-top: var(--s1); }
+.flow > * + h2       { margin-top: var(--s8); }
+.flow > * + h3       { margin-top: var(--s6); }
+.flow > * + h4       { margin-top: var(--s4); }
+
+/* ============================================================
+   ABSCHNITTS-KOPF (Linie wie .section-head)
+============================================================ */
+.section-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  padding-bottom: var(--s2);
+  border-bottom: 1pt solid var(--planet-black);
+  break-after: avoid;
+}
+.section-head .sh-num {
+  font-size: var(--doc-h2);
+  font-weight: var(--weight-display);
+  color: var(--planet-primary);
+}
+
+/* ============================================================
+   KENNZAHLEN-REIHE
+============================================================ */
+.stat-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--s4);
+  break-inside: avoid;
+}
+.stat {
+  border-top: 1.5pt solid var(--planet-primary);
+  padding-top: var(--s2);
+}
+.stat .stat-num {
+  font-size: var(--doc-stat);
+  font-weight: var(--weight-display);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--planet-primary);
+}
+.stat .stat-label {
+  font-size: var(--doc-small);
+  line-height: 1.35;
+  margin-top: var(--s1);
+}
+
+/* ============================================================
+   TABELLE
+============================================================ */
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--doc-body);
+}
+.table caption {
+  text-align: left;
+  font-size: var(--doc-h4);
+  font-weight: var(--weight-display);
+  margin-bottom: var(--s2);
+}
+.table th {
+  text-align: left;
+  font-weight: var(--weight-display);
+  line-height: 1.35;
+  padding: var(--s2) var(--s3) var(--s2) 0;
+  border-bottom: 1pt solid var(--planet-black);
+}
+.table td {
+  padding: var(--s2) var(--s3) var(--s2) 0;
+  border-bottom: 0.6pt solid var(--planet-rule);
+  line-height: 1.35;
+  vertical-align: top;
+}
+.table th:last-child, .table td:last-child { padding-right: 0; }
+.table tr:last-child td { border-bottom: none; }
+.table .num { text-align: right; font-variant-numeric: tabular-nums; }
+.table thead { display: table-header-group; } /* Kopf auf jeder gedruckten Seite */
+.table tr { break-inside: avoid; }
+
+/* ============================================================
+   DEFINITIONSLISTE (Metadaten)
+============================================================ */
+.dl {
+  display: grid;
+  grid-template-columns: 45mm 1fr;
+  column-gap: var(--s4);
+}
+.dl dt {
+  font-weight: var(--weight-display);
+  padding: var(--s2) 0;
+  border-bottom: 0.6pt solid var(--planet-rule);
+}
+.dl dd {
+  padding: var(--s2) 0;
+  border-bottom: 0.6pt solid var(--planet-rule);
+}
+
+/* ============================================================
+   CALLOUT / HINWEISBOX
+============================================================ */
+.callout {
+  padding: var(--s4);
+  border-radius: 3mm;
+  background: var(--planet-neutral);
+  break-inside: avoid;
+}
+.callout--primary { background: var(--planet-primary); color: var(--planet-white); }
+.callout--primary h4, .callout--primary p { color: var(--planet-white); }
+.callout--acid { background: var(--planet-secondary); }
+.callout h4 { margin-bottom: var(--s1); }
+.callout--primary { border-left: none; }
+
+/* ============================================================
+   ZITAT
+============================================================ */
+.quote { break-inside: avoid; }
+.quote .quote-text {
+  font-size: var(--doc-quote);
+  font-weight: var(--weight-display);
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+}
+.quote .quote-attr {
+  margin-top: var(--s3);
+  font-size: var(--doc-small);
+  font-weight: var(--weight-display);
+}
+.quote .quote-attr .role { font-weight: var(--weight-body); }
+
+/* ============================================================
+   ABBILDUNG / FIGUR
+============================================================ */
+.figure { break-inside: avoid; }
+.figure img,
+.figure .fig-placeholder {
+  width: 100%;
+  border-radius: 2mm;
+  background: var(--planet-tint);
+}
+.figure .fig-placeholder {
+  aspect-ratio: 16 / 9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 0 var(--s5);
+  font-size: var(--doc-small);
+}
+.fig-ph-screen { color: var(--planet-primary); font-weight: var(--weight-display); }
+.fig-ph-print  { display: none; color: var(--planet-black); opacity: 0.4; }
+@media print { .fig-ph-screen { display: none; } .fig-ph-print { display: inline; } }
+.figure figcaption {
+  font-size: var(--doc-meta);
+  line-height: 1.4;
+  margin-top: var(--s2);
+}
+
+/* ============================================================
+   ZWEISPALTIGER FLIESSTEXT
+============================================================ */
+.cols-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--s6);
+  align-items: start;
+}
+
+/* ============================================================
+   EINFACHES BALKENDIAGRAMM (CSS)
+============================================================ */
+.barchart { break-inside: avoid; }
+.barchart .bc-row {
+  display: grid;
+  grid-template-columns: 38mm 1fr 18mm;
+  align-items: center;
+  gap: var(--s3);
+  padding: var(--s1) 0;
+}
+.barchart .bc-label { font-size: var(--doc-small); }
+.barchart .bc-track {
+  height: 6mm;
+  background: var(--planet-fill);
+  border-radius: 1mm;
+  overflow: hidden;
+}
+.barchart .bc-fill {
+  display: block;
+  height: 100%;
+  background: var(--planet-primary);
+}
+.barchart .bc-fill--acid { background: var(--planet-secondary); }
+.barchart .bc-value {
+  font-size: var(--doc-small);
+  font-weight: var(--weight-display);
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ============================================================
+   INHALTSVERZEICHNIS
+============================================================ */
+.toc { width: 100%; }
+.toc-row {
+  display: flex;
+  align-items: baseline;
+  gap: var(--s2);
+  padding: var(--s2) 0;
+  border-bottom: 0.6pt solid var(--planet-rule);
+}
+.toc-row .toc-num {
+  font-weight: var(--weight-display);
+  color: var(--planet-primary);
+  min-width: 10mm;
+}
+.toc-row .toc-title { font-weight: var(--weight-display); }
+.toc-row .toc-dots {
+  flex: 1;
+  border-bottom: 0.6pt dotted var(--planet-rule);
+  transform: translateY(-2pt);
+}
+.toc-row .toc-page { font-variant-numeric: tabular-nums; }
+
+/* ============================================================
+   SEITENUMBRUCH-UTILITIES
+============================================================ */
+.break-before { break-before: page; }
+.avoid-break  { break-inside: avoid; }
+
+/* ============================================================
+   PAGE-BODY: Inhaltsfluss zwischen Kopf und Fuß
+============================================================ */
+.page-body { height: 100%; }
+
+/* ============================================================
+   FARBREGEL — auf BLAU immer weiße Schrift (nie Gelb, nie Schwarz).
+   Gilt für: .page--cover · .page--divider · .page--back · .page--primary
+   Gelb/Schwarz nur als FLÄCHE (callout--acid u. a.), nie als Schrift auf Blau.
+============================================================ */
+
+/* ---- Blaue Inhaltsseite (.page--primary) ---- */
+.page--primary { background: var(--planet-primary); }
+.page--primary .page-body,
+.page--primary p, .page--primary h1, .page--primary h2,
+.page--primary h3, .page--primary h4, .page--primary li,
+.page--primary .lead, .page--primary .small { color: var(--planet-white); }
+.page--primary .page-header .logo { color: var(--planet-white); }
+.page--primary .page-header .header-doc,
+.page--primary .page-footer .footer-meta { color: var(--planet-white); }
+.page--primary .page-footer .page-num { color: var(--planet-white); }
+.page--primary .page-header::after,
+.page--primary .page-footer::before { background: rgba(255,255,255,0.4); }
+.page--primary .section-head { border-bottom-color: var(--planet-white); }
+.page--primary .section-head .sh-num { color: var(--planet-white); }
+
+/* ---- Kapitel-Trenner (.page--divider) — blau ---- */
+.page--divider {
+  background: var(--planet-primary); color: var(--planet-white);
+  display: flex; flex-direction: column; justify-content: space-between;
+}
+.page--divider .divider-logo { font-weight: var(--weight-display); font-size: 16pt; color: var(--planet-white); }
+.page--divider .divider-main { margin-top: auto; }
+.page--divider .divider-kicker { font-size: var(--doc-body); font-weight: var(--weight-display); color: var(--planet-white); margin-bottom: var(--s2); }
+.page--divider .divider-num { font-size: 96pt; font-weight: var(--weight-display); line-height: 0.9; letter-spacing: -0.03em; color: var(--planet-white); }
+.page--divider h2 { font-size: var(--doc-cover-title); line-height: 0.95; letter-spacing: -0.02em; color: var(--planet-white); max-width: 150mm; margin-top: var(--s3); }
+
+/* ---- Stat-Hero — eine monumentale Kennzahl ---- */
+.stat-hero { margin-top: var(--s8); }
+.stat-hero .sh-figure { font-size: var(--doc-stat-xl); font-weight: var(--weight-display); line-height: 0.85; letter-spacing: -0.03em; color: var(--planet-primary); }
+.stat-hero .sh-caption { font-size: var(--doc-lead); line-height: 1.4; margin-top: var(--s5); max-width: 120mm; }
+.page--primary .stat-hero .sh-figure { color: var(--planet-white); }
+
+/* ---- Vollbild-Bildseite (.page--image) — randlos ---- */
+.page--image { padding: 0; background: #1a1a1a; }
+.page--image .img-bleed { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; border-radius: 0; }
+.page--image .img-bleed.fig-placeholder { display: flex; align-items: center; justify-content: center; color: var(--planet-white); opacity: 0.4; font-size: var(--doc-small); background: #2a2a2a; aspect-ratio: auto; }
+.page--image::after { content: ""; position: absolute; inset: 0; z-index: 1; background: linear-gradient(to top, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0) 45%); }
+.page--image .img-logo { position: absolute; top: var(--header-y); left: var(--margin-x); z-index: 2; font-weight: var(--weight-display); font-size: 16pt; color: var(--planet-white); }
+.page--image .img-cap { position: absolute; left: var(--margin-x); right: var(--margin-x); bottom: var(--footer-y); z-index: 2; color: var(--planet-white); }
+.page--image .img-cap h2 { color: var(--planet-white); max-width: 150mm; }
+.page--image .img-cap p { color: var(--planet-white); margin-top: var(--s2); max-width: 140mm; }
+
+/* ---- Rückseite / Kontakt (.page--back) — blau ---- */
+.page--back {
+  background: var(--planet-primary); color: var(--planet-white);
+  display: flex; flex-direction: column; justify-content: space-between;
+}
+.page--back .back-logo { font-weight: var(--weight-display); font-size: 16pt; color: var(--planet-white); }
+.page--back .back-main { margin-top: auto; }
+.page--back h2 { font-size: var(--doc-h2); color: var(--planet-white); max-width: 140mm; }
+.page--back .back-contact { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--s5); margin-top: var(--s8); }
+.page--back .bc-label2 { font-size: var(--doc-meta); font-weight: var(--weight-display); color: var(--planet-white); margin-bottom: var(--s1); }
+.page--back .bc-val { font-size: var(--doc-body); color: var(--planet-white); line-height: 1.4; }
+.page--back .back-legal { font-size: var(--doc-small); line-height: 1.4; color: var(--planet-white); margin-top: var(--s6); padding-top: var(--s3); border-top: 0.5pt solid rgba(255,255,255,0.4); }
+
+/* ---- Textreiche Seite (.text-cols) — zweispaltiger Fließtext ---- */
+.text-cols { column-count: 2; column-gap: var(--s6); }
+.text-cols > * { break-inside: avoid; }
+.text-cols > * + * { margin-top: var(--s3); }
+.text-cols h3 { break-after: avoid; }
+
+/* ============================================================
+   PRINT
+============================================================ */
+@page {
+  size: A4;
+  margin: 0;
+}
+@media print {
+  html, body { background: var(--planet-white); }
+  .page {
+    box-shadow: none;
+    margin: 0;
+    break-after: page;
+  }
+  .page:last-child { break-after: auto; }
+}
+
+/* ============================================================
+   UI: Bearbeiten + Drucken (nur Bildschirm) + Edit-Modus
+============================================================ */
+@media screen {
+  .ui-bar { position: fixed; bottom: 8mm; right: 8mm; z-index: 100; display: inline-flex; align-items: center; gap: 8px; }
+  .ui-btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-family: var(--planet-font); font-weight: var(--weight-display); font-size: 11pt;
+    height: 48px; padding: 0 20px; border-radius: 9999px; border: 0; cursor: pointer;
+  }
+  .ui-btn--print { background: var(--planet-primary); color: var(--planet-white); }
+  .ui-btn--print:hover { background: var(--planet-black); }
+  .ui-btn--edit { background: var(--planet-white); color: var(--planet-black); box-shadow: 0 2px 8px rgba(0,0,0,0.15); }
+  .ui-btn--edit:hover, .ui-btn--edit.active { background: var(--planet-secondary); }
+  .ui-btn .material-icons-outlined { font-size: 20px; }
+
+  /* Edit-Modus: dezente Markierung der editierbaren Felder */
+  body.edit-mode [contenteditable="true"] {
+    outline: 1.5px dashed rgba(0,0,255,0.35); outline-offset: 2px; border-radius: 1px; cursor: text;
+  }
+  body.edit-mode [contenteditable="true"]:focus {
+    outline: 1.5px solid var(--planet-primary); background: rgba(0,0,255,0.03);
+  }
+  /* Bild einsetzen: Figur im Edit-Modus anklickbar / Drop-Ziel */
+  body.edit-mode .figure { cursor: pointer; outline: 1.5px dashed rgba(0,0,255,0.35); outline-offset: 2px; }
+  body.edit-mode .figure.drop-hover { outline: 2px solid var(--planet-primary); }
+}
+@media print { .ui-bar { display: none !important; } [contenteditable] { outline: none !important; } }
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     SEITE 1 — TITELSEITE
+============================================================ -->
+<section class="page page--cover">
+  <span class="cover-logo">Planet</span>
+  <div class="cover-main">
+    <div class="cover-kicker">Geschäftsbericht · Q2 2026</div>
+    <h1>Wachstum mit Substanz.</h1>
+    <p class="cover-sub">Performance, Märkte und strategische Prioritäten der Planet Group im zweiten Quartal 2026.</p>
+    <div class="cover-meta">
+      <div>
+        <div class="cm-label">Erstellt</div>
+        <div class="cm-value">11. Juni 2026</div>
+      </div>
+      <div>
+        <div class="cm-label">Bereich</div>
+        <div class="cm-value">Group Finance</div>
+      </div>
+      <div>
+        <div class="cm-label">Vertraulichkeit</div>
+        <div class="cm-value">Intern</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SEITE 2 — INHALTSVERZEICHNIS
+============================================================ -->
+<section class="page">
+  <header class="page-header">
+    <span class="logo">Planet</span>
+    <span class="header-doc">Geschäftsbericht Q2 2026</span>
+  </header>
+
+  <div class="page-body flow">
+    <div class="section-head"><h2>Inhalt</h2></div>
+    <div class="toc">
+      <div class="toc-row"><span class="toc-num">01</span><span class="toc-title">Zusammenfassung</span><span class="toc-dots"></span><span class="toc-page">3</span></div>
+      <div class="toc-row"><span class="toc-num">02</span><span class="toc-title">Finanzielle Entwicklung</span><span class="toc-dots"></span><span class="toc-page">4</span></div>
+      <div class="toc-row"><span class="toc-num">03</span><span class="toc-title">Märkte & Regionen</span><span class="toc-dots"></span><span class="toc-page">5</span></div>
+      <div class="toc-row"><span class="toc-num">04</span><span class="toc-title">Ausblick</span><span class="toc-dots"></span><span class="toc-page">6</span></div>
+    </div>
+  </div>
+
+  <footer class="page-footer">
+    <span class="footer-meta">Planet Group · Intern</span>
+    <span class="page-num">2</span>
+  </footer>
+</section>
+
+<!-- ============================================================
+     SEITE 3 — ZUSAMMENFASSUNG (Text + Stats)
+============================================================ -->
+<section class="page">
+  <header class="page-header">
+    <span class="logo">Planet</span>
+    <span class="header-doc">Geschäftsbericht Q2 2026</span>
+  </header>
+
+  <div class="page-body flow">
+    <div class="section-head"><h2>Zusammenfassung</h2><span class="sh-num">01</span></div>
+    <p class="lead">Die Planet Group hat im zweiten Quartal 2026 ein starkes, profitables Wachstum erzielt. Alle Kernmärkte tragen positiv bei, getragen von der Marke Inuvet.</p>
+    <p>Der Umsatz stieg gegenüber dem Vorjahresquartal um 38 %. Wesentliche Treiber waren der Ausbau des D2C-Geschäfts sowie die internationale Expansion in die Märkte Italien, Spanien und Japan. Die operative Marge verbesserte sich trotz höherer Marketinginvestitionen.</p>
+
+    <div class="stat-row">
+      <div class="stat"><div class="stat-num">+38 %</div><div class="stat-label">Umsatzwachstum ggü. Vorjahr</div></div>
+      <div class="stat"><div class="stat-num">9</div><div class="stat-label">Aktive Ländermärkte</div></div>
+      <div class="stat"><div class="stat-num">22 %</div><div class="stat-label">Wiederkaufrate D2C</div></div>
+    </div>
+
+    <h3>Wesentliche Punkte</h3>
+    <ul>
+      <li>D2C-Funnel steigert die Wiederkaufrate auf 22 %.</li>
+      <li>Markteintritt Japan früher als geplant abgeschlossen.</li>
+      <li>Operative Marge trotz Marketing-Offensive stabil.</li>
+    </ul>
+
+    <div class="callout callout--acid">
+      <h4>Auf einen Blick</h4>
+      <p>Das Wachstum ist breit abgestützt und nicht von einem Einzelmarkt abhängig — die Basis für planbare Skalierung in H2.</p>
+    </div>
+  </div>
+
+  <footer class="page-footer">
+    <span class="footer-meta">Planet Group · Intern</span>
+    <span class="page-num">3</span>
+  </footer>
+</section>
+
+<!-- ============================================================
+     SEITE 4 — FINANZEN (Tabelle + Definitionsliste)
+============================================================ -->
+<section class="page">
+  <header class="page-header">
+    <span class="logo">Planet</span>
+    <span class="header-doc">Geschäftsbericht Q2 2026</span>
+  </header>
+
+  <div class="page-body flow">
+    <div class="section-head"><h2>Finanzielle Entwicklung</h2><span class="sh-num">02</span></div>
+    <p>Die folgende Übersicht zeigt die Kennzahlen je Region im Vergleich zum Vorquartal.</p>
+
+    <table class="table">
+      <caption>Umsatz je Region (in Mio. €)</caption>
+      <thead>
+        <tr><th>Region</th><th class="num">Q1 2026</th><th class="num">Q2 2026</th><th class="num">Δ</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>DACH</td><td class="num">12,4</td><td class="num">15,8</td><td class="num">+27 %</td></tr>
+        <tr><td>Südeuropa</td><td class="num">4,1</td><td class="num">6,9</td><td class="num">+68 %</td></tr>
+        <tr><td>Benelux / FR</td><td class="num">3,2</td><td class="num">3,9</td><td class="num">+22 %</td></tr>
+        <tr><td>Asien-Pazifik</td><td class="num">1,0</td><td class="num">2,3</td><td class="num">+130 %</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Kennzahlen im Detail</h3>
+    <dl class="dl">
+      <dt>Bruttomarge</dt><dd>61,4 % (Vorjahr: 58,9 %)</dd>
+      <dt>Marketingquote</dt><dd>18,2 % vom Umsatz</dd>
+      <dt>Liquidität</dt><dd>Solide, keine kurzfristigen Finanzierungslücken</dd>
+    </dl>
+
+    <h3>Umsatzanteil je Region</h3>
+    <div class="barchart">
+      <div class="bc-row"><span class="bc-label">DACH</span><span class="bc-track"><span class="bc-fill" style="width:54%"></span></span><span class="bc-value">54 %</span></div>
+      <div class="bc-row"><span class="bc-label">Südeuropa</span><span class="bc-track"><span class="bc-fill" style="width:24%"></span></span><span class="bc-value">24 %</span></div>
+      <div class="bc-row"><span class="bc-label">Benelux / FR</span><span class="bc-track"><span class="bc-fill" style="width:14%"></span></span><span class="bc-value">14 %</span></div>
+      <div class="bc-row"><span class="bc-label">Asien-Pazifik</span><span class="bc-track"><span class="bc-fill bc-fill--acid" style="width:8%"></span></span><span class="bc-value">8 %</span></div>
+    </div>
+  </div>
+
+  <footer class="page-footer">
+    <span class="footer-meta">Planet Group · Intern</span>
+    <span class="page-num">4</span>
+  </footer>
+</section>
+
+<!-- ============================================================
+     SEITE 5 — MÄRKTE (Zweispaltig + Zitat + Figur)
+============================================================ -->
+<section class="page">
+  <header class="page-header">
+    <span class="logo">Planet</span>
+    <span class="header-doc">Geschäftsbericht Q2 2026</span>
+  </header>
+
+  <div class="page-body flow">
+    <div class="section-head"><h2>Märkte & Regionen</h2><span class="sh-num">03</span></div>
+
+    <div class="cols-2">
+      <div class="flow">
+        <h4>Südeuropa</h4>
+        <p>Italien und Spanien entwickeln sich überdurchschnittlich. Die lokalisierte Marken­kommunikation zahlt sich aus.</p>
+      </div>
+      <div class="flow">
+        <h4>Asien-Pazifik</h4>
+        <p>Der Markteintritt in Japan verlief schneller als geplant. Erste Handelspartnerschaften sind unterzeichnet.</p>
+      </div>
+    </div>
+
+    <figure class="figure">
+      <div class="fig-placeholder">
+        <span class="fig-ph-screen">Im Bearbeitenmodus: hier klicken, um Abbildung oder Foto hochzuladen</span>
+        <span class="fig-ph-print">Abbildung / Foto</span>
+      </div>
+      <figcaption>Abb. 1 — Regionale Verteilung der Neukunden im Q2 2026.</figcaption>
+    </figure>
+
+    <div class="quote">
+      <p class="quote-text">„Wir wachsen dort am schnellsten, wo wir konsequent lokal denken.“</p>
+      <p class="quote-attr">Maria Lang <span class="role">· Head of International</span></p>
+    </div>
+  </div>
+
+  <footer class="page-footer">
+    <span class="footer-meta">Planet Group · Intern</span>
+    <span class="page-num">5</span>
+  </footer>
+</section>
+
+<!-- ============================================================
+     SEITE 6 — AUSBLICK (Primary Callout)
+============================================================ -->
+<section class="page">
+  <header class="page-header">
+    <span class="logo">Planet</span>
+    <span class="header-doc">Geschäftsbericht Q2 2026</span>
+  </header>
+
+  <div class="page-body flow">
+    <div class="section-head"><h2>Ausblick</h2><span class="sh-num">04</span></div>
+    <p class="lead">Für das zweite Halbjahr 2026 erwarten wir eine Fortsetzung des profitablen Wachstums bei diszipliniertem Kostenmanagement.</p>
+    <p>Die Priorität liegt auf der Skalierung der jungen Märkte und der weiteren Automatisierung des D2C-Funnels. Investitionen werden gezielt dort eingesetzt, wo die Wiederkaufrate am höchsten ist.</p>
+
+    <div class="callout callout--primary">
+      <h4>Strategische Prioritäten H2 2026</h4>
+      <p>1 — Skalierung Südeuropa & APAC · 2 — Ausbau D2C-Automatisierung · 3 — Margenstabilität sichern.</p>
+    </div>
+
+    <p class="small">Dieser Bericht enthält zukunftsgerichtete Aussagen. Tatsächliche Ergebnisse können abweichen. Finanzkennzahlen sind ungeprüft und sollten vor externer Verwendung durch einen Fachexperten geprüft werden.</p>
+  </div>
+
+  <footer class="page-footer">
+    <span class="footer-meta">Planet Group · Intern</span>
+    <span class="page-num">6</span>
+  </footer>
+</section>
+
+<!-- ============================================================
+     SEITE 7 — KAPITEL-TRENNER (blau)
+============================================================ -->
+<section class="page page--divider">
+  <span class="divider-logo">Planet</span>
+  <div class="divider-main">
+    <div class="divider-kicker">Anhang</div>
+    <div class="divider-num">A</div>
+    <h2>Methodik & Detaildaten.</h2>
+  </div>
+</section>
+
+<!-- ============================================================
+     SEITE 8 — TEXTREICHE SEITE (zweispaltiger Fließtext)
+============================================================ -->
+<section class="page">
+  <header class="page-header">
+    <span class="logo">Planet</span>
+    <span class="header-doc">Geschäftsbericht Q2 2026</span>
+  </header>
+
+  <div class="page-body flow">
+    <div class="section-head"><h2>Methodik</h2><span class="sh-num">A.1</span></div>
+    <p class="lead">Die folgenden Erläuterungen beschreiben Datengrundlage, Abgrenzung und Annahmen dieses Berichts.</p>
+    <div class="text-cols">
+      <h3>Datengrundlage</h3>
+      <p>Die Umsatzzahlen basieren auf den konsolidierten internen Managementreports der Planet Group. Stichtag ist der 31. Mai 2026. Wechselkurse werden zum Quartalsdurchschnitt umgerechnet.</p>
+      <p>Regionale Zuordnungen folgen dem Sitz der jeweiligen Vertriebsgesellschaft, nicht dem Lieferort. Intercompany-Umsätze sind eliminiert.</p>
+      <h3>Abgrenzung</h3>
+      <p>Der Bericht umfasst ausschließlich fortgeführte Geschäftsbereiche. Einmaleffekte aus dem Markteintritt Japan sind gesondert ausgewiesen und nicht in der operativen Marge enthalten.</p>
+      <p>Vergleichswerte des Vorjahres wurden an die aktuelle Segmentstruktur angepasst, um die Vergleichbarkeit zu wahren.</p>
+      <h3>Annahmen</h3>
+      <p>Die Ausblicksaussagen unterstellen stabile Wechselkurse und unveränderte regulatorische Rahmenbedingungen in den Kernmärkten.</p>
+    </div>
+  </div>
+
+  <footer class="page-footer">
+    <span class="footer-meta">Planet Group · Intern</span>
+    <span class="page-num"></span>
+  </footer>
+</section>
+
+<!-- ============================================================
+     SEITE 9 — STAT-HERO (blaue Inhaltsseite, monumentale Kennzahl)
+============================================================ -->
+<section class="page page--primary">
+  <header class="page-header">
+    <span class="logo">Planet</span>
+    <span class="header-doc">Geschäftsbericht Q2 2026</span>
+  </header>
+
+  <div class="page-body flow">
+    <div class="section-head"><h2>Schlüsselzahl</h2><span class="sh-num">A.2</span></div>
+    <div class="stat-hero">
+      <div class="sh-figure">+130 %</div>
+      <p class="sh-caption">Umsatzwachstum in der Region Asien-Pazifik gegenüber dem Vorquartal — der schnellste regionale Anstieg in der Geschichte der Gruppe.</p>
+    </div>
+  </div>
+
+  <footer class="page-footer">
+    <span class="footer-meta">Planet Group · Intern</span>
+    <span class="page-num"></span>
+  </footer>
+</section>
+
+<!-- ============================================================
+     SEITE 10 — VOLLBILD-BILDSEITE (randlos)
+============================================================ -->
+<section class="page page--image">
+  <div class="img-bleed fig-placeholder">Vollbild-Foto (randlos)</div>
+  <span class="img-logo">Planet</span>
+  <div class="img-cap">
+    <h2>Nah am Markt.</h2>
+    <p>Unsere Teams in neun Ländern übersetzen die Marke in lokale Erfahrung.</p>
+  </div>
+</section>
+
+<!-- ============================================================
+     SEITE 11 — RÜCKSEITE / KONTAKT (blau)
+============================================================ -->
+<section class="page page--back">
+  <span class="back-logo">Planet</span>
+  <div class="back-main">
+    <h2>Fragen zu diesem Bericht?</h2>
+    <div class="back-contact">
+      <div>
+        <div class="bc-label2">Kontakt</div>
+        <div class="bc-val">Group Finance<br>finance@planet-group.com</div>
+      </div>
+      <div>
+        <div class="bc-label2">Adresse</div>
+        <div class="bc-val">Planet Group GmbH<br>Musterstraße 1<br>10115 Berlin</div>
+      </div>
+      <div>
+        <div class="bc-label2">Web</div>
+        <div class="bc-val">planet-group.com</div>
+      </div>
+    </div>
+    <p class="back-legal">© 2026 Planet Group GmbH. Vertraulich — nur zur internen Verwendung. Finanzkennzahlen sind ungeprüft; rechtliche und steuerliche Aussagen sind vor externer Verwendung durch einen Fachexperten zu prüfen.</p>
+  </div>
+</section>
+
+<div class="ui-bar">
+  <button class="ui-btn ui-btn--edit" id="editBtn" onclick="toggleEdit()">
+    <span class="material-icons-outlined">edit</span><span id="editLabel">Bearbeiten</span>
+  </button>
+  <button class="ui-btn ui-btn--print" onclick="window.print()">
+    <span class="material-icons-outlined">print</span> Als PDF drucken
+  </button>
+</div>
+
+<script>
+// Seitenzahlen automatisch
+document.querySelectorAll('.page').forEach((page, i) => {
+  const num = page.querySelector('.page-num');
+  if (num) num.textContent = i + 1;
+});
+
+// Edit-Modus: macht Standard-Textfelder editierbar (selektor-basiert, kein Markup nötig)
+const EDIT_SEL = [
+  '.page-body h1', '.page-body h2', '.page-body h3', '.page-body h4',
+  '.page-body p', '.page-body li', '.page-body td', '.page-body figcaption', '.page-body caption',
+  '.stat-num', '.stat-label', '.sh-figure', '.sh-caption',
+  '.quote-text', '.quote-attr', '.bc-label', '.bc-value',
+  '.cover-kicker', '.page--cover h1', '.cover-sub', '.cm-value',
+  '.divider-kicker', '.divider-num', '.page--divider h2',
+  '.img-cap h2', '.img-cap p', '.page--back h2', '.bc-val', '.back-legal',
+  '.header-doc', '.footer-meta'
+].join(',');
+function toggleEdit() {
+  const on = document.body.classList.toggle('edit-mode');
+  document.querySelectorAll(EDIT_SEL).forEach(el => { el.contentEditable = on; });
+  document.getElementById('editBtn').classList.toggle('active', on);
+  document.getElementById('editLabel').textContent = on ? 'Fertig' : 'Bearbeiten';
+}
+
+// Bilder einsetzen (nur im Edit-Modus): Klick / Drag&Drop / Einfügen → als Base64 eingebettet (self-contained)
+function setFigureImage(fig, dataUrl) {
+  let img = fig.querySelector('img');
+  if (!img) {
+    img = document.createElement('img');
+    const ph = fig.querySelector('.fig-placeholder');
+    if (ph) ph.replaceWith(img); else fig.insertBefore(img, fig.firstChild);
+  }
+  img.src = dataUrl;
+}
+function readImage(file, fig) {
+  if (!file || !file.type.startsWith('image/')) return;
+  const r = new FileReader();
+  r.onload = e => setFigureImage(fig, e.target.result);
+  r.readAsDataURL(file);
+}
+let lastFigure = null;
+document.querySelectorAll('.figure').forEach(fig => {
+  fig.addEventListener('click', e => {
+    if (!document.body.classList.contains('edit-mode')) return;
+    if (e.target.closest('figcaption, [contenteditable="true"]')) return; // Caption bearbeiten, nicht Bild
+    lastFigure = fig;
+    const inp = document.createElement('input');
+    inp.type = 'file'; inp.accept = 'image/*';
+    inp.onchange = () => readImage(inp.files[0], fig);
+    inp.click();
+  });
+  fig.addEventListener('dragover', e => {
+    if (!document.body.classList.contains('edit-mode')) return;
+    e.preventDefault(); fig.classList.add('drop-hover');
+  });
+  fig.addEventListener('dragleave', () => fig.classList.remove('drop-hover'));
+  fig.addEventListener('drop', e => {
+    if (!document.body.classList.contains('edit-mode')) return;
+    e.preventDefault(); fig.classList.remove('drop-hover');
+    readImage(e.dataTransfer.files[0], fig);
+  });
+});
+document.addEventListener('paste', e => {
+  if (!document.body.classList.contains('edit-mode') || !lastFigure) return;
+  const item = [...(e.clipboardData?.items || [])].find(i => i.type.startsWith('image/'));
+  if (item) { e.preventDefault(); readImage(item.getAsFile(), lastFigure); }
+});
+</script>
+
+</body>
+</html>

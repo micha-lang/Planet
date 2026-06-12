@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Inuvet Markenreport 2026 — Planet</title>
+<link rel="stylesheet" href="https://use.typekit.net/phj5hyp.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined">
+<style>
+:root {
+  --planet-black:      #000000;
+  --planet-white:      #FFFFFF;
+  --planet-primary:    #0000FF;
+  --planet-secondary:  #D4FF00;
+  --planet-tint:       #DCDCDC;
+  --planet-fill:       #ECECEC;
+  --planet-neutral:    #F5F5F5;
+
+  --planet-font:    "neue-haas-grotesk-display", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --weight-body:    500;
+  --weight-display: 600;
+
+  --doc-cover-title: 52pt;
+  --doc-cover-sub:   16pt;
+  --doc-h1:          30pt;
+  --doc-h2:          21pt;
+  --doc-h3:          14pt;
+  --doc-h4:          11pt;
+  --doc-lead:        13pt;
+  --doc-body:        10.5pt;
+  --doc-small:       9pt;
+  --doc-meta:        8pt;
+  --doc-stat:        40pt;
+  --doc-quote:       18pt;
+
+  --s1: 4pt; --s2: 8pt;  --s3: 12pt; --s4: 16pt;
+  --s5: 20pt; --s6: 24pt; --s8: 32pt; --s10: 40pt; --s12: 48pt;
+
+  --page-w: 210mm;
+  --page-h: 297mm;
+  --margin-x: 22mm;
+  --margin-top: 26mm;
+  --margin-bot: 22mm;
+  --header-y: 13mm;
+  --footer-y: 13mm;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  background: var(--planet-tint);
+  color: var(--planet-black);
+  font-family: var(--planet-font);
+  font-weight: var(--weight-body);
+  font-size: var(--doc-body);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+img { display: block; max-width: 100%; }
+svg { display: block; }
+
+.page {
+  position: relative;
+  width: var(--page-w);
+  height: var(--page-h);
+  background: var(--planet-white);
+  overflow: hidden;
+  padding: var(--margin-top) var(--margin-x) var(--margin-bot);
+}
+
+@media screen {
+  body { display: flex; flex-direction: column; align-items: center; gap: 12mm; padding: 16mm 0; }
+  .page { box-shadow: 0 4mm 16mm rgba(0,0,0,0.18); }
+}
+
+.page-header {
+  position: absolute; top: var(--header-y); left: var(--margin-x); right: var(--margin-x);
+  display: flex; justify-content: space-between; align-items: baseline;
+  font-size: var(--doc-meta); font-weight: var(--weight-body); color: var(--planet-black);
+}
+.page-header .logo { font-weight: var(--weight-display); font-size: var(--doc-meta); color: var(--planet-primary); letter-spacing: 0.01em; }
+.page-header .header-doc { opacity: 0.5; }
+
+.page-footer {
+  position: absolute; bottom: var(--footer-y); left: var(--margin-x); right: var(--margin-x);
+  display: flex; justify-content: space-between; align-items: baseline;
+  font-size: var(--doc-meta); font-weight: var(--weight-body); color: var(--planet-black);
+}
+.page-footer .footer-meta { opacity: 0.5; }
+.page-footer .page-num { font-weight: var(--weight-display); font-variant-numeric: tabular-nums; }
+
+.page-header::after, .page-footer::before {
+  content: ""; position: absolute; left: 0; right: 0; height: 0.4pt; background: var(--planet-tint);
+}
+.page-header::after  { bottom: -3mm; }
+.page-footer::before { top: -3mm; }
+
+.page--cover {
+  background: var(--planet-primary); color: var(--planet-white);
+  display: flex; flex-direction: column; justify-content: space-between;
+}
+.page--cover .cover-logo { font-weight: var(--weight-display); font-size: 16pt; color: var(--planet-white); }
+.page--cover .cover-main { margin-top: auto; }
+.page--cover .cover-kicker { font-size: var(--doc-body); font-weight: var(--weight-display); color: var(--planet-white); margin-bottom: var(--s4); }
+.page--cover h1 { font-weight: var(--weight-display); font-size: var(--doc-cover-title); line-height: 0.95; letter-spacing: -0.02em; color: var(--planet-white); max-width: 150mm; }
+.page--cover .cover-sub { font-size: var(--doc-cover-sub); font-weight: var(--weight-body); line-height: 1.35; color: var(--planet-white); max-width: 130mm; margin-top: var(--s5); }
+.cover-meta { display: flex; gap: var(--s10); margin-top: var(--s10); padding-top: var(--s4); border-top: 0.5pt solid rgba(255,255,255,0.4); }
+.cover-meta .cm-label { font-size: var(--doc-meta); font-weight: var(--weight-display); color: var(--planet-white); opacity: 0.6; margin-bottom: var(--s1); }
+.cover-meta .cm-value { font-size: var(--doc-body); font-weight: var(--weight-body); color: var(--planet-white); }
+
+h1, h2, h3, h4 { font-family: var(--planet-font); font-weight: var(--weight-display); color: var(--planet-black); }
+.page-body h1 { font-size: var(--doc-h1); line-height: 1.0; letter-spacing: -0.015em; }
+.page-body h2 { font-size: var(--doc-h2); line-height: 1.05; }
+.page-body h3 { font-size: var(--doc-h3); line-height: 1.2; }
+.page-body h4 { font-size: var(--doc-h4); line-height: 1.3; }
+
+p { font-size: var(--doc-body); line-height: 1.5; }
+.lead { font-size: var(--doc-lead); line-height: 1.4; font-weight: var(--weight-body); }
+.small { font-size: var(--doc-small); }
+ul, ol { font-size: var(--doc-body); line-height: 1.5; padding-left: var(--s4); }
+li { margin-bottom: var(--s1); }
+strong, b { font-weight: var(--weight-display); }
+a { color: var(--planet-primary); text-decoration: none; }
+
+h1, h2, h3, h4 { break-after: avoid; }
+p, li { orphans: 2; widows: 2; }
+
+.flow > * + *  { margin-top: var(--s3); }
+.flow > h1 + * { margin-top: var(--s4); }
+.flow > h2 + * { margin-top: var(--s3); }
+.flow > h3 + * { margin-top: var(--s2); }
+.flow > h4 + * { margin-top: var(--s1); }
+.flow > * + h2 { margin-top: var(--s8); }
+.flow > * + h3 { margin-top: var(--s6); }
+.flow > * + h4 { margin-top: var(--s4); }
+
+.section-head {
+  display: flex; justify-content: space-between; align-items: flex-end;
+  padding-bottom: var(--s2); border-bottom: 1pt solid var(--planet-black); break-after: avoid;
+}
+.section-head .sh-num { font-size: var(--doc-h2); font-weight: var(--weight-display); color: var(--planet-primary); }
+
+.stat-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--s4); break-inside: avoid; }
+.stat { border-top: 1.5pt solid var(--planet-primary); padding-top: var(--s2); }
+.stat .stat-num { font-size: var(--doc-stat); font-weight: var(--weight-display); line-height: 1; letter-spacing: -0.02em; color: var(--planet-primary); }
+.stat .stat-label { font-size: var(--doc-small); line-height: 1.35; margin-top: var(--s1); }
+
+.table { width: 100%; border-collapse: collapse; font-size: var(--doc-body); }
+.table caption { text-align: left; font-size: var(--doc-h4); font-weight: var(--weight-display); margin-bottom: var(--s2); }
+.table th { text-align: left; font-weight: var(--weight-display); line-height: 1.35; padding: var(--s2) var(--s3) var(--s2) 0; border-bottom: 1pt solid var(--planet-black); }
+.table td { padding: var(--s2) var(--s3) var(--s2) 0; border-bottom: 0.4pt solid var(--planet-tint); line-height: 1.35; vertical-align: top; }
+.table th:last-child, .table td:last-child { padding-right: 0; }
+.table tr:last-child td { border-bottom: none; }
+.table .num { text-align: right; font-variant-numeric: tabular-nums; }
+.table thead { display: table-header-group; }
+.table tr { break-inside: avoid; }
+
+.dl { display: grid; grid-template-columns: 45mm 1fr; column-gap: var(--s4); }
+.dl dt { font-weight: var(--weight-display); padding: var(--s2) 0; border-bottom: 0.4pt solid var(--planet-tint); }
+.dl dd { padding: var(--s2) 0; border-bottom: 0.4pt solid var(--planet-tint); }
+
+.callout { padding: var(--s4); border-radius: 3mm; background: var(--planet-neutral); break-inside: avoid; }
+.callout--primary { background: var(--planet-primary); color: var(--planet-white); }
+.callout--primary h4, .callout--primary p { color: var(--planet-white); }
+.callout--acid { background: var(--planet-secondary); }
+.callout h4 { margin-bottom: var(--s1); }
+
+.quote { break-inside: avoid; }
+.quote .quote-text { font-size: var(--doc-quote); font-weight: var(--weight-display); line-height: 1.25; letter-spacing: -0.01em; }
+.quote .quote-attr { margin-top: var(--s3); font-size: var(--doc-small); font-weight: var(--weight-display); }
+.quote .quote-attr .role { font-weight: var(--weight-body); opacity: 0.6; }
+
+.figure { break-inside: avoid; }
+.figure img, .figure .fig-placeholder { width: 100%; border-radius: 2mm; background: var(--planet-tint); }
+.figure .fig-placeholder { aspect-ratio: 16 / 9; display: flex; align-items: center; justify-content: center; color: var(--planet-black); opacity: 0.4; font-size: var(--doc-small); }
+.figure figcaption { font-size: var(--doc-meta); line-height: 1.4; margin-top: var(--s2); opacity: 0.6; }
+
+.cols-2 { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s6); align-items: start; }
+
+.barchart { break-inside: avoid; }
+.barchart .bc-row { display: grid; grid-template-columns: 38mm 1fr 18mm; align-items: center; gap: var(--s3); padding: var(--s1) 0; }
+.barchart .bc-label { font-size: var(--doc-small); }
+.barchart .bc-track { height: 6mm; background: var(--planet-fill); border-radius: 1mm; overflow: hidden; }
+.barchart .bc-fill { display: block; height: 100%; background: var(--planet-primary); }
+.barchart .bc-fill--acid { background: var(--planet-secondary); }
+.barchart .bc-value { font-size: var(--doc-small); font-weight: var(--weight-display); text-align: right; font-variant-numeric: tabular-nums; }
+
+.toc { width: 100%; }
+.toc-row { display: flex; align-items: baseline; gap: var(--s2); padding: var(--s2) 0; border-bottom: 0.4pt solid var(--planet-tint); }
+.toc-row .toc-num { font-weight: var(--weight-display); color: var(--planet-primary); min-width: 10mm; }
+.toc-row .toc-title { font-weight: var(--weight-display); }
+.toc-row .toc-dots { flex: 1; border-bottom: 0.4pt dotted var(--planet-tint); transform: translateY(-2pt); }
+.toc-row .toc-page { font-variant-numeric: tabular-nums; }
+
+.break-before { break-before: page; }
+.avoid-break  { break-inside: avoid; }
+.page-body { height: 100%; }
+
+@page { size: A4; margin: 0; }
+@media print {
+  html, body { background: var(--planet-white); }
+  .page { box-shadow: none; margin: 0; break-after: page; }
+  .page:last-child { break-after: auto; }
+  .print-bar { display: none; }
+}
+
+.print-bar {
+  position: fixed; bottom: 8mm; right: 8mm; z-index: 100;
+  display: inline-flex; align-items: center; gap: 6px;
+  font-family: var(--planet-font); font-weight: var(--weight-display); font-size: 11pt;
+  height: 48px; padding: 0 20px; border-radius: 9999px; border: 0; cursor: pointer;
+  background: var(--planet-primary); color: var(--planet-white);
+}
+.print-bar:hover { background: var(--planet-black); }
+.print-bar .material-icons-outlined { font-size: 20px; }
+</style>
+</head>
+<body>
+
+<!-- SEITE 1 — COVER -->
+<section class="page page--cover">
+  <span class="cover-logo">Planet</span>
+  <div class="cover-main">
+    <div class="cover-kicker">Markenreport · Inuvet · 2026</div>
+    <h1>Tiergesundheit, neu gedacht.</h1>
+    <p class="cover-sub">Markenwahrnehmung, Sortiment und Kanäle der Marke Inuvet im Geschäftsjahr 2026.</p>
+    <div class="cover-meta">
+      <div><div class="cm-label">Erstellt</div><div class="cm-value">11. Juni 2026</div></div>
+      <div><div class="cm-label">Bereich</div><div class="cm-value">Brand & Marketing</div></div>
+      <div><div class="cm-label">Vertraulichkeit</div><div class="cm-value">Intern</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- SEITE 2 — INHALT -->
+<section class="page">
+  <header class="page-header">
+    <span class="logo">Planet</span>
+    <span class="header-doc">Inuvet Markenreport 2026</span>
+  </header>
+  <div class="page-body flow">
+    <div class="section-head"><h2>Inhalt</h2></div>
+    <div class="toc">
+      <div class="toc-row"><span class="toc-num">01</span><span class="toc-title">Markenüberblick</span><span class="toc-dots"></span><span class="toc-page">3</span></div>
+      <div class="toc-row"><span class="toc-num">02</span><span class="toc-title">Sortiment & Performance</span><span class="toc-dots"></span><span class="toc-page">4</span></div>
+      <div class="toc-row"><span class="toc-num">03</span><span class="toc-title">Kanäle & Markenwahrnehmung</span><span class="toc-dots"></span><span class="toc-page">5</span></div>
+    </div>
+  </div>
+  <footer class="page-footer">
+    <span class="footer-meta">Inuvet · Intern</span>
+    <span class="page-num">2</span>
+  </footer>
+</section>
+
+<!-- SEITE 3 — MARKENÜBERBLICK -->
+<section class="page">
+  <header class="page-header">
+    <span class="logo">Planet</span>
+    <span class="header-doc">Inuvet Markenreport 2026</span>
+  </header>
+  <div class="page-body flow">
+    <div class="section-head"><h2>Markenüberblick</h2><span class="sh-num">01</span></div>
+    <p class="lead">Inuvet hat sich 2026 als wachstumsstärkste Marke der Planet Group etabliert — mit klarer Positionierung im Premium-Segment der Tiergesundheit.</p>
+    <p>Die Marke ist heute in neun Ländermärkten aktiv. Treiber sind ein fokussiertes Sortiment, konsequente D2C-Kommunikation und eine hohe Wiederkaufrate bei Bestandskund:innen.</p>
+
+    <div class="stat-row">
+      <div class="stat"><div class="stat-num">9</div><div class="stat-label">Aktive Ländermärkte</div></div>
+      <div class="stat"><div class="stat-num">+41 %</div><div class="stat-label">Markenbekanntheit (gestützt)</div></div>
+      <div class="stat"><div class="stat-num">4,7</div><div class="stat-label">Ø Produktbewertung (von 5)</div></div>
+    </div>
+
+    <h3>Markenkennzahlen</h3>
+    <dl class="dl">
+      <dt>Positionierung</dt><dd>Premium-Tiergesundheit, wissenschaftlich fundiert</dd>
+      <dt>Kernzielgruppe</dt><dd>Hunde- & Katzenhalter:innen, 30–55 Jahre</dd>
+      <dt>Net Promoter Score</dt><dd>+62 (Vorjahr: +48)</dd>
+    </dl>
+
+    <div class="callout callout--acid">
+      <h4>Auf einen Blick</h4>
+      <p>Die Markenstärke wächst schneller als der Umsatz — ein Hinweis auf nachhaltiges, nicht rein promotionsgetriebenes Wachstum.</p>
+    </div>
+  </div>
+  <footer class="page-footer">
+    <span class="footer-meta">Inuvet · Intern</span>
+    <span class="page-num">3</span>
+  </footer>
+</section>
+
+<!-- SEITE 4 — SORTIMENT & PERFORMANCE -->
+<section class="page">
+  <header class="page-header">
+    <span class="logo">Planet</span>
+    <span class="header-doc">Inuvet Markenreport 2026</span>
+  </header>
+  <div class="page-body flow">
+    <div class="section-head"><h2>Sortiment & Performance</h2><span class="sh-num">02</span></div>
+    <p>Vier Produktlinien tragen den Großteil des Umsatzes. Die Linie <strong>Joint &amp; Mobility</strong> wächst am stärksten.</p>
+
+    <table class="table">
+      <caption>Umsatz je Produktlinie (in Mio. €)</caption>
+      <thead>
+        <tr><th>Produktlinie</th><th class="num">2025</th><th class="num">2026</th><th class="num">Δ</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Joint &amp; Mobility</td><td class="num">5,2</td><td class="num">8,9</td><td class="num">+71 %</td></tr>
+        <tr><td>Skin &amp; Coat</td><td class="num">4,8</td><td class="num">6,1</td><td class="num">+27 %</td></tr>
+        <tr><td>Digestive Care</td><td class="num">3,9</td><td class="num">4,7</td><td class="num">+21 %</td></tr>
+        <tr><td>Calming</td><td class="num">2,1</td><td class="num">3,3</td><td class="num">+57 %</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Umsatzanteil je Linie</h3>
+    <div class="barchart">
+      <div class="bc-row"><span class="bc-label">Joint &amp; Mobility</span><span class="bc-track"><span class="bc-fill" style="width:38%"></span></span><span class="bc-value">38 %</span></div>
+      <div class="bc-row"><span class="bc-label">Skin &amp; Coat</span><span class="bc-track"><span class="bc-fill" style="width:26%"></span></span><span class="bc-value">26 %</span></div>
+      <div class="bc-row"><span class="bc-label">Digestive Care</span><span class="bc-track"><span class="bc-fill" style="width:20%"></span></span><span class="bc-value">20 %</span></div>
+      <div class="bc-row"><span class="bc-label">Calming</span><span class="bc-track"><span class="bc-fill bc-fill--acid" style="width:14%"></span></span><span class="bc-value">14 %</span></div>
+    </div>
+
+    <p class="small">Umsatzangaben sind vorläufig und ungeprüft; vor externer Verwendung durch einen Fachexperten zu prüfen.</p>
+  </div>
+  <footer class="page-footer">
+    <span class="footer-meta">Inuvet · Intern</span>
+    <span class="page-num">4</span>
+  </footer>
+</section>
+
+<!-- SEITE 5 — KANÄLE & WAHRNEHMUNG -->
+<section class="page">
+  <header class="page-header">
+    <span class="logo">Planet</span>
+    <span class="header-doc">Inuvet Markenreport 2026</span>
+  </header>
+  <div class="page-body flow">
+    <div class="section-head"><h2>Kanäle & Markenwahrnehmung</h2><span class="sh-num">03</span></div>
+
+    <div class="cols-2">
+      <div class="flow">
+        <h4>Direct-to-Consumer</h4>
+        <p>Der eigene Shop ist mit 58 % Umsatzanteil der wichtigste Kanal. Abo-Modelle steigern die Kundenbindung deutlich.</p>
+      </div>
+      <div class="flow">
+        <h4>Fachhandel & Tierärzte</h4>
+        <p>Empfehlungen durch Tierärzt:innen bleiben der stärkste Vertrauensanker für Neukund:innen.</p>
+      </div>
+    </div>
+
+    <figure class="figure">
+      <div class="fig-placeholder">Abbildung / Foto</div>
+      <figcaption>Abb. 1 — Umsatzverteilung nach Vertriebskanal, 2026.</figcaption>
+    </figure>
+
+    <div class="quote">
+      <p class="quote-text">„Marke entsteht für uns am Napf — in der täglichen Erfahrung der Tiere.“</p>
+      <p class="quote-attr">Dr. Lena Vogt <span class="role">· Head of Brand, Inuvet</span></p>
+    </div>
+
+    <div class="callout callout--primary">
+      <h4>Prioritäten 2027</h4>
+      <p>1 — Abo-Anteil im D2C ausbauen · 2 — Tierarzt-Partnerprogramm skalieren · 3 — Markenbekanntheit in Südeuropa erhöhen.</p>
+    </div>
+  </div>
+  <footer class="page-footer">
+    <span class="footer-meta">Inuvet · Intern</span>
+    <span class="page-num">5</span>
+  </footer>
+</section>
+
+<button class="print-bar" onclick="window.print()">
+  <span class="material-icons-outlined">print</span> Als PDF drucken
+</button>
+
+<script>
+document.querySelectorAll('.page').forEach((page, i) => {
+  const num = page.querySelector('.page-num');
+  if (num) num.textContent = i + 1;
+});
+</script>
+</body>
+</html>

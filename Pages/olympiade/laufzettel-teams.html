@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Laufzettel — Planet-Olympiade 2026</title>
+<link rel="stylesheet" href="https://use.typekit.net/phj5hyp.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined">
+<style>
+:root {
+  --planet-black:#000; --planet-white:#FFF; --planet-primary:#0000FF;
+  --planet-secondary:#D4FF00; --planet-tint:#DCDCDC; --planet-rule:#A6A6A6; --planet-fill:#ECECEC; --planet-neutral:#F5F5F5;
+  --planet-font:"neue-haas-grotesk-display","Helvetica Neue",Helvetica,Arial,sans-serif;
+  --weight-body:500; --weight-display:600;
+  --doc-h1:30pt; --doc-h2:21pt; --doc-h3:14pt; --doc-h4:11pt; --doc-lead:13pt;
+  --doc-body:10.5pt; --doc-small:9pt; --doc-meta:8pt; --doc-team:120pt;
+  --s1:4pt; --s2:8pt; --s3:12pt; --s4:16pt; --s5:20pt; --s6:24pt; --s8:32pt; --s10:40pt; --s12:48pt;
+  --page-w:210mm; --page-h:297mm; --margin-x:22mm; --margin-top:26mm; --margin-bot:22mm; --header-y:13mm; --footer-y:13mm;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html,body{background:var(--planet-tint);color:var(--planet-black);font-family:var(--planet-font);font-weight:var(--weight-body);font-size:var(--doc-body);line-height:1.5;-webkit-font-smoothing:antialiased;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+.page{position:relative;width:var(--page-w);height:var(--page-h);background:var(--planet-white);overflow:hidden;padding:var(--margin-top) var(--margin-x) var(--margin-bot);}
+@media screen{body{display:flex;flex-direction:column;align-items:center;gap:12mm;padding:16mm 0;}.page{box-shadow:0 4mm 16mm rgba(0,0,0,0.18);}}
+.page-header{position:absolute;top:var(--header-y);left:var(--margin-x);right:var(--margin-x);display:flex;justify-content:space-between;align-items:baseline;font-size:var(--doc-meta);}
+.page-header .logo{font-weight:var(--weight-display);color:var(--planet-primary);}
+.page-header .header-doc{color:var(--planet-black);}
+.page-footer{position:absolute;bottom:var(--footer-y);left:var(--margin-x);right:var(--margin-x);display:flex;justify-content:space-between;align-items:baseline;font-size:var(--doc-meta);}
+.page-footer .footer-meta{color:var(--planet-black);}
+.page-footer .page-num{font-weight:var(--weight-display);font-variant-numeric:tabular-nums;}
+.page-header::after,.page-footer::before{content:"";position:absolute;left:0;right:0;height:0.6pt;background:var(--planet-rule);}
+.page-header::after{bottom:-3mm;} .page-footer::before{top:-3mm;}
+h1,h2,h3,h4{font-family:var(--planet-font);font-weight:var(--weight-display);}
+.kicker{font-size:var(--doc-body);font-weight:var(--weight-display);color:var(--planet-primary);margin-bottom:var(--s2);}
+.page-body{height:100%;display:flex;flex-direction:column;}
+
+/* ---- Team-Kopf ---- */
+.team-head{display:flex;align-items:flex-end;gap:var(--s6);}
+.team-num{font-size:var(--doc-team);font-weight:var(--weight-display);line-height:0.8;letter-spacing:-0.04em;color:var(--planet-primary);}
+.team-head .team-meta{flex:1;padding-bottom:var(--s2);}
+.team-head .team-label{font-size:var(--doc-h3);font-weight:var(--weight-display);}
+.team-name-cap{font-size:var(--doc-small);font-weight:var(--weight-display);margin:var(--s4) 0 2mm;}
+.team-name-line{border-bottom:1.4pt solid var(--planet-black);height:11mm;}
+.team-name-hint{font-size:var(--doc-small);color:var(--planet-black);margin-top:2mm;}
+
+/* ---- Stationsplan (Rotation) ---- */
+.plan-title{font-size:var(--doc-h3);font-weight:var(--weight-display);margin:var(--s8) 0 var(--s3);}
+.plan{display:grid;grid-template-columns:1fr 1fr;gap:0 var(--s8);}
+.plan-row{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:var(--s3);padding:var(--s2) 0;border-bottom:0.6pt solid var(--planet-rule);}
+.plan-round{font-size:var(--doc-small);font-weight:var(--weight-display);color:var(--planet-black);min-width:20mm;}
+.plan-arrow{height:0;border-top:0.6pt solid var(--planet-rule);}
+.plan-station{font-size:var(--doc-h2);font-weight:var(--weight-display);color:var(--planet-primary);font-variant-numeric:tabular-nums;letter-spacing:-0.01em;}
+
+/* ---- Anleitung ---- */
+.guide{margin-top:auto;padding-top:var(--s5);font-size:var(--doc-small);font-weight:var(--weight-display);display:flex;gap:var(--s6);flex-wrap:wrap;}
+.guide span{display:flex;gap:var(--s1);}
+.guide .g-num{color:var(--planet-primary);}
+
+@page{size:A4;margin:0;}
+@media print{html,body{background:var(--planet-white);}.page{box-shadow:none;break-after:page;}.page:last-child{break-after:auto;}.print-bar{display:none !important;}}
+@media screen {
+  .print-bar{position:fixed;bottom:8mm;right:8mm;z-index:100;display:inline-flex;align-items:center;gap:6px;font-family:var(--planet-font);font-weight:var(--weight-display);font-size:11pt;height:48px;padding:0 20px;border-radius:9999px;border:0;cursor:pointer;background:var(--planet-primary);color:var(--planet-white);}
+  .print-bar:hover{background:var(--planet-black);}
+  .print-bar .material-icons-outlined{font-size:20px;}
+}
+</style>
+</head>
+<body>
+
+<button class="print-bar" onclick="window.print()"><span class="material-icons-outlined">print</span> Als PDF drucken</button>
+
+<script>
+const TEAMS = 10, STATIONS = 10, ROUNDS = 10;
+const body = document.body;
+const btn = document.querySelector('.print-bar');
+
+for (let t = 1; t <= TEAMS; t++) {
+  // Rotation: Team t startet an Station t, danach +1 (Round-Robin)
+  let rows = '';
+  for (let r = 1; r <= ROUNDS; r++) {
+    const station = ((t - 1 + r - 1) % STATIONS) + 1;
+    rows += `<div class="plan-row"><span class="plan-round">Runde ${r}</span><span class="plan-arrow"></span><span class="plan-station">Station ${station}</span></div>`;
+  }
+  const num = String(t).padStart(2, '0');
+  const page = document.createElement('section');
+  page.className = 'page';
+  page.innerHTML = `
+    <header class="page-header"><span class="logo">Planet</span><span class="header-doc">Planet-Olympiade · Sommerfest 2026</span></header>
+    <div class="page-body">
+      <div class="kicker">Planet-Olympiade 2026 · Laufzettel</div>
+      <div class="team-head">
+        <div class="team-num">${num}</div>
+        <div class="team-meta">
+          <div class="team-label">Team ${t}</div>
+          <div class="team-name-cap">Team-Name</div>
+          <div class="team-name-line"></div>
+          <div class="team-name-hint">Wählt einen kreativen Namen!</div>
+        </div>
+      </div>
+      <div class="plan-title">Euer Stationsplan</div>
+      <div class="plan">${rows}</div>
+      <div class="guide">
+        <span><span class="g-num">15&nbsp;Min</span> pro Station</span>
+        <span><span class="g-num">·</span> Beim Signalhorn weiter zur nächsten Station</span>
+        <span><span class="g-num">·</span> Viel Erfolg!</span>
+      </div>
+    </div>
+    <footer class="page-footer"><span class="footer-meta">Planet-Olympiade 2026</span><span class="page-num">${t} / ${TEAMS}</span></footer>`;
+  body.insertBefore(page, btn);
+}
+</script>
+</body>
+</html>

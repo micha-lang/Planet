@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tagung Layout — Beispielseiten (Planet)</title>
+<link rel="stylesheet" href="https://use.typekit.net/phj5hyp.css">
+<style>
+/* ============================================================
+   PLANET — TAGUNG LAYOUT (InDesign-Nachbau, Test)
+   Raster aus PDF-Hilfslinien abgeleitet (1 Quadrat = 5 mm):
+   12 Spalten × 10 mm, Gutter 5 mm, Spaltenfeld 175 mm
+   Ränder: links 20 · rechts 15 · oben 20 · unten 15 mm
+   Linke Meta-Spalte = Spalten 1–2 · Content = Spalten 5–12
+============================================================ */
+:root {
+  --planet-black:   #000000;
+  --planet-white:   #FFFFFF;
+  --planet-primary: #0000FF;
+  --planet-secondary:#D4FF00;
+  --planet-tint:    #DCDCDC;
+  --planet-rule:    #A6A6A6;
+  --planet-fill:    #ECECEC;
+
+  --planet-font: "neue-haas-grotesk-display", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --weight-body:    500;
+  --weight-display: 600;
+
+  /* Type-Skala (print pt) */
+  --t-cover: 40pt;  /* Cover-Titel */
+  --t-h1:   27pt;   /* Leit-Headline */
+  --t-h2:   18pt;   /* Abschnitt */
+  --t-h3:   13pt;   /* Unterpunkt */
+  --t-statement: 22pt;
+  --t-lead: 12pt;
+  --t-body: 10pt;
+  --t-logo: var(--t-h2);   /* Logo = H2-Größe */
+  --t-meta-label: 8pt;
+  --t-meta-value: 9.5pt;
+  --t-spec-label: 8pt;
+  --t-caption: 8pt;
+
+  --page-w: 210mm; --page-h: 297mm;
+  --m-top: 20mm; --m-bottom: 15mm; --m-left: 20mm; --m-right: 15mm;
+  --grid-col: 10mm; --grid-gut: 5mm;   /* 12×10 + 11×5 = 175mm */
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  background: var(--planet-tint);
+  color: var(--planet-black);
+  font-family: var(--planet-font);
+  font-weight: var(--weight-body);
+  font-size: var(--t-body);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -webkit-print-color-adjust: exact; print-color-adjust: exact;
+}
+
+.page {
+  position: relative;
+  width: var(--page-w); height: var(--page-h);
+  background: var(--planet-white);
+  overflow: hidden;
+}
+
+@media screen {
+  body { display:flex; flex-direction:column; align-items:center; gap:12mm; padding:16mm 0; }
+  .page { box-shadow: 0 4mm 16mm rgba(0,0,0,0.18); }
+}
+
+/* ---- Raster-Container (Spaltenfeld) ---- */
+.page-grid {
+  position: absolute;
+  top: var(--m-top); left: var(--m-left);
+  width: calc(12 * var(--grid-col) + 11 * var(--grid-gut)); /* 175mm */
+  bottom: var(--m-bottom);
+  display: grid;
+  grid-template-columns: repeat(12, var(--grid-col));
+  column-gap: var(--grid-gut);
+  grid-template-rows: 1fr;
+}
+
+/* ---- Linke Meta-Spalte: Spalten 1–2 ---- */
+.col-left { grid-column: 1 / 3; grid-row: 1; position: relative; }
+.col-left .logo {
+  font-weight: var(--weight-display);
+  font-size: var(--t-logo);
+  line-height: 1;
+  color: var(--planet-primary);
+}
+.meta-block { position: absolute; left: 0; right: 0; }
+.meta-block--mid    { top: 84mm; }
+.meta-block--bottom { bottom: 0; }
+.meta-group + .meta-group { margin-top: 5mm; }
+.meta-label {
+  font-size: var(--t-meta-label);
+  font-weight: var(--weight-display);
+  line-height: 1.3;
+  color: var(--planet-black);   /* schwarz, nicht grau */
+  margin-bottom: 1mm;
+}
+.meta-value { font-size: var(--t-meta-value); font-weight: var(--weight-body); line-height: 1.3; }
+.folio { font-size: var(--t-meta-value); font-weight: var(--weight-display); font-variant-numeric: tabular-nums; }
+
+/* ---- Content-Spalte: Spalten 5–12 ---- */
+.col-content { grid-column: 5 / 13; grid-row: 1; }
+.col-content h1, .col-content h2, .col-content h3 {
+  font-family: var(--planet-font); font-weight: var(--weight-display);
+}
+.col-content h1 { font-size: var(--t-h1); line-height: 1.05; letter-spacing: -0.015em; }
+.col-content h2 { font-size: var(--t-h2); line-height: 1.1;  letter-spacing: -0.01em; }
+.col-content h3 { font-size: var(--t-h3); line-height: 1.2; }
+.col-content .lead { font-size: var(--t-lead); line-height: 1.4; }
+.col-content p { font-size: var(--t-body); line-height: 1.5; text-align: justify; hyphens: auto; }
+.col-content p + p { margin-top: 4mm; }
+
+/* Vertikaler Rhythmus im Content */
+.flow > * + *      { margin-top: 5mm; }
+.flow > h2 + *     { margin-top: 3mm; }
+.flow > h3 + *     { margin-top: 2mm; }
+.flow > * + h2     { margin-top: 9mm; }
+.flow > * + h3     { margin-top: 6mm; }
+
+/* ---- Cover ---- */
+.kicker { font-size: var(--t-body); font-weight: var(--weight-display); margin-bottom: 6mm; }
+.col-content .cover-title { font-size: var(--t-cover); line-height: 1.0; letter-spacing: -0.02em; }
+.cover-foot { margin-top: auto; }
+
+/* ---- Agenda / Programm ---- */
+.agenda-row {
+  display: grid; grid-template-columns: 24mm 1fr; gap: 5mm;
+  padding: 3.5mm 0; border-bottom: 0.6pt solid var(--planet-rule);
+}
+.agenda-row:last-child { border-bottom: 0; }
+.agenda-time { font-weight: var(--weight-display); font-variant-numeric: tabular-nums; }
+.agenda-title { font-weight: var(--weight-display); }
+.agenda-by { font-weight: var(--weight-body); }
+
+/* ---- Abbildung ---- */
+.figure img, .figure .fig-ph { width: 100%; display: block; background: var(--planet-tint); }
+.figure .fig-ph { aspect-ratio: 4 / 3; display: flex; align-items: center; justify-content: center; color: var(--planet-black); opacity: 0.4; font-size: var(--t-caption); }
+.figure figcaption { font-size: var(--t-caption); line-height: 1.4; margin-top: 2.5mm; }
+
+/* ---- Statement / Zitat ---- (unter .col-content für korrekte Spezifität) */
+.col-content .statement { font-size: var(--t-statement); font-weight: var(--weight-display); line-height: 1.22; letter-spacing: -0.01em; text-align: left; }
+.col-content .statement-attr { font-size: var(--t-body); font-weight: var(--weight-display); margin-top: 7mm; text-align: left; }
+
+/* ---- Type-Specimen ---- */
+.spec + .spec { margin-top: 9mm; }
+.spec-label { font-size: var(--t-spec-label); font-weight: var(--weight-display); letter-spacing: 0.04em; color: var(--planet-black); margin-bottom: 2.5mm; }
+
+/* ---- Kennzahlen (Stat-Reihe) ---- */
+.stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6mm; }
+.stat { border-top: 1.2pt solid var(--planet-primary); padding-top: 3mm; }
+.stat .num { font-size: 30pt; font-weight: var(--weight-display); line-height: 1; letter-spacing: -0.02em; color: var(--planet-primary); }
+.stat .lbl { font-size: var(--t-caption); line-height: 1.3; margin-top: 2mm; }
+
+/* ---- Monumentale Kennzahl ---- */
+.stat-mono .num-xl { font-size: 96pt; font-weight: var(--weight-display); line-height: 0.85; letter-spacing: -0.03em; color: var(--planet-primary); }
+.stat-mono .cap { font-size: var(--t-lead); line-height: 1.4; margin-top: 6mm; }
+
+/* ---- Balkendiagramm ---- */
+.barchart .bar-row { display: grid; grid-template-columns: 32mm 1fr 16mm; align-items: center; gap: 4mm; padding: 1.6mm 0; }
+.bar-lbl { font-size: var(--t-caption); }
+.bar-track { height: 6mm; background: var(--planet-fill); overflow: hidden; }
+.bar-fill { display: block; height: 100%; background: var(--planet-primary); }
+.bar-fill--acid { background: var(--planet-secondary); }
+.bar-val { text-align: right; font-size: var(--t-caption); font-weight: var(--weight-display); font-variant-numeric: tabular-nums; }
+
+/* ---- Display-Headline (große Typo) ---- */
+.col-content h1.display { font-size: 54pt; line-height: 0.98; letter-spacing: -0.025em; }
+
+/* ============================================================
+   FARBREGEL — auf BLAU immer weiße Schrift (gesperrt)
+============================================================ */
+.page--primary { background: var(--planet-primary); }
+.page--primary .logo,
+.page--primary .meta-label, .page--primary .meta-value, .page--primary .folio,
+.page--primary h1, .page--primary h2, .page--primary h3,
+.page--primary .lead, .page--primary p,
+.page--primary .kicker, .page--primary .statement, .page--primary .statement-attr,
+.page--primary .spec-label,
+.page--primary .stat .lbl, .page--primary .stat-mono .cap,
+.page--primary .bar-lbl, .page--primary .bar-val { color: var(--planet-white); }
+.page--primary .stat { border-top-color: var(--planet-white); }
+.page--primary .stat .num, .page--primary .stat-mono .num-xl { color: var(--planet-white); }
+.page--primary .bar-track { background: rgba(255,255,255,0.25); }
+.page--primary .bar-fill { background: var(--planet-white); }
+.page--primary .bar-fill--acid { background: var(--planet-secondary); }
+
+/* ============================================================
+   GRID-OVERLAY (nur Kontrolle, per JS injiziert, nicht im Druck)
+============================================================ */
+.grid-overlay {
+  position: absolute;
+  top: var(--m-top); left: var(--m-left);
+  width: calc(12 * var(--grid-col) + 11 * var(--grid-gut));
+  bottom: var(--m-bottom);
+  display: grid; grid-template-columns: repeat(12, var(--grid-col)); column-gap: var(--grid-gut);
+  pointer-events: none; z-index: 50; opacity: 0;
+}
+.grid-overlay > span { background: rgba(0,180,255,0.18); }
+body.show-grid .grid-overlay { opacity: 1; }
+
+.toggle-bar { position: fixed; bottom: 8mm; right: 8mm; z-index: 100; }
+.toggle-bar button {
+  font-family: var(--planet-font); font-weight: var(--weight-display); font-size: 11pt;
+  height: 44px; padding: 0 18px; border-radius: 9999px; border: 0; cursor: pointer;
+  background: var(--planet-primary); color: var(--planet-white);
+}
+.toggle-bar button:hover { background: var(--planet-black); }
+@media print { .toggle-bar, .grid-overlay { display: none; } @page { size: A4; margin: 0; } .page { box-shadow:none; break-after: page; } .page:last-child { break-after: auto; } }
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     SEITE 1 — COVER (blau)
+============================================================ -->
+<section class="page page--primary">
+  <div class="page-grid">
+    <div class="col-left">
+      <span class="logo">Planet</span>
+      <div class="meta-block meta-block--bottom">
+        <div class="meta-group"><div class="meta-label">Ort</div><div class="meta-value">Hamburg</div></div>
+        <div class="meta-group"><div class="meta-label">Datum</div><div class="meta-value">22—23.04.26</div></div>
+      </div>
+    </div>
+    <div class="col-content" style="display:flex; flex-direction:column;">
+      <div class="cover-foot">
+        <div class="kicker">Jahrestagung 2026</div>
+        <h1 class="cover-title">Wachsen, was bleibt.</h1>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SEITE 2 — PROGRAMM / AGENDA
+============================================================ -->
+<section class="page">
+  <div class="page-grid">
+    <div class="col-left">
+      <span class="logo">Planet</span>
+      <div class="meta-block meta-block--mid">
+        <div class="meta-group"><div class="meta-label">Titel</div><div class="meta-value">Jahrestagung 2026</div></div>
+        <div class="meta-group"><div class="meta-label">Tag</div><div class="meta-value">1 — 22.04.</div></div>
+      </div>
+      <div class="meta-block meta-block--bottom">
+        <div class="meta-group"><div class="meta-label">Bereich</div><div class="meta-value">Brand &amp; Marketing</div></div>
+        <div class="meta-group"><div class="meta-label">Seite</div><div class="meta-value folio">2 / 16</div></div>
+      </div>
+    </div>
+    <div class="col-content flow">
+      <h2>Programm — Tag 1</h2>
+      <div class="agenda">
+        <div class="agenda-row"><div class="agenda-time">09:00</div><div><div class="agenda-title">Ankunft &amp; Begrüßung</div><div class="agenda-by">Geschäftsführung</div></div></div>
+        <div class="agenda-row"><div class="agenda-time">09:30</div><div><div class="agenda-title">Jahresrückblick 2025</div><div class="agenda-by">Group Strategy</div></div></div>
+        <div class="agenda-row"><div class="agenda-time">11:00</div><div><div class="agenda-title">Markenpositionierung Inuvet</div><div class="agenda-by">Brand &amp; Marketing</div></div></div>
+        <div class="agenda-row"><div class="agenda-time">13:00</div><div><div class="agenda-title">Mittagspause</div><div class="agenda-by">Foyer</div></div></div>
+        <div class="agenda-row"><div class="agenda-time">14:00</div><div><div class="agenda-title">Workshops — Internationalisierung</div><div class="agenda-by">Parallele Sessions</div></div></div>
+        <div class="agenda-row"><div class="agenda-time">17:30</div><div><div class="agenda-title">Tagesabschluss</div><div class="agenda-by">Plenum</div></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SEITE 3 — ARTIKEL (Headline + Zwischentitel + Fließtext)
+============================================================ -->
+<section class="page">
+  <div class="page-grid">
+    <div class="col-left">
+      <span class="logo">Planet</span>
+      <div class="meta-block meta-block--mid">
+        <div class="meta-group"><div class="meta-label">Titel</div><div class="meta-value">Jahrestagung 2026</div></div>
+        <div class="meta-group"><div class="meta-label">Thema</div><div class="meta-value">Strategie</div></div>
+      </div>
+      <div class="meta-block meta-block--bottom">
+        <div class="meta-group"><div class="meta-label">Bereich</div><div class="meta-value">Brand &amp; Marketing</div></div>
+        <div class="meta-group"><div class="meta-label">Seite</div><div class="meta-value folio">3 / 16</div></div>
+      </div>
+    </div>
+    <div class="col-content flow">
+      <h1>Der Samen der Gewohnheit wird gesät.</h1>
+      <p class="lead">Wie aus konsequenten Entscheidungen über Jahre eine Marke entsteht, der Kund:innen vertrauen — und warum Geduld die unterschätzteste Wachstumsstrategie ist.</p>
+      <h2>Was uns 2025 getragen hat</h2>
+      <p>Voler atur renibus soluptum qui inis rest ut quatur aruptat emporep erchictus alitiuscia et la simus suntiosist i et volore nes dolesto que rem rem excepudit, ni utem fugia et ules atlies atquas maximus quati cuporeicia ipsam suntdit, volo bea nem ea volo eum, undserae mos aut eiunti quis i dundamur.</p>
+      <p>Ommodia derionem. Nequi is aceperum iam dusant volunt is sequo aliquature porro, net magnatur, ut fugiae nobis quo delest harum quatatem qui dus voles rumquatius ut fugiae nobis quo delest harum quatatem.</p>
+      <h3>Drei Prinzipien</h3>
+      <p>Lesciaium as ciatio. Atur, tecullor aut volore ma volore blabor molorem faccum aditas alicies commolecum que que ea simimis moluptatio eum, quia erum quid qui culupt atetur alia cum, cumque officiet et abore non corrorunt poreperundis mugnam a paribus et eictem.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SEITE 4 — BILDSEITE (Abbildung + Caption + Text)
+============================================================ -->
+<section class="page">
+  <div class="page-grid">
+    <div class="col-left">
+      <span class="logo">Planet</span>
+      <div class="meta-block meta-block--bottom">
+        <div class="meta-group"><div class="meta-label">Bereich</div><div class="meta-value">Brand &amp; Marketing</div></div>
+        <div class="meta-group"><div class="meta-label">Seite</div><div class="meta-value folio">4 / 16</div></div>
+      </div>
+    </div>
+    <div class="col-content flow">
+      <h2>Eindrücke vom ersten Tag</h2>
+      <figure class="figure">
+        <div class="fig-ph">Abbildung / Foto</div>
+        <figcaption>Abb. 1 — Plenum während der Eröffnung, Hamburg.</figcaption>
+      </figure>
+      <p>Ture ipis mi, quo ilute maxim quidis debis dolupt ais ea con nonsedia ius, qui niami, cuptis et et que ditusapedit quam alignat endant quaeperferci quis exceptati blam, tecta quassed quundit, unt aut earunt ullam ef ma con rem es eumet uta nimolup tasitaqui qui destiunt ut odigent iam fuga.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SEITE 5 — STATEMENT (blau)
+============================================================ -->
+<section class="page page--primary">
+  <div class="page-grid">
+    <div class="col-left">
+      <span class="logo">Planet</span>
+      <div class="meta-block meta-block--bottom">
+        <div class="meta-group"><div class="meta-label">Bereich</div><div class="meta-value">Brand &amp; Marketing</div></div>
+        <div class="meta-group"><div class="meta-label">Seite</div><div class="meta-value folio">5 / 16</div></div>
+      </div>
+    </div>
+    <div class="col-content" style="display:flex; flex-direction:column;">
+      <div style="margin-top:auto;">
+        <p class="statement">„Wir wachsen dort am schnellsten, wo wir konsequent lokal denken.“</p>
+        <p class="statement-attr">Maria Lang · Head of International</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SEITE 6 — TYPE-SPECIMEN
+============================================================ -->
+<section class="page">
+  <div class="page-grid">
+    <div class="col-left">
+      <span class="logo">Planet</span>
+      <div class="meta-block meta-block--mid">
+        <div class="meta-group"><div class="meta-label">Titel</div><div class="meta-value">Jahrestagung 2026</div></div>
+        <div class="meta-group"><div class="meta-label">Referenz</div><div class="meta-value">Typo</div></div>
+      </div>
+      <div class="meta-block meta-block--bottom">
+        <div class="meta-group"><div class="meta-label">Bereich</div><div class="meta-value">Brand &amp; Marketing</div></div>
+        <div class="meta-group"><div class="meta-label">Seite</div><div class="meta-value folio">6 / 16</div></div>
+      </div>
+    </div>
+    <div class="col-content">
+      <div class="spec"><div class="spec-label">Headline 1 · 27 pt</div><h1>Der Samen der Gewohnheit.</h1></div>
+      <div class="spec"><div class="spec-label">Headline 2 · 18 pt</div><h2>Ein Abschnitt, der gliedert.</h2></div>
+      <div class="spec"><div class="spec-label">Headline 3 · 13 pt</div><h3>Ein Unterpunkt im Abschnitt.</h3></div>
+      <div class="spec"><div class="spec-label">Lead · 12 pt</div><p class="lead">Ein einleitender Absatz, etwas größer als der Fließtext, der den Abschnitt anmoderiert.</p></div>
+      <div class="spec"><div class="spec-label">Fließtext · 10 pt</div><p>Voler atur renibus soluptum qui inis rest ut quatur aruptat emporep erchictus alitiuscia et la simus suntiosist i et volore nes dolesto que rem rem excepudit, ni utem fugia et ules atlies atquas maximus quati cuporeicia ipsam suntdit.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SEITE 7 — KENNZAHLEN + BALKENDIAGRAMM (Grafik)
+============================================================ -->
+<section class="page">
+  <div class="page-grid">
+    <div class="col-left">
+      <span class="logo">Planet</span>
+      <div class="meta-block meta-block--mid">
+        <div class="meta-group"><div class="meta-label">Titel</div><div class="meta-value">Jahrestagung 2026</div></div>
+        <div class="meta-group"><div class="meta-label">Thema</div><div class="meta-value">Kennzahlen</div></div>
+      </div>
+      <div class="meta-block meta-block--bottom">
+        <div class="meta-group"><div class="meta-label">Bereich</div><div class="meta-value">Brand &amp; Marketing</div></div>
+        <div class="meta-group"><div class="meta-label">Seite</div><div class="meta-value folio">7 / 16</div></div>
+      </div>
+    </div>
+    <div class="col-content flow">
+      <h2>Kennzahlen 2025</h2>
+      <div class="stats">
+        <div class="stat"><div class="num">+38 %</div><div class="lbl">Umsatzwachstum ggü. Vorjahr</div></div>
+        <div class="stat"><div class="num">9</div><div class="lbl">Aktive Ländermärkte</div></div>
+        <div class="stat"><div class="num">22 %</div><div class="lbl">Wiederkaufrate D2C</div></div>
+      </div>
+      <h3>Umsatzanteil je Region</h3>
+      <div class="barchart">
+        <div class="bar-row"><div class="bar-lbl">DACH</div><div class="bar-track"><span class="bar-fill" style="width:54%"></span></div><div class="bar-val">54 %</div></div>
+        <div class="bar-row"><div class="bar-lbl">Südeuropa</div><div class="bar-track"><span class="bar-fill" style="width:24%"></span></div><div class="bar-val">24 %</div></div>
+        <div class="bar-row"><div class="bar-lbl">Benelux / FR</div><div class="bar-track"><span class="bar-fill" style="width:14%"></span></div><div class="bar-val">14 %</div></div>
+        <div class="bar-row"><div class="bar-lbl">Asien-Pazifik</div><div class="bar-track"><span class="bar-fill bar-fill--acid" style="width:8%"></span></div><div class="bar-val">8 %</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SEITE 8 — MONUMENTALE KENNZAHL (blau)
+============================================================ -->
+<section class="page page--primary">
+  <div class="page-grid">
+    <div class="col-left">
+      <span class="logo">Planet</span>
+      <div class="meta-block meta-block--bottom">
+        <div class="meta-group"><div class="meta-label">Bereich</div><div class="meta-value">Brand &amp; Marketing</div></div>
+        <div class="meta-group"><div class="meta-label">Seite</div><div class="meta-value folio">8 / 16</div></div>
+      </div>
+    </div>
+    <div class="col-content" style="display:flex; flex-direction:column;">
+      <div class="stat-mono" style="margin-top:auto;">
+        <div class="num-xl">+130 %</div>
+        <div class="cap">Umsatzwachstum in der Region Asien-Pazifik — der schnellste regionale Anstieg in der Geschichte der Gruppe.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SEITE 9 — DISPLAY-HEADLINE (große Typo, blau)
+============================================================ -->
+<section class="page page--primary">
+  <div class="page-grid">
+    <div class="col-left">
+      <span class="logo">Planet</span>
+      <div class="meta-block meta-block--bottom">
+        <div class="meta-group"><div class="meta-label">Kapitel</div><div class="meta-value">02</div></div>
+        <div class="meta-group"><div class="meta-label">Seite</div><div class="meta-value folio">9 / 16</div></div>
+      </div>
+    </div>
+    <div class="col-content" style="display:flex; flex-direction:column;">
+      <div style="margin-top:auto;">
+        <div class="kicker">Kapitel 02</div>
+        <h1 class="display">Mut zur Lücke.</h1>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="toggle-bar">
+  <button onclick="document.body.classList.toggle('show-grid')">Raster ein/aus</button>
+</div>
+
+<script>
+// Grid-Overlay in jede Seite injizieren
+document.querySelectorAll('.page').forEach(p => {
+  const ov = document.createElement('div');
+  ov.className = 'grid-overlay'; ov.setAttribute('aria-hidden','true');
+  for (let i=0;i<12;i++) ov.appendChild(document.createElement('span'));
+  p.insertBefore(ov, p.firstChild);
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Planet — Slide Deck Playbook</title>
+<link rel="stylesheet" href="https://use.typekit.net/phj5hyp.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined">
+<link rel="stylesheet" href="planet.css">
+<style>
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --planet-black:      #000000;
+  --planet-white:      #FFFFFF;
+  --planet-primary:    #0000FF;
+  --planet-secondary:  #D4FF00;
+  --planet-tint:       #DCDCDC;
+  --planet-input-fill: #ECECEC;
+  --planet-font:       "neue-haas-grotesk-display", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --weight-body:       500; /* Fließtext, Seitenzahl */
+  --weight-display:    600; /* Logo, Headlines h1/h2 */
+}
+
+html, body {
+  background: var(--planet-tint);
+  color: var(--planet-black);
+  font-family: var(--planet-font);
+  font-weight: var(--weight-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Overview-Layout ────────────────────────────────────────── */
+body {
+  min-height: 100vh;
+  padding: 5rem 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3rem;
+}
+
+.label {
+  font-size: 0.7rem;
+  font-weight: var(--weight-display);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #555;
+  width: min(1100px, calc(100vw - 4rem));
+  margin-bottom: -1.5rem;
+}
+
+/* ── Präsentations-Modus ────────────────────────────────────── */
+.start-btn {
+  position: fixed;
+  bottom: var(--space-5);
+  right: var(--space-5);
+  z-index: 100;
+}
+
+.slide-counter {
+  display: none;
+  position: fixed;
+  bottom: 1.5rem;
+  right: 2rem;
+  font-family: var(--planet-font);
+  font-size: 0.75rem;
+  font-weight: var(--weight-body);
+  letter-spacing: 0.1em;
+  color: rgba(255,255,255,0.4);
+  z-index: 101;
+  pointer-events: none;
+}
+
+/* ── EDIT-MODUS (nur Bildschirm, nicht im Präsentationsmodus) ── */
+.ui-bar { position: fixed; bottom: var(--space-5); right: var(--space-5); z-index: 100; display: inline-flex; align-items: center; gap: var(--space-2); }
+.ui-bar .start-btn { position: static; bottom: auto; right: auto; }
+.edit-btn { background: var(--planet-white); color: var(--planet-black); box-shadow: 0 2px 8px rgba(0,0,0,0.15); }
+.edit-btn:hover, .edit-btn.active { background: var(--planet-secondary); color: var(--planet-black); }
+body.--presenting .ui-bar { display: none; }
+
+body.edit-mode .slide [contenteditable="true"] { outline: 1.5px dashed rgba(0,0,255,0.5); outline-offset: 2px; cursor: text; }
+body.edit-mode .slide [contenteditable="true"]:focus { outline: 2px solid var(--planet-primary); }
+body.edit-mode .slide-image, body.edit-mode .slide--fullbleed { cursor: pointer; }
+body.edit-mode .slide-image { outline: 1.5px dashed rgba(0,0,255,0.5); outline-offset: 2px; }
+body.edit-mode .slide--fullbleed { outline: 3px dashed rgba(0,0,255,0.6); outline-offset: -3px; }
+body.edit-mode .slide-image.drop-hover, body.edit-mode .slide--fullbleed.drop-hover { outline: 2px solid var(--planet-primary); }
+
+body.--presenting {
+  background: #000 !important;
+  padding: 0;
+  gap: 0;
+  overflow: hidden;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+body.--presenting .label      { display: none; }
+body.--presenting .start-btn  { display: none; }
+body.--presenting .slide-counter { display: block; }
+body.--presenting .slide      { display: none; box-shadow: none; }
+body.--presenting .slide.--active {
+  display: block;
+  width: min(100vw, 177.78vh);
+}
+
+/* ── Einblend-Animationen (nur im Präsentationsmodus) ───────── */
+@keyframes slideIn {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+body.--presenting .slide.--active .slide-logo {
+  animation: slideIn 0.5s cubic-bezier(0.0, 0.0, 0.2, 1) 0ms both;
+}
+body.--presenting .slide.--active .slide-image--fill {
+  animation: slideIn 0.7s cubic-bezier(0.0, 0.0, 0.2, 1) 0ms both;
+}
+body.--presenting .slide.--active .slide-top {
+  animation: slideIn 0.5s cubic-bezier(0.0, 0.0, 0.2, 1) 120ms both;
+}
+body.--presenting .slide.--active .slide-bottom {
+  animation: slideIn 0.5s cubic-bezier(0.0, 0.0, 0.2, 1) 240ms both;
+}
+body.--presenting .slide.--active .slide-num {
+  animation: slideIn 0.4s cubic-bezier(0.0, 0.0, 0.2, 1) 360ms both;
+}
+body.--presenting .slide.--active .slide-stat-number {
+  animation: slideIn 0.6s cubic-bezier(0.0, 0.0, 0.2, 1) 100ms both;
+}
+
+/* ============================================================
+   SLIDE — 1920×1080
+   Padding & Gutter = 2.5cqw (48px bei 1920px)
+============================================================ */
+.slide {
+  container-type: inline-size;
+  width: min(1100px, calc(100vw - 4rem));
+  aspect-ratio: 16 / 9;
+  background: var(--planet-white);
+  overflow: hidden;
+  position: relative;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+}
+
+/* Logo — absolut oben links */
+.slide-logo {
+  position: absolute;
+  top: 2.5cqw;
+  left: 2.5cqw;
+  font-family: var(--planet-font);
+  font-weight: var(--weight-display);
+  font-size: 2.5cqw;
+  line-height: 1.35; /* gleiche line-height wie p → Grundlinien fluchten */
+  color: var(--planet-primary);
+  z-index: 10;
+}
+
+/* Foliennummer — absolut unten links */
+.slide-num {
+  position: absolute;
+  bottom: 2.5cqw;
+  left: 2.5cqw;
+  font-family: var(--planet-font);
+  font-weight: var(--weight-body);
+  font-size: 1.25cqw;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  z-index: 10;
+}
+.slide--no-num .slide-num { display: none; }
+
+/* Oben verankerter Inhaltsbereich — align-items:start → Inhalt klebt oben */
+.slide-top {
+  position: absolute;
+  top: 2.5cqw;
+  left: 2.5cqw;
+  right: 2.5cqw;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  column-gap: 2.5cqw;
+  align-items: start;
+  z-index: 1;
+}
+
+/* Unten verankerter Inhaltsbereich — align-items:end → Inhalt klebt unten */
+.slide-bottom {
+  position: absolute;
+  bottom: 2.5cqw;
+  left: 2.5cqw;
+  right: 2.5cqw;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  column-gap: 2.5cqw;
+  align-items: end;
+  z-index: 1;
+}
+
+/* Typografie */
+.slide h1 { font-family: var(--planet-font); font-weight: var(--weight-display); font-size: 10cqw;  line-height: 0.92; letter-spacing: -0.025em; }
+.slide h2 { font-family: var(--planet-font); font-weight: var(--weight-display); font-size: 5cqw;   line-height: 0.95; letter-spacing: -0.02em; }
+.slide h3 { font-family: var(--planet-font); font-weight: var(--weight-display); font-size: 2.5cqw; line-height: 1.35; } /* Zwischen-Label: gleich groß wie p, aber fett (600) — sichtbarer Unterschied zu Fließtext */
+.slide p  { font-family: var(--planet-font); font-weight: var(--weight-body);    font-size: 2.5cqw; line-height: 1.35; }
+.slide ul, .slide ol { font-family: var(--planet-font); font-weight: var(--weight-body); font-size: 2.5cqw; line-height: 1.35; padding-left: 2cqw; }
+.slide li { margin-bottom: 0.5cqw; }
+
+/* Bild-Platzhalter
+   Bilder wachsen so groß wie möglich —
+   Mindest-Gap zum nächsten Textelement: 2.5cqw (ein Padding-Schritt).
+   Faustregel für Bilder in slide-bottom wenn Text in slide-top:
+   Max-Höhe ≈ Folienhöhe − Text-Höhe − 3 × 2.5cqw (Padding oben + Gap + Padding unten) */
+.slide-image { background: rgba(0,0,0,0.12); width: 100%; }
+.slide-image--square   { aspect-ratio: 1/1; }
+.slide-image--circle {
+  aspect-ratio: 1/1;
+  border-radius: 50%;
+  width: 100%;
+  max-width: 100%;
+  animation: planetRotate 28s linear infinite;
+  transform-origin: center;
+}
+@keyframes planetRotate {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+.slide-image--portrait { aspect-ratio: 2/3; } /* Taller for maximum visual impact */
+/* Alle nicht-vollflächigen Bilder respektieren den Satzspiegel (2.5cqw Padding allseitig).
+   Ausnahme: .slide--fullbleed (background-image auf dem Slide selbst) */
+.slide-image--fill {
+  position: absolute;
+  top: 2.5cqw; right: 2.5cqw; bottom: 2.5cqw;
+  left: 35cqw; /* Spalte 2 linke Kante */
+  width: auto; /* überschreibt width:100% aus .slide-image */
+}
+
+/* Vollspaltige Bild-Spalten — innerhalb des Satzspiegels */
+.slide-image--col-left   { position:absolute; top:2.5cqw; left:2.5cqw;   bottom:2.5cqw; width:30cqw;   background-size:cover; background-position:center; }
+.slide-image--col-center { position:absolute; top:2.5cqw; left:35cqw;    bottom:2.5cqw; width:30cqw;   background-size:cover; background-position:center; }
+.slide-image--col-right  { position:absolute; top:2.5cqw; right:2.5cqw;  bottom:2.5cqw; width:30cqw;   background-size:cover; background-position:center; }
+
+/* Logo / Nummer ausblenden wenn Inhalt sie überdecken würde */
+.slide--no-logo .slide-logo { display: none; }
+
+/* Stat-Zahl — monumental */
+.slide-stat-number {
+  font-family: var(--planet-font);
+  font-weight: var(--weight-display);
+  font-size: 20cqw;
+  line-height: 0.85;
+  letter-spacing: -0.05em;
+}
+
+/* Vollbild-Foto */
+.slide--fullbleed {
+  background-color: #1a1a1a;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+.slide--fullbleed::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0) 50%);
+  z-index: 0;
+}
+.slide--fullbleed .slide-logo { color: var(--planet-white); z-index: 2; }
+.slide--fullbleed .slide-num  { color: rgba(255,255,255,0.5); z-index: 2; }
+.slide--fullbleed .slide-bottom { z-index: 2; }
+.slide--fullbleed p, .slide--fullbleed h2 { color: var(--planet-white); }
+
+/* Hintergrundvarianten */
+.slide--primary { background: var(--planet-primary); }
+.slide--primary .slide-logo,
+.slide--primary .slide-num,
+.slide--primary p,
+.slide--primary h1,
+.slide--primary h2,
+.slide--primary h3,
+.slide--primary h4,
+.slide--primary li,
+.slide--primary ul,
+.slide--primary ol,
+.slide--primary .slide-stat-number { color: var(--planet-white); }
+
+.slide--acid { background: var(--planet-secondary); }
+.slide--acid .slide-logo,
+.slide--acid .slide-num,
+.slide--acid p,
+.slide--acid h1,
+.slide--acid h2,
+.slide--acid h3,
+.slide--acid h4,
+.slide--acid li,
+.slide--acid ul,
+.slide--acid ol { color: var(--planet-black); }
+
+</style>
+</head>
+<body>
+
+<!-- 00 — Raster & Regeln -->
+<p class="label">00 — Raster & Regeln</p>
+<div class="slide slide--no-num" style="background:#FAFAFA;">
+  <span class="slide-logo">Planet</span>
+
+  <!-- Padding-Zonen -->
+  <div style="position:absolute;top:0;left:0;bottom:0;width:2.5cqw;background:rgba(0,0,255,0.06);"></div>
+  <div style="position:absolute;top:0;right:0;bottom:0;width:2.5cqw;background:rgba(0,0,255,0.06);"></div>
+  <div style="position:absolute;top:0;left:0;right:0;height:2.5cqw;background:rgba(0,0,255,0.06);"></div>
+  <div style="position:absolute;bottom:0;left:0;right:0;height:2.5cqw;background:rgba(0,0,255,0.06);"></div>
+
+  <!-- Spalten -->
+  <div style="position:absolute;top:0;bottom:0;left:2.5cqw;width:30cqw;background:rgba(0,0,255,0.04);border-left:1px dashed rgba(0,0,255,0.25);border-right:1px dashed rgba(0,0,255,0.25);"></div>
+  <div style="position:absolute;top:0;bottom:0;left:35cqw;width:30cqw;background:rgba(0,0,255,0.04);border-left:1px dashed rgba(0,0,255,0.25);border-right:1px dashed rgba(0,0,255,0.25);"></div>
+  <div style="position:absolute;top:0;bottom:0;left:67.5cqw;width:30cqw;background:rgba(0,0,255,0.04);border-left:1px dashed rgba(0,0,255,0.25);border-right:1px dashed rgba(0,0,255,0.25);"></div>
+
+  <!-- slide-top Zone -->
+  <div style="position:absolute;top:2.5cqw;left:2.5cqw;right:2.5cqw;height:0;border-top:1.5px dashed rgba(255,100,0,0.5);"></div>
+  <!-- slide-bottom Zone -->
+  <div style="position:absolute;bottom:2.5cqw;left:2.5cqw;right:2.5cqw;height:0;border-top:1.5px dashed rgba(255,100,0,0.5);"></div>
+
+  <div class="slide-top">
+    <div>
+      <!-- Spalten-Labels -->
+      <p style="font-size:1.2cqw;line-height:1.4;color:rgba(0,0,255,0.5);margin-top:3cqw;">Sp. 1<br>30 cqw</p>
+    </div>
+    <div>
+      <p style="font-size:1.2cqw;line-height:1.4;color:rgba(0,0,255,0.5);margin-top:3cqw;">Sp. 2<br>30 cqw</p>
+    </div>
+    <div>
+      <p style="font-size:1.2cqw;line-height:1.4;color:rgba(0,0,255,0.5);margin-top:3cqw;">Sp. 3<br>30 cqw</p>
+    </div>
+  </div>
+
+  <div class="slide-bottom">
+    <div>
+      <p style="font-size:1.3cqw;line-height:1.6;color:#444;">
+        <span style="color:rgba(0,0,255,0.7);font-weight:600;">Padding</span> L/R/T/B: 2.5 cqw<br>
+        <span style="color:rgba(0,0,255,0.7);font-weight:600;">Gutter</span> zwischen Sp.: 2.5 cqw<br>
+        <span style="color:rgba(255,100,0,0.8);font-weight:600;">slide-top</span> → oben verankert<br>
+        <span style="color:rgba(255,100,0,0.8);font-weight:600;">slide-bottom</span> → unten verankert
+      </p>
+    </div>
+    <div>
+      <p style="font-size:1.3cqw;line-height:1.6;color:#444;">
+        <span style="font-weight:600;">Logo</span> immer Sp. 1 · nie überdecken<br>
+        <span style="font-weight:600;">Seitenzahl</span> entfällt wenn Sp. 1 in slide-bottom belegt<br>
+        <span style="font-weight:600;">slide--no-logo</span> wenn Sp. 1 in slide-top belegt<br>
+        <span style="font-weight:600;">Min-Gap</span> Text ↔ Bild: 2.5 cqw
+      </p>
+    </div>
+    <div>
+      <p style="font-size:1.3cqw;line-height:1.6;color:#444;">
+        <span style="font-weight:600;">h1</span> max. 8 Wörter<br>
+        <span style="font-weight:600;">h2</span> max. 12 Wörter<br>
+        <span style="font-weight:600;">p</span> max. 30 Wörter pro Block<br>
+        <span style="font-weight:600;">Bilder</span> width: 100% der Spalte, height explizit
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- 01 — Cover / Headline groß (Primary) -->
+<p class="label">01 — Cover · Primary</p>
+<div class="slide slide--primary">
+  <span class="slide-logo">Planet</span>
+  <div class="slide-top">
+    <div></div>
+    <div style="grid-column: 2 / span 2;">
+      <h1>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed euismod tincidunt.</h1>
+    </div>
+  </div>
+  <span class="slide-num">01 / 09</span>
+</div>
+
+<!-- 02 — Headline + Body (Weiß) -->
+<p class="label">02 — Headline + Body · Weiß</p>
+<div class="slide">
+  <span class="slide-logo">Planet</span>
+  <div class="slide-top">
+    <div></div>
+    <div style="grid-column: 2 / span 2;">
+      <h1>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy.</h1>
+    </div>
+  </div>
+  <div class="slide-bottom">
+    <div></div>
+    <div style="grid-column: 2 / span 2;">
+      <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy.</p>
+    </div>
+  </div>
+  <span class="slide-num">02 / 09</span>
+</div>
+
+<!-- 03 — H2 + Body (Weiß) -->
+<p class="label">03 — H2 + Body · Weiß</p>
+<div class="slide">
+  <span class="slide-logo">Planet</span>
+  <div class="slide-top">
+    <div></div>
+    <div style="grid-column: 2 / span 2;">
+      <h2>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy.</h2>
+    </div>
+  </div>
+  <div class="slide-bottom">
+    <div></div>
+    <div style="grid-column: 2 / span 2;">
+      <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy.</p>
+    </div>
+  </div>
+  <span class="slide-num">03 / 09</span>
+</div>
+
+<!-- 04 — 5 Body-Blöcke (Acid) -->
+<p class="label">04 — 5 Body-Blöcke · Acid</p>
+<div class="slide slide--acid slide--no-num">
+  <span class="slide-logo">Planet</span>
+  <div class="slide-top">
+    <div></div>
+    <div><p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy.</p></div>
+    <div><p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy.</p></div>
+  </div>
+  <div class="slide-bottom">
+    <div><p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy.</p></div>
+    <div><p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy.</p></div>
+    <div><p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy.</p></div>
+  </div>
+</div>
+
+<!-- 05 — Text-Spalten + Bilder (Primary) -->
+<p class="label">05 — Text-Spalten + Bilder · Primary</p>
+<div class="slide slide--primary">
+  <span class="slide-logo">Planet</span>
+  <div class="slide-top">
+    <div></div>
+    <div><p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy.</p></div>
+    <div><p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy.</p></div>
+  </div>
+  <div class="slide-bottom">
+    <div></div>
+    <div><div class="slide-image" style="background:url('assets/images/Inuvet_Team_J_Rohloff.jpg') center/cover; height:34cqw; width:100%;"></div></div>
+    <div style="display:flex; align-items:flex-end;"><div class="slide-image slide-image--circle" style="background:url('assets/images/Inuvet_Team_S_Nabholz.jpg') center/cover;"></div></div>
+  </div>
+  <span class="slide-num">05 / 09</span>
+</div>
+
+<!-- 05a — Nur Bild oben, Text unten -->
+<p class="label">05a — Bild oben · Text unten · Primary</p>
+<div class="slide slide--primary slide--no-num">
+  <span class="slide-logo">Planet</span>
+  <div class="slide-top">
+    <div></div>
+    <div style="grid-column: 2 / span 2;">
+      <div class="slide-image" style="height:30cqw; background:url('assets/images/Inuvet_Team_J_Rohloff_Ane.jpg') center/cover;"></div>
+    </div>
+  </div>
+  <div class="slide-bottom">
+    <div></div>
+    <div style="grid-column: 2 / span 2;">
+      <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy.</p>
+    </div>
+  </div>
+</div>
+
+<!-- 05b — Vollspaltige Bild-Spalte links, Text rechts -->
+<p class="label">05b — Bild-Spalte links · Text rechts · Primary</p>
+<div class="slide slide--primary slide--no-logo slide--no-num">
+  <div class="slide-image--col-left" style="background-image:url('assets/images/Inuvet_Team_S_Nabholz.jpg');"></div>
+  <div class="slide-top">
+    <div></div>
+    <div style="grid-column: 2 / span 2;">
+      <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt.</p>
+    </div>
+  </div>
+  <div class="slide-bottom">
+    <div></div>
+    <div style="grid-column: 2 / span 2;">
+      <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt.</p>
+    </div>
+  </div>
+</div>
+
+<!-- 05c — Text oben (Spalte 2), Bild unten (alle Spalten) -->
+<p class="label">05c — Text oben · Bild unten · Primary</p>
+<div class="slide slide--primary slide--no-num">
+  <span class="slide-logo">Planet</span>
+  <div class="slide-top">
+    <div></div>
+    <div style="grid-column: 2 / span 2;">
+      <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt.</p>
+    </div>
+  </div>
+  <div class="slide-bottom">
+    <div style="grid-column: 1 / span 3;">
+      <div class="slide-image" style="height:30cqw; background:url('assets/images/Inuvet_Team_J_Rohloff.jpg') center 30%/cover;"></div>
+    </div>
+  </div>
+</div>
+
+<!-- 06 — Bild rechts + Caption (Primary) -->
+<p class="label">06 — Bild rechts + Caption · Primary</p>
+<div class="slide slide--primary slide--no-num">
+  <span class="slide-logo">Planet</span>
+  <div class="slide-image slide-image--fill" style="background:url('assets/images/Inuvet_Team_J_Rohloff_Ane.jpg') center/cover;"></div>
+  <div class="slide-bottom">
+    <div>
+      <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy.</p>
+    </div>
+  </div>
+</div>
+
+<!-- 06b — Rundbild 2 Spalten + Caption (Primary) -->
+<p class="label">06b — Rundbild 2 Spalten · Primary</p>
+<div class="slide slide--primary slide--no-num">
+  <span class="slide-logo">Planet</span>
+  <!-- Kreis: Ø = 51.25cqw (Folienhöhe − 2× Satzspiegel-Padding),
+       zentriert in Spalten 2+3, respektiert alle Rasterränder -->
+  <div style="position:absolute;
+              top:2.5cqw;
+              left:40.625cqw;
+              width:51.25cqw; height:51.25cqw;
+              border-radius:50%;
+              background:url('assets/images/Inuvet_Team_S_Nabholz.jpg') center/cover;
+              animation:planetRotate 28s linear infinite;"></div>
+  <div class="slide-bottom">
+    <div>
+      <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy.</p>
+    </div>
+  </div>
+</div>
+
+<!-- 07 — Stat Monumental (Primary) -->
+<p class="label">07 — Stat Monumental · Primary</p>
+<div class="slide slide--primary">
+  <span class="slide-logo">Planet</span>
+  <div class="slide-top">
+    <div></div>
+    <div style="grid-column: 2 / span 2;">
+      <div class="slide-stat-number" style="color: var(--planet-white);">+38%</div>
+    </div>
+  </div>
+  <div class="slide-bottom">
+    <div></div>
+    <div style="grid-column: 2 / span 2;">
+      <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy.</p>
+    </div>
+  </div>
+  <span class="slide-num">07 / 09</span>
+</div>
+
+<!-- 08 — Bild-Triptychon (Weiß) -->
+<p class="label">08 — Bild-Triptychon · Weiß</p>
+<div class="slide slide--no-num">
+  <span class="slide-logo">Planet</span>
+  <div class="slide-bottom">
+    <div><div class="slide-image slide-image--portrait" style="background:url('assets/images/Inuvet_Team_J_Rohloff.jpg') center/cover; height:44cqw;"></div></div>
+    <div><div class="slide-image slide-image--portrait" style="background:url('assets/images/Inuvet_Team_J_Rohloff_Ane.jpg') center/cover; height:44cqw;"></div></div>
+    <div><div class="slide-image slide-image--portrait" style="background:url('assets/images/Inuvet_Team_S_Nabholz.jpg') center/cover; height:44cqw;"></div></div>
+  </div>
+</div>
+
+<!-- 09 — Vollbild-Foto -->
+<p class="label">09 — Vollbild-Foto · Foto-Overlay</p>
+<div class="slide slide--fullbleed slide--no-num" style="background-image: url('assets/images/Inuvet_Team_J_Rohloff.jpg');">
+  <span class="slide-logo">Planet</span>
+</div>
+
+<!-- 10 — Vollbild-Foto + Caption -->
+<p class="label">10 — Vollbild-Foto + Caption</p>
+<div class="slide slide--fullbleed slide--no-num" style="background-image: url('assets/images/Inuvet_Team_S_Nabholz.jpg');">
+  <span class="slide-logo">Planet</span>
+  <div class="slide-bottom">
+    <div style="grid-column: 1 / span 2;">
+      <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt.</p>
+    </div>
+  </div>
+</div>
+
+<!-- 10 — Cover Acid -->
+<p class="label">09 — Cover · Acid</p>
+<div class="slide slide--acid slide--no-num">
+  <span class="slide-logo">Planet</span>
+  <div class="slide-top">
+    <div></div>
+    <div style="grid-column: 2 / span 2;">
+      <h1>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed euismod tincidunt.</h1>
+    </div>
+  </div>
+</div>
+
+<div class="ui-bar">
+  <button class="btn edit-btn" id="editBtn" onclick="toggleEdit()">
+    <span class="material-icons-outlined">edit</span> <span id="editLabel">Bearbeiten</span>
+  </button>
+  <button class="btn start-btn" onclick="startPresentation()">
+    <span class="material-icons-outlined">play_arrow</span> Präsentation starten
+  </button>
+</div>
+<div class="slide-counter"></div>
+
+<script>
+  const slides  = Array.from(document.querySelectorAll('.slide'));
+  const counter = document.querySelector('.slide-counter');
+  let current   = 0;
+
+  function showSlide(i) {
+    slides.forEach(s => s.classList.remove('--active'));
+    // Kurzes rAF-Delay damit Browser die Klasse entfernt hat
+    // bevor sie neu gesetzt wird → Animation startet neu
+    requestAnimationFrame(() => {
+      slides[i].classList.add('--active');
+      counter.textContent = `${i + 1} / ${slides.length}`;
+      current = i;
+    });
+  }
+
+  function startPresentation() {
+    if (document.body.classList.contains('edit-mode')) toggleEdit(); // Edit beenden
+    document.body.classList.add('--presenting');
+    showSlide(0);
+    document.documentElement.requestFullscreen?.();
+  }
+
+  function stopPresentation() {
+    document.body.classList.remove('--presenting');
+    slides.forEach(s => s.classList.remove('--active'));
+    if (document.fullscreenElement) document.exitFullscreen?.();
+  }
+
+  function next() { if (current < slides.length - 1) showSlide(current + 1); }
+  function prev() { if (current > 0) showSlide(current - 1); }
+
+  document.addEventListener('keydown', e => {
+    if (!document.body.classList.contains('--presenting')) return;
+    if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); next(); }
+    if (e.key === 'ArrowLeft')                    { e.preventDefault(); prev(); }
+    if (e.key === 'Escape')                         stopPresentation();
+  });
+
+  document.addEventListener('click', e => {
+    if (!document.body.classList.contains('--presenting')) return;
+    if (e.target.closest('.slide')) next();
+  });
+
+  document.addEventListener('fullscreenchange', () => {
+    if (!document.fullscreenElement) stopPresentation();
+  });
+
+  /* ── EDIT-MODUS: Text bearbeiten + Bilder einsetzen (nur am Bildschirm) ── */
+  const EDIT_SEL = '.slide h1, .slide h2, .slide h3, .slide h4, .slide p, .slide li, .slide-stat-number';
+  function toggleEdit() {
+    if (document.body.classList.contains('--presenting')) return;
+    const on = document.body.classList.toggle('edit-mode');
+    document.querySelectorAll(EDIT_SEL).forEach(el => { el.contentEditable = on; });
+    document.getElementById('editBtn').classList.toggle('active', on);
+    document.getElementById('editLabel').textContent = on ? 'Fertig' : 'Bearbeiten';
+  }
+  // Bilder einsetzen: Klick / Drag&Drop / Einfügen → als Base64-Hintergrund (self-contained)
+  function setSlideImage(el, dataUrl) {
+    el.style.backgroundImage = 'url("' + dataUrl + '")';
+    el.style.backgroundSize = 'cover';
+    el.style.backgroundPosition = 'center';
+  }
+  function readSlideImage(file, el) {
+    if (!file || !file.type.startsWith('image/')) return;
+    const r = new FileReader();
+    r.onload = e => setSlideImage(el, e.target.result);
+    r.readAsDataURL(file);
+  }
+  let lastImg = null;
+  document.querySelectorAll('.slide-image, .slide--fullbleed').forEach(el => {
+    el.addEventListener('click', e => {
+      if (!document.body.classList.contains('edit-mode')) return;
+      if (e.target.closest('[contenteditable="true"]')) return; // Text bearbeiten, nicht Bild
+      lastImg = el;
+      const inp = document.createElement('input');
+      inp.type = 'file'; inp.accept = 'image/*';
+      inp.onchange = () => readSlideImage(inp.files[0], el);
+      inp.click();
+    });
+    el.addEventListener('dragover', e => { if (document.body.classList.contains('edit-mode')) { e.preventDefault(); el.classList.add('drop-hover'); } });
+    el.addEventListener('dragleave', () => el.classList.remove('drop-hover'));
+    el.addEventListener('drop', e => {
+      if (!document.body.classList.contains('edit-mode')) return;
+      e.preventDefault(); el.classList.remove('drop-hover');
+      readSlideImage(e.dataTransfer.files[0], el);
+    });
+  });
+  document.addEventListener('paste', e => {
+    if (!document.body.classList.contains('edit-mode') || !lastImg) return;
+    const item = [...(e.clipboardData?.items || [])].find(i => i.type.startsWith('image/'));
+    if (item) { e.preventDefault(); readSlideImage(item.getAsFile(), lastImg); }
+  });
+</script>
+
+</body>
+</html>

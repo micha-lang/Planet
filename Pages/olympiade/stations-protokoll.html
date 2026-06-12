@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stations-Protokoll — Planet-Olympiade 2026</title>
+<link rel="stylesheet" href="https://use.typekit.net/phj5hyp.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined">
+<style>
+:root {
+  --planet-black:#000; --planet-white:#FFF; --planet-primary:#0000FF;
+  --planet-secondary:#D4FF00; --planet-tint:#DCDCDC; --planet-rule:#A6A6A6; --planet-fill:#ECECEC; --planet-neutral:#F5F5F5;
+  --planet-font:"neue-haas-grotesk-display","Helvetica Neue",Helvetica,Arial,sans-serif;
+  --weight-body:500; --weight-display:600;
+  --doc-cover-title:52pt; --doc-cover-sub:16pt; --doc-h1:30pt; --doc-h2:21pt; --doc-h3:14pt;
+  --doc-h4:11pt; --doc-lead:13pt; --doc-body:10.5pt; --doc-small:9pt; --doc-meta:8pt;
+  --doc-stat:40pt; --doc-stat-xl:110pt; --doc-quote:18pt;
+  --s1:4pt; --s2:8pt; --s3:12pt; --s4:16pt; --s5:20pt; --s6:24pt; --s8:32pt; --s10:40pt; --s12:48pt;
+  --page-w:210mm; --page-h:297mm; --margin-x:22mm; --margin-top:26mm; --margin-bot:22mm; --header-y:13mm; --footer-y:13mm;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html,body{background:var(--planet-tint);color:var(--planet-black);font-family:var(--planet-font);font-weight:var(--weight-body);font-size:var(--doc-body);line-height:1.5;-webkit-font-smoothing:antialiased;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+.page{position:relative;width:var(--page-w);height:var(--page-h);background:var(--planet-white);overflow:hidden;padding:var(--margin-top) var(--margin-x) var(--margin-bot);}
+@media screen{body{display:flex;flex-direction:column;align-items:center;gap:12mm;padding:16mm 0;}.page{box-shadow:0 4mm 16mm rgba(0,0,0,0.18);}}
+.page-header{position:absolute;top:var(--header-y);left:var(--margin-x);right:var(--margin-x);display:flex;justify-content:space-between;align-items:baseline;font-size:var(--doc-meta);color:var(--planet-black);}
+.page-header .logo{font-weight:var(--weight-display);color:var(--planet-primary);}
+.page-header .header-doc{color:var(--planet-black);}
+.page-footer{position:absolute;bottom:var(--footer-y);left:var(--margin-x);right:var(--margin-x);display:flex;justify-content:space-between;align-items:baseline;font-size:var(--doc-meta);}
+.page-footer .footer-meta{color:var(--planet-black);}
+.page-footer .page-num{font-weight:var(--weight-display);font-variant-numeric:tabular-nums;}
+.page-header::after,.page-footer::before{content:"";position:absolute;left:0;right:0;height:0.6pt;background:var(--planet-rule);}
+.page-header::after{bottom:-3mm;} .page-footer::before{top:-3mm;}
+h1,h2,h3,h4{font-family:var(--planet-font);font-weight:var(--weight-display);color:var(--planet-black);}
+.page-body h1{font-size:var(--doc-h1);line-height:1.0;letter-spacing:-0.015em;}
+.page-body h2{font-size:var(--doc-h2);line-height:1.05;}
+.page-body h3{font-size:var(--doc-h3);line-height:1.2;}
+.page-body h4{font-size:var(--doc-h4);line-height:1.3;}
+p{font-size:var(--doc-body);line-height:1.5;}
+.lead{font-size:var(--doc-lead);line-height:1.4;}
+.small{font-size:var(--doc-small);}
+.kicker{font-size:var(--doc-body);font-weight:var(--weight-display);color:var(--planet-primary);margin-bottom:var(--s2);}
+h1,h2,h3,h4{break-after:avoid;}
+.flow>*+*{margin-top:var(--s3);}
+.flow>h1+*{margin-top:var(--s4);} .flow>h3+*{margin-top:var(--s2);}
+.flow>*+h3{margin-top:var(--s6);}
+.section-head{display:flex;justify-content:space-between;align-items:flex-end;padding-bottom:var(--s2);border-bottom:1pt solid var(--planet-black);break-after:avoid;}
+.section-head .sh-num{font-size:var(--doc-h2);font-weight:var(--weight-display);color:var(--planet-primary);}
+.page-body{height:100%;}
+
+/* ---- Formularfelder ---- */
+.fields-2{display:grid;grid-template-columns:1fr 1fr;gap:var(--s6);}
+.field .field-label{font-size:var(--doc-small);font-weight:var(--weight-display);margin-bottom:2mm;}
+.field .field-line{border-bottom:1.2pt solid var(--planet-black);height:9mm;}
+
+/* ---- Ergebnistabelle (Formular) ---- */
+.table{width:100%;border-collapse:collapse;font-size:var(--doc-body);}
+.table th{text-align:left;font-weight:var(--weight-display);padding:var(--s2) var(--s3) var(--s2) 0;border-bottom:1pt solid var(--planet-black);}
+.table td{padding:0 var(--s3) 0 0;border-bottom:0.6pt solid var(--planet-rule);height:11mm;vertical-align:bottom;}
+.table th:last-child,.table td:last-child{padding-right:0;}
+.table .num{text-align:left;font-variant-numeric:tabular-nums;width:36mm;}
+.table .note-col{width:60mm;}
+
+/* ---- Siegerehrung (Podium) ---- */
+.podium-row{display:grid;grid-template-columns:16mm 1fr 38mm;gap:var(--s4);align-items:end;padding:var(--s4) 0;border-bottom:0.6pt solid var(--planet-rule);}
+.podium-row:last-child{border-bottom:0;}
+.podium-rank{font-size:var(--doc-stat);font-weight:var(--weight-display);line-height:0.9;color:var(--planet-primary);letter-spacing:-0.02em;}
+.podium-fill{border-bottom:1.2pt solid var(--planet-black);height:8mm;}
+.podium-cap{font-size:var(--doc-small);font-weight:var(--weight-display);margin-bottom:1.5mm;}
+
+/* ---- Callout (Kurzanleitung) ---- */
+.callout{padding:var(--s4);border-radius:3mm;background:var(--planet-secondary);break-inside:avoid;}
+.callout h4{margin-bottom:var(--s2);}
+.callout ol{padding-left:var(--s4);font-size:var(--doc-body);line-height:1.5;}
+.callout li{margin-bottom:var(--s1);}
+
+@page{size:A4;margin:0;}
+@media print{html,body{background:var(--planet-white);}.page{box-shadow:none;break-after:page;}.page:last-child{break-after:auto;}.print-bar{display:none !important;}}
+@media screen {
+  .print-bar{position:fixed;bottom:8mm;right:8mm;z-index:100;display:inline-flex;align-items:center;gap:6px;font-family:var(--planet-font);font-weight:var(--weight-display);font-size:11pt;height:48px;padding:0 20px;border-radius:9999px;border:0;cursor:pointer;background:var(--planet-primary);color:var(--planet-white);}
+  .print-bar:hover{background:var(--planet-black);}
+  .print-bar .material-icons-outlined{font-size:20px;}
+}
+</style>
+</head>
+<body>
+
+<!-- SEITE 1 — Felder + Ergebnistabelle -->
+<section class="page">
+  <header class="page-header"><span class="logo">Planet</span><span class="header-doc">Planet-Olympiade · Sommerfest 2026</span></header>
+  <div class="page-body flow">
+    <div>
+      <div class="kicker">Planet-Olympiade 2026</div>
+      <h1>Stations-Protokoll</h1>
+    </div>
+    <p class="lead">Für die Stationsleitung: Zeiten messen, eintragen, Sieger:innen küren.</p>
+
+    <div class="fields-2">
+      <div class="field"><div class="field-label">Station</div><div class="field-line"></div></div>
+      <div class="field"><div class="field-label">Stationsleitung</div><div class="field-line"></div></div>
+    </div>
+
+    <h3>Ergebnisse</h3>
+    <table class="table">
+      <thead><tr><th>Team</th><th class="num">Zeit (min:sek)</th><th class="note-col">Anmerkung</th></tr></thead>
+      <tbody>
+        <tr><td></td><td class="num"></td><td></td></tr>
+        <tr><td></td><td class="num"></td><td></td></tr>
+        <tr><td></td><td class="num"></td><td></td></tr>
+        <tr><td></td><td class="num"></td><td></td></tr>
+        <tr><td></td><td class="num"></td><td></td></tr>
+        <tr><td></td><td class="num"></td><td></td></tr>
+        <tr><td></td><td class="num"></td><td></td></tr>
+        <tr><td></td><td class="num"></td><td></td></tr>
+        <tr><td></td><td class="num"></td><td></td></tr>
+        <tr><td></td><td class="num"></td><td></td></tr>
+        <tr><td></td><td class="num"></td><td></td></tr>
+        <tr><td></td><td class="num"></td><td></td></tr>
+        <tr><td></td><td class="num"></td><td></td></tr>
+        <tr><td></td><td class="num"></td><td></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <footer class="page-footer"><span class="footer-meta">Planet-Olympiade 2026</span><span class="page-num">1 / 2</span></footer>
+</section>
+
+<!-- SEITE 2 — Siegerehrung + Anleitung -->
+<section class="page">
+  <header class="page-header"><span class="logo">Planet</span><span class="header-doc">Planet-Olympiade · Sommerfest 2026</span></header>
+  <div class="page-body flow">
+    <div class="section-head"><h2>Siegerehrung</h2></div>
+    <p>Wer war an dieser Station am schnellsten?</p>
+
+    <div>
+      <div class="podium-row">
+        <div class="podium-rank">1</div>
+        <div><div class="podium-cap">Team</div><div class="podium-fill"></div></div>
+        <div><div class="podium-cap">Zeit</div><div class="podium-fill"></div></div>
+      </div>
+      <div class="podium-row">
+        <div class="podium-rank">2</div>
+        <div><div class="podium-cap">Team</div><div class="podium-fill"></div></div>
+        <div><div class="podium-cap">Zeit</div><div class="podium-fill"></div></div>
+      </div>
+      <div class="podium-row">
+        <div class="podium-rank">3</div>
+        <div><div class="podium-cap">Team</div><div class="podium-fill"></div></div>
+        <div><div class="podium-cap">Zeit</div><div class="podium-fill"></div></div>
+      </div>
+    </div>
+
+    <div class="callout">
+      <h4>Kurz für die Stationsleitung</h4>
+      <ol>
+        <li>Stoppuhr beim Startsignal starten, im Ziel stoppen.</li>
+        <li>Zeit immer im Format <strong>MM:SS</strong> notieren.</li>
+        <li>Gleiche Startbedingungen für alle Teams.</li>
+        <li>Blatt nach der Olympiade zur Auswertung bringen.</li>
+      </ol>
+    </div>
+  </div>
+  <footer class="page-footer"><span class="footer-meta">Planet-Olympiade 2026</span><span class="page-num">2 / 2</span></footer>
+</section>
+
+<button class="print-bar" onclick="window.print()"><span class="material-icons-outlined">print</span> Als PDF drucken</button>
+</body>
+</html>
