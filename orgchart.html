@@ -376,8 +376,12 @@ function update(src) {
     .style('font-family', 'var(--planet-font)')
     .style('font-size', d => d.depth <= 1 ? '13px' : '11px')
     .style('font-weight', d => d.depth <= 1 ? '600' : '500')
-    .style('opacity', d => isInActiveStrand(d) ? null : 0.15)
-    .text(d => d.depth === 0 ? '' : d.data.name);
+    .style('opacity', d => isInActiveStrand(d) ? null : 0)
+    .text(d => {
+      if (d.depth === 0) return '';
+      if (d.data.type === 'employee') return d.data.name.split(' ')[0]; // nur Vorname
+      return d.data.name;
+    });
 
   labels.exit().transition().duration(DUR)
     .attr('transform', `translate(${px0},${py0})`).remove();

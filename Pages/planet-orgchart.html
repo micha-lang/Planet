@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Planet — Organigramm</title>
+
+<link rel="stylesheet" href="https://use.typekit.net/phj5hyp.css">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+
+<style>
+  :root {
+    --planet-primary: #0000FF;
+    --planet-secondary: #D4FF00;
+    --planet-neutral: #F5F5F5;
+    --planet-black: #000000;
+    --planet-white: #FFFFFF;
+    --planet-font: "neue-haas-grotesk-display", "Helvetica Neue", Helvetica, Inter, Arial, system-ui, sans-serif;
+    --planet-weight-body: 400;
+    --planet-weight-heading: 500;
+    --planet-radius: 9999px;
+    --hairline: 1px solid #E5E5E5;
+    --line: #C8C8C8;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+
+  body {
+    font-family: var(--planet-font);
+    font-weight: var(--planet-weight-body);
+    color: var(--planet-black);
+    background: var(--planet-white);
+    -webkit-font-smoothing: antialiased;
+    overflow: hidden;
+  }
+
+  /* All headlines — every size — Medium */
+  h1, h2, h3, h4, h5, h6,
+  .kicker, .eyebrow, .section-label, .subhead {
+    font-family: var(--planet-font);
+    font-weight: var(--planet-weight-heading);
+  }
+
+  /* Logo: explicit weight, mandatory */
+  .planet-logo {
+    font-family: var(--planet-font);
+    font-weight: var(--planet-weight-heading);
+    color: var(--planet-primary);
+  }
+
+  /* Interactive labels — Medium */
+  button {
+    font-family: var(--planet-font);
+    font-weight: var(--planet-weight-heading);
+  }
+  input {
+    font-family: var(--planet-font);
+    font-weight: var(--planet-weight-body);
+  }
+
+  /* App grid */
+  .app {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto 1fr;
+    height: 100vh;
+    position: relative;
+  }
+  .app.panel-open {
+    grid-template-columns: 1fr 380px;
+  }
+
+  /* Header */
+  .header {
+    grid-column: 1 / -1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 32px;
+    border-bottom: var(--hairline);
+    background: var(--planet-white);
+  }
+  .planet-logo {
+    font-size: 24px;
+    letter-spacing: -0.02em;
+    line-height: 1;
+  }
+  .header-title {
+    font-size: 12px;
+    font-weight: var(--planet-weight-body);
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: #666;
+  }
+
+  /* Toolbar */
+  .toolbar {
+    grid-column: 1 / 2;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 32px;
+    border-bottom: var(--hairline);
+    background: var(--planet-white);
+  }
+
+  .search {
+    flex: 1;
+    max-width: 400px;
+    position: relative;
+  }
+  .search input {
+    width: 100%;
+    border: 1px solid var(--planet-black);
+    border-radius: var(--planet-radius);
+    padding: 10px 16px 10px 40px;
+    font-size: 14px;
+    background: var(--planet-white);
+    outline: none;
+  }
+  .search input:focus { background: var(--planet-neutral); }
+  .search .material-icons-outlined {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 18px;
+    color: #666;
+  }
+
+  .pill-btn {
+    background: var(--planet-white);
+    border: 1px solid var(--planet-black);
+    border-radius: var(--planet-radius);
+    padding: 9px 16px;
+    font-size: 13px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--planet-black);
+    transition: background 0.15s;
+    white-space: nowrap;
+  }
+  .pill-btn:hover { background: var(--planet-neutral); }
+  .pill-btn .material-icons-outlined { font-size: 16px; }
+
+  /* Stage */
+  .stage {
+    grid-column: 1 / 2;
+    grid-row: 3 / 4;
+    overflow: auto;
+    background: var(--planet-neutral);
+    padding: 56px 32px 80px;
+  }
+  .tree {
+    display: flex;
+    justify-content: center;
+    min-width: min-content;
+  }
+
+  .node {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 10px;
+    position: relative;
+  }
+
+  /* Cards — fully round-pill or rect-with-pill-radius?
+     Guideline: shape language is round. We use fully rounded for personnel pills,
+     and a softer (but still pill-like) shape for org cards via large radius. */
+  .card {
+    background: var(--planet-white);
+    border: 1px solid var(--planet-black);
+    border-radius: 20px;
+    padding: 14px 20px;
+    min-width: 180px;
+    max-width: 240px;
+    cursor: pointer;
+    text-align: left;
+    transition: background 0.15s, color 0.15s;
+    position: relative;
+    z-index: 2;
+  }
+  .card:hover { background: var(--planet-neutral); }
+  .card.selected {
+    background: var(--planet-black);
+    color: var(--planet-white);
+  }
+  .card.selected .card-type,
+  .card.selected .card-meta { color: rgba(255,255,255,0.65); }
+
+  .card.root {
+    background: var(--planet-black);
+    color: var(--planet-white);
+    border-color: var(--planet-black);
+  }
+  .card.root .card-type { color: rgba(255,255,255,0.6); }
+  .card.root .card-name { font-size: 18px; }
+  .card.root .card-meta { color: rgba(255,255,255,0.6); }
+  .card.root.selected {
+    background: var(--planet-secondary);
+    color: var(--planet-black);
+    border-color: var(--planet-black);
+  }
+  .card.root.selected .card-type,
+  .card.root.selected .card-meta { color: var(--planet-black); }
+
+  .card.tochter .card-name { font-size: 16px; }
+
+  .card.person {
+    border-radius: var(--planet-radius);
+    padding: 10px 18px;
+    min-width: 160px;
+  }
+  .card.person .card-name { font-size: 13px; }
+
+  .card-type {
+    font-size: 9px;
+    font-weight: var(--planet-weight-heading);
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: #888;
+    margin-bottom: 4px;
+  }
+  .card-name {
+    font-weight: var(--planet-weight-heading);
+    font-size: 14px;
+    line-height: 1.2;
+    letter-spacing: -0.005em;
+  }
+  .card-meta {
+    font-size: 11px;
+    font-weight: var(--planet-weight-body);
+    color: #888;
+    margin-top: 6px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .card-meta .material-icons-outlined { font-size: 13px; }
+
+  /* Toggle button */
+  .toggle-btn {
+    width: 22px;
+    height: 22px;
+    border-radius: var(--planet-radius);
+    background: var(--planet-white);
+    border: 1px solid var(--planet-black);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 6px;
+    position: relative;
+    z-index: 3;
+    transition: background 0.15s;
+    padding: 0;
+  }
+  .toggle-btn:hover { background: var(--planet-neutral); }
+  .toggle-btn .material-icons-outlined {
+    font-size: 16px;
+    color: var(--planet-black);
+  }
+
+  .vline {
+    width: 1px;
+    height: 24px;
+    background: var(--line);
+  }
+
+  .children {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: center;
+    position: relative;
+    padding-top: 24px;
+  }
+
+  .node.child::before {
+    content: "";
+    position: absolute;
+    top: -24px;
+    left: 50%;
+    width: 1px;
+    height: 24px;
+    background: var(--line);
+  }
+
+  .children.has-siblings::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    height: 1px;
+    background: var(--line);
+  }
+
+  .node.collapsed > .vline,
+  .node.collapsed > .children { display: none; }
+
+  /* PANEL — slide in from right when active */
+  .panel {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 380px;
+    height: 100%;
+    border-left: var(--hairline);
+    background: var(--planet-white);
+    padding: 28px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    transform: translateX(100%);
+    transition: transform 0.25s ease;
+    z-index: 20;
+  }
+  .panel.open {
+    transform: translateX(0);
+  }
+
+  .panel-close {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 32px;
+    height: 32px;
+    border-radius: var(--planet-radius);
+    background: var(--planet-white);
+    border: 1px solid var(--planet-black);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    transition: background 0.15s;
+  }
+  .panel-close:hover { background: var(--planet-neutral); }
+  .panel-close .material-icons-outlined { font-size: 18px; }
+
+  .panel-kicker {
+    font-size: 10px;
+    font-weight: var(--planet-weight-heading);
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: #666;
+    margin-bottom: 8px;
+    margin-top: 12px;
+  }
+  .panel-title {
+    font-weight: var(--planet-weight-heading);
+    font-size: 28px;
+    letter-spacing: -0.01em;
+    line-height: 1.1;
+    margin-bottom: 6px;
+  }
+  .panel-breadcrumb {
+    font-size: 12px;
+    font-weight: var(--planet-weight-body);
+    color: #888;
+    margin-bottom: 24px;
+    line-height: 1.5;
+  }
+  .panel-breadcrumb .crumb { cursor: pointer; }
+  .panel-breadcrumb .crumb:hover {
+    color: var(--planet-black);
+    text-decoration: underline;
+  }
+  .panel-breadcrumb .sep {
+    margin: 0 4px;
+    color: #CCC;
+  }
+
+  .panel-section {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: var(--hairline);
+  }
+  .panel-section-label {
+    font-size: 10px;
+    font-weight: var(--planet-weight-heading);
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: #999;
+    margin-bottom: 8px;
+  }
+  .panel-section-content {
+    font-size: 14px;
+    font-weight: var(--planet-weight-body);
+    line-height: 1.55;
+    color: var(--planet-black);
+  }
+  .panel-section-content .placeholder {
+    color: #BBB;
+  }
+
+  .badge {
+    display: inline-block;
+    background: var(--planet-secondary);
+    color: var(--planet-black);
+    border-radius: var(--planet-radius);
+    padding: 3px 10px;
+    font-size: 10px;
+    font-weight: var(--planet-weight-heading);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-left: 6px;
+    vertical-align: middle;
+  }
+
+  /* Search results */
+  .search-results {
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0;
+    right: 0;
+    background: var(--planet-white);
+    border: 1px solid var(--planet-black);
+    border-radius: 20px;
+    max-height: 360px;
+    overflow-y: auto;
+    z-index: 30;
+    display: none;
+  }
+  .search-results.active { display: block; }
+  .search-result {
+    padding: 10px 16px;
+    cursor: pointer;
+    font-size: 13px;
+    border-bottom: 1px solid #F5F5F5;
+  }
+  .search-result:hover { background: var(--planet-neutral); }
+  .search-result:last-child { border-bottom: none; }
+  .search-result .name {
+    font-weight: var(--planet-weight-heading);
+  }
+  .search-result .path {
+    display: block;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #999;
+    margin-top: 2px;
+    font-weight: var(--planet-weight-body);
+  }
+  .search-result-empty {
+    padding: 20px;
+    text-align: center;
+    color: #999;
+    font-size: 13px;
+  }
+
+  /* Mobile */
+  @media (max-width: 960px) {
+    .panel {
+      width: 100%;
+      max-width: 420px;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="app" id="app">
+
+  <header class="header">
+    <div class="planet-logo">Planet</div>
+    <div class="header-title">Organigramm</div>
+  </header>
+
+  <div class="toolbar">
+    <button class="pill-btn" id="expandAllBtn">
+      <span class="material-icons-outlined">unfold_more</span> Alles ausklappen
+    </button>
+    <button class="pill-btn" id="collapseAllBtn">
+      <span class="material-icons-outlined">unfold_less</span> Einklappen
+    </button>
+    <div class="search">
+      <span class="material-icons-outlined">search</span>
+      <input type="text" id="searchInput" placeholder="Suche nach Person, Abteilung, Team …" autocomplete="off">
+      <div class="search-results" id="searchResults"></div>
+    </div>
+  </div>
+
+  <main class="stage" id="stage">
+    <div class="tree" id="tree"></div>
+  </main>
+
+  <aside class="panel" id="panel">
+    <button class="panel-close" id="panelClose" aria-label="Schließen">
+      <span class="material-icons-outlined">close</span>
+    </button>
+    <div id="panelContent"></div>
+  </aside>
+
+</div>
+
+<script>
+const DATA = {
+  id: "planet", name: "Planet GmbH", type: "Holding", level: "root",
+  children: [
+    {
+      id: "inuvet", name: "Inuvet", type: "Tochtergesellschaft", level: "tochter",
+      description: "Produkte für veterinärmedizinische Praxen.",
+      children: [
+        { id: "inuvet-gf", name: "Geschäftsführung", type: "Leitung", level: "abteilung",
+          children: [
+            { id: "inuvet-ceo", name: "CEO", type: "Rolle", level: "person", isPerson: true }
+          ]
+        },
+        { id: "inuvet-marketing", name: "Marketing", type: "Abteilung", level: "abteilung",
+          children: [
+            { id: "inuvet-m-content", name: "Content Team", type: "Team", level: "team",
+              children: [
+                { id: "p-1", name: "Teamlead Content", type: "Rolle", level: "person", isPerson: true },
+                { id: "p-2", name: "Designer", type: "Rolle", level: "person", isPerson: true }
+              ]
+            },
+            { id: "inuvet-m-brand", name: "Brand Team", type: "Team", level: "team",
+              children: [
+                { id: "p-3", name: "Brand Lead", type: "Rolle", level: "person", isPerson: true }
+              ]
+            }
+          ]
+        },
+        { id: "inuvet-sales", name: "Sales", type: "Abteilung", level: "abteilung",
+          children: [
+            { id: "inuvet-s-dach", name: "DACH Team", type: "Team", level: "team", children: [] },
+            { id: "inuvet-s-bnl", name: "BeNeLux Team", type: "Team", level: "team", children: [] }
+          ]
+        },
+        { id: "inuvet-product", name: "Produkt & Entwicklung", type: "Abteilung", level: "abteilung", children: [] },
+        { id: "inuvet-ops", name: "Operations", type: "Abteilung", level: "abteilung", children: [] }
+      ]
+    },
+    {
+      id: "byox", name: "Byox", type: "Tochtergesellschaft", level: "tochter",
+      children: [
+        { id: "byox-gf", name: "Geschäftsführung", type: "Leitung", level: "abteilung", children: [] },
+        { id: "byox-marketing", name: "Marketing", type: "Abteilung", level: "abteilung", children: [] },
+        { id: "byox-sales", name: "Sales", type: "Abteilung", level: "abteilung", children: [] }
+      ]
+    },
+    {
+      id: "planimol", name: "Planimol", type: "Tochtergesellschaft", level: "tochter",
+      children: [
+        { id: "planimol-gf", name: "Geschäftsführung", type: "Leitung", level: "abteilung", children: [] },
+        { id: "planimol-marketing", name: "Marketing", type: "Abteilung", level: "abteilung", children: [] }
+      ]
+    },
+    {
+      id: "eqx", name: "EQX", type: "Tochtergesellschaft", level: "tochter",
+      children: [
+        { id: "eqx-gf", name: "Geschäftsführung", type: "Leitung", level: "abteilung", children: [] },
+        { id: "eqx-marketing", name: "Marketing", type: "Abteilung", level: "abteilung", children: [] }
+      ]
+    }
+  ]
+};
+
+const state = {
+  selected: null,
+  panelOpen: false,
+  expanded: new Set(["planet", "inuvet", "byox", "planimol", "eqx"])
+};
+
+function findNode(id, root) {
+  root = root || DATA;
+  if (root.id === id) return root;
+  if (!root.children) return null;
+  for (var i = 0; i < root.children.length; i++) {
+    var f = findNode(id, root.children[i]);
+    if (f) return f;
+  }
+  return null;
+}
+
+function findPath(id, root, path) {
+  root = root || DATA;
+  path = path || [];
+  if (root.id === id) return path.concat([root]);
+  if (!root.children) return null;
+  for (var i = 0; i < root.children.length; i++) {
+    var f = findPath(id, root.children[i], path.concat([root]));
+    if (f) return f;
+  }
+  return null;
+}
+
+function flattenAll(node, path) {
+  node = node || DATA;
+  path = path || [];
+  var here = Object.assign({}, node, { path: path.concat([node]) });
+  var out = [here];
+  if (node.children) {
+    for (var i = 0; i < node.children.length; i++) {
+      out = out.concat(flattenAll(node.children[i], path.concat([node])));
+    }
+  }
+  return out;
+}
+
+function allIds(node, acc) {
+  node = node || DATA;
+  acc = acc || [];
+  acc.push(node.id);
+  if (node.children) node.children.forEach(function(c) { allIds(c, acc); });
+  return acc;
+}
+
+function escapeHTML(s) {
+  if (s == null) return "";
+  return String(s)
+    .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+}
+
+function renderTree() {
+  var tree = document.getElementById("tree");
+  tree.innerHTML = "";
+  tree.appendChild(buildNode(DATA, true));
+  requestAnimationFrame(drawConnectors);
+}
+
+function buildNode(node, isRoot) {
+  var el = document.createElement("div");
+  el.className = "node";
+  if (!isRoot) el.classList.add("child");
+  el.dataset.id = node.id;
+
+  var hasChildren = node.children && node.children.length > 0;
+  var isExpanded = state.expanded.has(node.id);
+  if (hasChildren && !isExpanded) el.classList.add("collapsed");
+
+  var card = document.createElement("div");
+  card.className = "card";
+  if (node.level === "root") card.classList.add("root");
+  else if (node.level === "tochter") card.classList.add("tochter");
+  else if (node.isPerson) card.classList.add("person");
+  if (state.selected === node.id) card.classList.add("selected");
+
+  var typeEl = document.createElement("div");
+  typeEl.className = "card-type";
+  typeEl.textContent = node.type || "";
+  card.appendChild(typeEl);
+
+  var nameEl = document.createElement("div");
+  nameEl.className = "card-name";
+  nameEl.textContent = node.name;
+  card.appendChild(nameEl);
+
+  if (hasChildren) {
+    var meta = document.createElement("div");
+    meta.className = "card-meta";
+    var count = node.children.length;
+    meta.innerHTML = '<span class="material-icons-outlined">account_tree</span> ' + count + ' ' + (count === 1 ? 'Eintrag' : 'Einträge');
+    card.appendChild(meta);
+  }
+
+  card.addEventListener("click", function(e) {
+    e.stopPropagation();
+    selectNode(node.id);
+  });
+  el.appendChild(card);
+
+  if (hasChildren) {
+    var btn = document.createElement("button");
+    btn.className = "toggle-btn";
+    btn.innerHTML = '<span class="material-icons-outlined">' + (isExpanded ? 'remove' : 'add') + '</span>';
+    btn.title = isExpanded ? "Einklappen" : "Ausklappen";
+    btn.addEventListener("click", function(e) {
+      e.stopPropagation();
+      if (state.expanded.has(node.id)) state.expanded.delete(node.id);
+      else state.expanded.add(node.id);
+      renderTree();
+    });
+    el.appendChild(btn);
+
+    var vline = document.createElement("div");
+    vline.className = "vline";
+    el.appendChild(vline);
+
+    var childrenWrap = document.createElement("div");
+    childrenWrap.className = "children";
+    if (node.children.length > 1) childrenWrap.classList.add("has-siblings");
+    node.children.forEach(function(c) {
+      childrenWrap.appendChild(buildNode(c, false));
+    });
+    el.appendChild(childrenWrap);
+  }
+  return el;
+}
+
+function drawConnectors() {
+  var styleId = "dyn-bar-style";
+  var styleEl = document.getElementById(styleId);
+  if (!styleEl) {
+    styleEl = document.createElement("style");
+    styleEl.id = styleId;
+    document.head.appendChild(styleEl);
+  }
+  var rules = [];
+  document.querySelectorAll(".children.has-siblings").forEach(function(row, i) {
+    var kids = row.querySelectorAll(":scope > .node");
+    if (kids.length < 2) return;
+    var rowRect = row.getBoundingClientRect();
+    var first = kids[0].getBoundingClientRect();
+    var last = kids[kids.length - 1].getBoundingClientRect();
+    var firstMid = first.left + first.width / 2 - rowRect.left;
+    var lastMid = last.left + last.width / 2 - rowRect.left;
+    row.dataset.barIdx = i;
+    rules.push('.children.has-siblings[data-bar-idx="' + i + '"]::after { left: ' + firstMid + 'px; width: ' + (lastMid - firstMid) + 'px; }');
+  });
+  styleEl.textContent = rules.join("\n");
+}
+
+window.addEventListener("resize", function() { requestAnimationFrame(drawConnectors); });
+
+function openPanel() {
+  state.panelOpen = true;
+  document.getElementById("app").classList.add("panel-open");
+  document.getElementById("panel").classList.add("open");
+  requestAnimationFrame(drawConnectors);
+}
+
+function closePanel() {
+  state.panelOpen = false;
+  state.selected = null;
+  document.getElementById("app").classList.remove("panel-open");
+  document.getElementById("panel").classList.remove("open");
+  renderTree();
+  requestAnimationFrame(drawConnectors);
+}
+
+function selectNode(id) {
+  state.selected = id;
+  var path = findPath(id);
+  if (path) path.forEach(function(p) { state.expanded.add(p.id); });
+  renderTree();
+  renderPanel();
+  openPanel();
+  setTimeout(function() {
+    var el = document.querySelector('.node[data-id="' + id + '"] > .card');
+    if (el) el.scrollIntoView({ behavior: "smooth", block: "center", inline: "center" });
+  }, 50);
+}
+
+function renderPanel() {
+  var content = document.getElementById("panelContent");
+  if (!state.selected) {
+    content.innerHTML = "";
+    return;
+  }
+  var node = findNode(state.selected);
+  if (!node) return;
+  var path = findPath(state.selected) || [];
+
+  var breadcrumbHTML = path.map(function(n, i) {
+    var isLast = i === path.length - 1;
+    return (i > 0 ? '<span class="sep">›</span>' : '') +
+           '<span class="crumb" data-id="' + n.id + '"' + (isLast ? ' style="color:#000;"' : '') + '>' + escapeHTML(n.name) + '</span>';
+  }).join("");
+
+  var hasChildren = node.children && node.children.length > 0;
+  var childCount = hasChildren ? node.children.length : 0;
+
+  content.innerHTML =
+    '<div class="panel-kicker">' + escapeHTML(node.type || "") + '</div>' +
+    '<div class="panel-title">' + escapeHTML(node.name) + (node.isPerson ? '<span class="badge">Person</span>' : '') + '</div>' +
+    '<div class="panel-breadcrumb">' + breadcrumbHTML + '</div>' +
+    '<div class="panel-section">' +
+      '<div class="panel-section-label">Beschreibung</div>' +
+      '<div class="panel-section-content">' +
+        (node.description ? escapeHTML(node.description) : '<span class="placeholder">Inhalt folgt.</span>') +
+      '</div>' +
+    '</div>' +
+    '<div class="panel-section">' +
+      '<div class="panel-section-label">Verantwortlich</div>' +
+      '<div class="panel-section-content"><span class="placeholder">Inhalt folgt.</span></div>' +
+    '</div>' +
+    '<div class="panel-section">' +
+      '<div class="panel-section-label">' + (node.isPerson ? 'Kontakt' : 'Untergeordnete Einheiten') + '</div>' +
+      '<div class="panel-section-content">' +
+        (node.isPerson
+          ? '<span class="placeholder">Inhalt folgt.</span>'
+          : (hasChildren ? (childCount + ' ' + (childCount === 1 ? 'Eintrag' : 'Einträge')) : '<span class="placeholder">Keine.</span>')) +
+      '</div>' +
+    '</div>' +
+    (!node.isPerson
+      ? '<div class="panel-section"><div class="panel-section-label">Website</div><div class="panel-section-content"><span class="placeholder">Inhalt folgt.</span></div></div>'
+      : '');
+
+  content.querySelectorAll(".crumb").forEach(function(c) {
+    c.addEventListener("click", function() { selectNode(c.dataset.id); });
+  });
+}
+
+function setupSearch() {
+  var input = document.getElementById("searchInput");
+  var results = document.getElementById("searchResults");
+
+  input.addEventListener("input", function() {
+    var q = input.value.trim().toLowerCase();
+    if (!q) {
+      results.classList.remove("active");
+      results.innerHTML = "";
+      return;
+    }
+    var all = flattenAll().filter(function(n) { return n.id !== "planet"; });
+    var matches = all.filter(function(n) { return n.name.toLowerCase().indexOf(q) !== -1; }).slice(0, 12);
+
+    if (matches.length === 0) {
+      results.innerHTML = '<div class="search-result-empty">Nichts gefunden</div>';
+    } else {
+      results.innerHTML = matches.map(function(m) {
+        var pathStr = m.path.slice(0, -1).map(function(p) { return p.name; }).join(" › ");
+        return '<div class="search-result" data-id="' + m.id + '">' +
+               '<span class="name">' + escapeHTML(m.name) + '</span>' +
+               '<span class="path">' + escapeHTML(pathStr) + '</span>' +
+               '</div>';
+      }).join("");
+      results.querySelectorAll(".search-result").forEach(function(r) {
+        r.addEventListener("click", function() {
+          selectNode(r.dataset.id);
+          results.classList.remove("active");
+          input.value = "";
+        });
+      });
+    }
+    results.classList.add("active");
+  });
+
+  document.addEventListener("click", function(e) {
+    if (!e.target.closest(".search")) results.classList.remove("active");
+  });
+}
+
+document.getElementById("expandAllBtn").addEventListener("click", function() {
+  state.expanded = new Set(allIds());
+  renderTree();
+});
+
+document.getElementById("collapseAllBtn").addEventListener("click", function() {
+  state.expanded = new Set(["planet", "inuvet", "byox", "planimol", "eqx"]);
+  renderTree();
+});
+
+document.getElementById("panelClose").addEventListener("click", closePanel);
+
+// ESC closes panel
+document.addEventListener("keydown", function(e) {
+  if (e.key === "Escape" && state.panelOpen) closePanel();
+});
+
+setupSearch();
+renderTree();
+</script>
+
+</body>
+</html>
