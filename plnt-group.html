@@ -351,7 +351,7 @@
     to { opacity: 0.4; transform: translateY(0); }
   }
 
-  /* Planet — Kreis 1:1; unscharf bis ganz unten, dann scharf */
+  /* Planet — Kreis 1:1, dauerhaft soft */
   .pillar-band--planet {
     position: relative;
     min-height: 100svh;
@@ -461,8 +461,11 @@
     .container { padding-left: var(--space-3); padding-right: var(--space-3); }
     .pillar-band { padding: var(--space-5) 0; }
     .pillar-band--planet { padding: 0; }
-    .pillar-row__body h3,
-    .section-head--reveal h2 { overflow-wrap: anywhere; }
+    .pillar-row__body h3 { overflow-wrap: break-word; }
+    .section-head--reveal h2 {
+      overflow-wrap: normal;
+      word-break: normal;
+    }
     .pillar-orbit__caption text { font-size: 6px; }
     .planet-outro__inner {
       width: min(100vw - 32px, 100svh - 64px);
@@ -670,15 +673,7 @@
     justify-content: center;
     padding: var(--space-8) 0 calc(var(--space-6) + env(safe-area-inset-bottom, 0px));
     background: transparent;
-    color: color-mix(
-      in srgb,
-      color-mix(
-        in srgb,
-        var(--planet-black) calc((1 - var(--bg-mix, 0)) * 100%),
-        var(--planet-white)
-      ) calc((1 - var(--quote-bg)) * 100%),
-      var(--planet-white)
-    );
+    color: var(--planet-white);
   }
   .quote-type__bg {
     position: fixed;
@@ -760,7 +755,7 @@
 
   /* Kontakt — editoriales Formular, kein Card */
   .contact-band {
-    padding: var(--space-8) 0 var(--space-7);
+    padding: var(--space-8) 0 var(--space-16);
     background: transparent;
   }
   .contact-band .section-head { margin-bottom: var(--space-6); }
@@ -896,7 +891,7 @@
     .contact-intro p { max-width: 36ch; }
   }
   @media (max-width: 640px) {
-    .contact-band { padding: var(--space-6) 0 var(--space-5); }
+    .contact-band { padding: var(--space-6) 0 var(--space-12); }
     .contact-form__row { grid-template-columns: 1fr; gap: var(--space-3); }
     .contact-form__foot { flex-direction: column; align-items: stretch; }
     .contact-form__submit { width: 100%; justify-content: center; }
@@ -1416,7 +1411,6 @@ function toggleLang() {
   if (!section) return;
 
   const blueBand = section.querySelector('.pillar-band--blue');
-  const quoteBand = section.querySelector('[data-quote-type]');
   const planetBand = section.querySelector('.pillar-band--planet');
 
   function smoothstep(t) {
@@ -1443,10 +1437,8 @@ function toggleLang() {
   function updateBg() {
     const vh = window.innerHeight;
     const fade = vh * 0.28;
-    const blue = Math.max(
-      blueBand ? bandMix(blueBand.getBoundingClientRect(), vh, fade) : 0,
-      quoteBand ? bandMix(quoteBand.getBoundingClientRect(), vh, fade) : 0
-    );
+    /* Quote ohne Blau-Fade — stört das Foto */
+    const blue = blueBand ? bandMix(blueBand.getBoundingClientRect(), vh, fade) : 0;
 
     let dark = 0;
     if (planetBand) {
@@ -1563,7 +1555,7 @@ function toggleLang() {
         opacity = 1;
       } else {
         /* Später ein, früher aus */
-        const enter = smoothstep((vh - rect.top - vh * 0.32) / (vh * 0.4));
+        const enter = smoothstep((vh - rect.top - vh * 0.58) / (vh * 0.32));
         const leave = smoothstep((rect.bottom - vh * 0.22) / (vh * 0.4));
         opacity = Math.min(enter, leave);
       }
