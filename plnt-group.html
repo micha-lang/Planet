@@ -353,34 +353,37 @@
 
   /* Planet — Kreis 1:1, dauerhaft soft */
   .pillar-band--planet {
+    --planet-blur: 52px;
     position: relative;
     min-height: 100svh;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 0;
-    /* Blur oben/unten nicht abschneiden; seitlich clippt html/body (overflow-x) */
+    /* Platz für Blur-Halo oben/unten */
+    padding: calc(var(--planet-blur) * 1.25) 0;
+    /* Blur nicht abschneiden; seitlich clippt html/body (overflow-x) */
     overflow: visible;
   }
   .planet-outro__inner {
     position: relative;
-    /* Seite der kleineren Viewport-Kante — nie verzerren */
-    width: min(100vw - 48px, 100svh - 96px);
-    height: min(100vw - 48px, 100svh - 96px);
+    /* Extra Luft zur Viewport-Kante, damit Soft-Edges nicht clippen */
+    width: min(100vw - 48px, 100svh - 220px);
+    height: min(100vw - 48px, 100svh - 220px);
     aspect-ratio: 1 / 1;
     flex: none;
     display: flex;
     align-items: center;
     justify-content: center;
     overflow: visible;
+    /* Kein transform hier — sonst clippt der Blur der Sphere */
   }
   .planet-outro__sphere {
     position: absolute;
-    inset: 0;
+    /* Paint-Box größer als der Kreis → Blur bleibt im Element */
+    inset: calc(var(--planet-blur) * -1.15);
     border-radius: var(--radius-circle);
     background: var(--planet-primary);
-    transform: scale(1.08);
-    filter: blur(52px);
+    filter: blur(var(--planet-blur));
   }
   .planet-outro__logo {
     position: relative;
@@ -460,16 +463,19 @@
     .nav-overlay,
     .container { padding-left: var(--space-3); padding-right: var(--space-3); }
     .pillar-band { padding: var(--space-5) 0; }
-    .pillar-band--planet { padding: 0; }
     .pillar-row__body h3 { overflow-wrap: break-word; }
     .section-head--reveal h2 {
       overflow-wrap: normal;
       word-break: normal;
     }
     .pillar-orbit__caption text { font-size: 6px; }
+    .pillar-band--planet {
+      --planet-blur: 40px;
+      padding: calc(var(--planet-blur) * 1.4) 0 calc(var(--planet-blur) * 1.6);
+    }
     .planet-outro__inner {
-      width: min(100vw - 32px, 100svh - 64px);
-      height: min(100vw - 32px, 100svh - 64px);
+      width: min(72vw, 48svh);
+      height: min(72vw, 48svh);
     }
     .planet-legal {
       padding: var(--space-1) 0 calc(var(--space-3) + env(safe-area-inset-bottom, 0px));
@@ -1300,7 +1306,7 @@
   </div>
 
   <div class="pillar-band pillar-band--planet" id="planet">
-    <div class="planet-outro__inner reveal-scale">
+    <div class="planet-outro__inner">
       <div class="planet-outro__sphere" aria-hidden="true"></div>
       <a class="planet-outro__logo" href="#top">Planet</a>
     </div>
