@@ -353,7 +353,6 @@
 
   /* Planet — Kreis 1:1; unscharf bis ganz unten, dann scharf */
   .pillar-band--planet {
-    --planet-focus: 0;
     position: relative;
     min-height: 100svh;
     display: flex;
@@ -380,8 +379,8 @@
     inset: 0;
     border-radius: var(--radius-circle);
     background: var(--planet-primary);
-    transform: scale(calc(1.08 - var(--planet-focus) * 0.08));
-    filter: blur(calc((1 - var(--planet-focus)) * 52px));
+    transform: scale(1.08);
+    filter: blur(52px);
   }
   .planet-outro__logo {
     position: relative;
@@ -393,8 +392,6 @@
     letter-spacing: -0.03em;
     color: var(--planet-white);
     text-decoration: none;
-    /* Bleibt soft — auch wenn die Sphere unten scharf wird */
-    filter: blur(52px);
   }
   .planet-outro__logo:hover { opacity: 0.85; text-decoration: none; }
 
@@ -518,10 +515,8 @@
     .pillar-band--white { background: var(--planet-white); }
     .pillar-band--blue { background: var(--planet-primary); }
     .pillar-band--planet {
-      --planet-focus: 1;
       background: var(--planet-black);
     }
-    .planet-outro__sphere { filter: none; transform: none; }
     .quote-type {
       --quote-bg: 1;
       background: var(--planet-primary);
@@ -1419,7 +1414,6 @@ function toggleLang() {
   const section = document.getElementById('plattform');
   const nav = document.querySelector('.nav');
   if (!section) return;
-  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   const blueBand = section.querySelector('.pillar-band--blue');
   const quoteBand = section.querySelector('[data-quote-type]');
@@ -1460,14 +1454,6 @@ function toggleLang() {
       const start = vh;
       const end = vh * 0.2;
       dark = smoothstep((start - rect.top) / (start - end));
-
-      if (!reduced) {
-        /* Scharf erst am Seitenende — gleiche Zone wie Legal-Reveal */
-        const maxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
-        const fromBottom = maxScroll - window.scrollY;
-        const focus = smoothstep(1 - fromBottom / (vh * 0.35));
-        planetBand.style.setProperty('--planet-focus', focus.toFixed(4));
-      }
     }
 
     setMix(section, blue, dark);
