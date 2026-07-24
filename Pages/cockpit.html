@@ -223,6 +223,65 @@
     border-bottom-color: color-mix(in srgb, var(--planet-white) 35%, transparent);
   }
 
+  /* Featured / Accent — Acid-Gelb */
+  .widget--accent-acid {
+    background: var(--planet-secondary);
+    border-color: var(--planet-secondary);
+    box-shadow: none;
+    color: var(--planet-black) !important;
+  }
+  .widget--accent-acid:hover {
+    border-color: var(--planet-secondary);
+    transform: translateY(-2px);
+  }
+  .widget--accent-acid,
+  .widget--accent-acid .widget__title,
+  .widget--accent-acid .widget__source,
+  .widget--accent-acid .widget__body,
+  .widget--accent-acid h1,
+  .widget--accent-acid h2,
+  .widget--accent-acid h3,
+  .widget--accent-acid h4,
+  .widget--accent-acid p,
+  .widget--accent-acid span,
+  .widget--accent-acid li,
+  .widget--accent-acid a,
+  .widget--accent-acid strong {
+    color: var(--planet-black) !important;
+  }
+  .widget--accent-acid .widget__icon {
+    background: var(--planet-primary);
+  }
+  .widget--accent-acid .widget__icon .material-icons-outlined {
+    color: var(--planet-secondary) !important;
+  }
+  .widget--accent-acid .widget__source {
+    opacity: 0.55;
+  }
+  .widget--accent-acid .widget__tool,
+  .widget--accent-acid .widget__tool .material-icons-outlined {
+    color: var(--planet-black) !important;
+  }
+  .widget--accent-acid .widget__tool:hover {
+    background: color-mix(in srgb, var(--planet-black) 10%, transparent);
+    color: var(--planet-primary) !important;
+  }
+  .widget--accent-acid .widget__tool:hover .material-icons-outlined {
+    color: var(--planet-primary) !important;
+  }
+  .widget--accent-acid .w-list__row {
+    border-bottom-color: color-mix(in srgb, var(--planet-black) 12%, transparent);
+  }
+  .widget--accent-acid .w-list__action {
+    color: var(--planet-primary) !important;
+  }
+  .widget--accent-acid .w-news__kicker {
+    opacity: 0.55;
+  }
+  body.cockpit-edit .widget--accent-acid .widget__head {
+    border-bottom-color: color-mix(in srgb, var(--planet-black) 20%, transparent);
+  }
+
   .widget.is-dragging {
     opacity: 0.45;
     border-color: var(--planet-primary);
@@ -289,10 +348,55 @@
     gap: 4px;
     flex: none;
   }
-  /* Verschieben / Entfernen nur im Anpassen-Modus */
+  /* Verschieben / Entfernen / Farbe nur im Anpassen-Modus */
   body.cockpit-edit .widget__tools {
     display: flex;
   }
+  .widget__tones {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-right: 2px;
+  }
+  .widget__tone {
+    width: 18px;
+    height: 18px;
+    border-radius: var(--radius-circle);
+    border: 1.5px solid color-mix(in srgb, var(--planet-black) 18%, transparent);
+    padding: 0;
+    cursor: pointer;
+    flex: none;
+    background: var(--planet-white);
+  }
+  .widget__tone[data-tone="primary"] {
+    background: var(--planet-primary);
+    border-color: transparent;
+  }
+  .widget__tone[data-tone="acid"] {
+    background: var(--planet-secondary);
+    border-color: color-mix(in srgb, var(--planet-black) 12%, transparent);
+  }
+  .widget__tone.is-active {
+    box-shadow: 0 0 0 2px var(--planet-white), 0 0 0 4px var(--planet-primary);
+  }
+  .widget--accent .widget__tone.is-active {
+    box-shadow: 0 0 0 2px var(--planet-primary), 0 0 0 4px var(--planet-white);
+  }
+  .widget--accent-acid .widget__tone.is-active {
+    box-shadow: 0 0 0 2px var(--planet-secondary), 0 0 0 4px var(--planet-black);
+  }
+
+  /* Charts auf farbigen Widgets lesbar halten */
+  .widget--accent .bar-chart .bar { fill: var(--planet-white); }
+  .widget--accent .bar-chart .bar--highlight { fill: var(--planet-secondary); }
+  .widget--accent .line-chart .line { stroke: var(--planet-white); }
+  .widget--accent .line-chart .area { fill: var(--planet-white); }
+  .widget--accent .line-chart .dot { fill: var(--planet-secondary); }
+  .widget--accent .line-chart .grid-line { stroke: color-mix(in srgb, var(--planet-white) 22%, transparent); }
+  .widget--accent .chart-trend--up { color: var(--planet-secondary) !important; }
+  .widget--accent-acid .bar-chart .bar { fill: var(--planet-primary); }
+  .widget--accent-acid .bar-chart .bar--highlight { fill: var(--planet-black); }
+  .widget--accent-acid .chart-trend--up { color: var(--planet-primary) !important; }
   .widget__tool {
     display: inline-flex;
     align-items: center;
@@ -322,11 +426,16 @@
   }
 
   /* Widget content patterns */
-  .w-list { display: flex; flex-direction: column; gap: 0; }
+  .w-list {
+    display: grid;
+    /* Eine Spaltenstruktur für alle Zeilen → Linie halten, ohne unnötige Breite */
+    grid-template-columns: max-content minmax(0, 1fr) max-content;
+    column-gap: var(--space-2);
+  }
   .w-list__row {
     display: grid;
-    grid-template-columns: auto 1fr auto;
-    gap: var(--space-2);
+    grid-template-columns: subgrid;
+    grid-column: 1 / -1;
     align-items: baseline;
     padding: var(--space-2) 0;
     border-bottom: 1px solid var(--planet-tint);
@@ -341,7 +450,13 @@
   }
   .w-list__main { min-width: 0; }
   .w-list__main strong { font-weight: var(--weight-display); display: block; }
-  .w-list__meta { opacity: 0.5; font-size: 13px; }
+  .w-list__meta {
+    opacity: 0.5;
+    font-size: 13px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
   .w-list__action {
     color: var(--planet-primary);
     text-decoration: none;
@@ -510,6 +625,7 @@
     gap: 6px;
     font-size: 13px;
     font-weight: var(--weight-display);
+    font-variant-numeric: tabular-nums;
     color: var(--planet-primary);
   }
   .w-badge::before {
@@ -613,7 +729,7 @@
 
   /* —— Soft Planet Footer (wie Landing) —— */
   .pillar-band--planet {
-    --planet-blur: 52px;
+    --planet-blur: 80px;
     --planet-lead: clamp(120px, 32vh, 360px);
     position: relative;
     min-height: calc(100svh + var(--planet-lead));
@@ -705,7 +821,7 @@
 
   @media (max-width: 640px) {
     .pillar-band--planet {
-      --planet-blur: 40px;
+      --planet-blur: 60px;
       --planet-lead: clamp(72px, 22vh, 200px);
       min-height: calc(100svh + var(--planet-lead));
       padding:
@@ -765,8 +881,8 @@
     </div>
   </div>
   <p class="cockpit-hint">
-    <span class="de">Ziehen zum Sortieren · Entfernen über × · Neue Module über „Widget“.</span>
-    <span class="en">Drag to reorder · Remove with × · Add modules via “Widget”.</span>
+    <span class="de">Ziehen zum Sortieren · Farbe wählen · Entfernen über × · Neue Module über „Widget“.</span>
+    <span class="en">Drag to reorder · Pick a color · Remove with × · Add modules via “Widget”.</span>
   </p>
 
   <div class="cockpit-grid" id="cockpit-grid" aria-live="polite"></div>
@@ -804,7 +920,8 @@
 
 <script>
 (function () {
-  const STORAGE_KEY = 'planet-cockpit-layout-v3';
+  const STORAGE_KEY = 'planet-cockpit-layout-v4';
+  const TONES = ['default', 'primary', 'acid'];
   const grid = document.getElementById('cockpit-grid');
   const catalogList = document.getElementById('catalog-list');
   const panel = document.getElementById('cockpit-panel');
@@ -928,6 +1045,7 @@
       titleEn: 'Events',
       source: 'Kultur',
       icon: 'celebration',
+      accent: 'acid',
       render() {
         return `
           <div class="w-news">
@@ -1192,22 +1310,55 @@
     }
   };
 
-  const DEFAULT_LAYOUT = ['day', 'welcome', 'photo', 'revenue', 'quarters', 'mix', 'news', 'events', 'birthdays', 'asana'];
+  const DEFAULT_IDS = ['day', 'welcome', 'photo', 'revenue', 'quarters', 'mix', 'news', 'events', 'birthdays', 'asana'];
+
+  function defaultTone(mod) {
+    if (!mod) return 'default';
+    if (mod.accent === 'acid' || mod.accent === 'secondary') return 'acid';
+    if (mod.accent) return 'primary';
+    return 'default';
+  }
+
+  function buildDefaultLayout() {
+    return DEFAULT_IDS.map((id) => ({ id, tone: defaultTone(CATALOG[id]) }));
+  }
+
+  function normalizeLayout(raw) {
+    if (!Array.isArray(raw)) return buildDefaultLayout();
+    return raw.map((item) => {
+      if (typeof item === 'string') {
+        if (!CATALOG[item]) return null;
+        return { id: item, tone: defaultTone(CATALOG[item]) };
+      }
+      if (item && item.id && CATALOG[item.id]) {
+        const tone = TONES.includes(item.tone) ? item.tone : defaultTone(CATALOG[item.id]);
+        return { id: item.id, tone };
+      }
+      return null;
+    }).filter(Boolean);
+  }
 
   function loadLayout() {
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
-      if (!raw) return [...DEFAULT_LAYOUT];
-      const parsed = JSON.parse(raw);
-      if (!Array.isArray(parsed)) return [...DEFAULT_LAYOUT];
-      return parsed.filter((id) => CATALOG[id]);
+      if (!raw) return buildDefaultLayout();
+      return normalizeLayout(JSON.parse(raw));
     } catch {
-      return [...DEFAULT_LAYOUT];
+      return buildDefaultLayout();
     }
   }
 
-  function saveLayout(layout) {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(layout));
+  function saveLayout(next) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+  }
+
+  function layoutHas(id) {
+    return layout.some((item) => item.id === id);
+  }
+
+  function setTone(id, tone) {
+    layout = layout.map((item) => (item.id === id ? { ...item, tone } : item));
+    saveLayout(layout);
   }
 
   let layout = loadLayout();
@@ -1219,15 +1370,24 @@
     return en ? mod.titleEn : mod.titleDe;
   }
 
-  function renderWidget(id) {
+  function applyToneClass(el, tone) {
+    el.classList.remove('widget--accent', 'widget--accent-acid');
+    if (tone === 'primary') el.classList.add('widget--accent');
+    if (tone === 'acid') el.classList.add('widget--accent-acid');
+  }
+
+  function renderWidget(item) {
+    const id = typeof item === 'string' ? item : item.id;
+    const tone = typeof item === 'string' ? defaultTone(CATALOG[id]) : (item.tone || 'default');
     const mod = CATALOG[id];
     if (!mod) return null;
     const el = document.createElement('article');
     el.className = 'widget';
     if (mod.wide) el.classList.add('widget--wide');
     if (mod.tall) el.classList.add('widget--tall');
-    if (mod.accent) el.classList.add('widget--accent');
+    applyToneClass(el, tone);
     el.dataset.widgetId = id;
+    el.dataset.tone = tone;
     el.draggable = editMode;
     el.innerHTML = `
       <div class="widget__head">
@@ -1241,6 +1401,11 @@
           </div>
         </div>
         <div class="widget__tools">
+          <div class="widget__tones" role="group" aria-label="Hintergrundfarbe">
+            <button type="button" class="widget__tone${tone === 'default' ? ' is-active' : ''}" data-tone="default" aria-label="Weiß" title="Weiß"></button>
+            <button type="button" class="widget__tone${tone === 'primary' ? ' is-active' : ''}" data-tone="primary" aria-label="Blau" title="Blau"></button>
+            <button type="button" class="widget__tone${tone === 'acid' ? ' is-active' : ''}" data-tone="acid" aria-label="Gelb" title="Gelb"></button>
+          </div>
           <button class="widget__tool widget__tool--drag" type="button" data-drag aria-label="Verschieben" title="Verschieben">
             <span class="material-icons-outlined">drag_indicator</span>
           </button>
@@ -1263,8 +1428,8 @@
       grid.appendChild(empty);
       return;
     }
-    layout.forEach((id) => {
-      const widget = renderWidget(id);
+    layout.forEach((item) => {
+      const widget = renderWidget(item);
       if (widget) grid.appendChild(widget);
     });
     bindWidgetEvents();
@@ -1273,7 +1438,7 @@
   function renderCatalog() {
     catalogList.innerHTML = '';
     Object.values(CATALOG).forEach((mod) => {
-      const active = layout.includes(mod.id);
+      const active = layoutHas(mod.id);
       const row = document.createElement('div');
       row.className = 'cockpit-catalog-item';
       row.innerHTML = `
@@ -1312,8 +1477,18 @@
     grid.querySelectorAll('.widget').forEach((widget) => {
       const id = widget.dataset.widgetId;
 
+      widget.querySelectorAll('[data-tone]').forEach((btn) => {
+        btn.addEventListener('mousedown', (e) => e.stopPropagation());
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          if (!editMode) return;
+          setTone(id, btn.dataset.tone);
+          renderGrid();
+        });
+      });
+
       widget.querySelector('[data-remove]')?.addEventListener('click', () => {
-        layout = layout.filter((x) => x !== id);
+        layout = layout.filter((x) => x.id !== id);
         saveLayout(layout);
         renderGrid();
         if (panel.classList.contains('is-open')) renderCatalog();
@@ -1341,11 +1516,11 @@
         e.preventDefault();
         widget.classList.remove('is-drag-over');
         if (!editMode || !dragId || dragId === id) return;
-        const from = layout.indexOf(dragId);
-        const to = layout.indexOf(id);
+        const from = layout.findIndex((x) => x.id === dragId);
+        const to = layout.findIndex((x) => x.id === id);
         if (from < 0 || to < 0) return;
-        layout.splice(from, 1);
-        layout.splice(to, 0, dragId);
+        const [moved] = layout.splice(from, 1);
+        layout.splice(to, 0, moved);
         saveLayout(layout);
         renderGrid();
       });
@@ -1356,8 +1531,8 @@
     const btn = e.target.closest('[data-toggle]');
     if (!btn) return;
     const id = btn.getAttribute('data-toggle');
-    if (layout.includes(id)) layout = layout.filter((x) => x !== id);
-    else layout.push(id);
+    if (layoutHas(id)) layout = layout.filter((x) => x.id !== id);
+    else layout.push({ id, tone: defaultTone(CATALOG[id]) });
     saveLayout(layout);
     renderGrid();
     renderCatalog();
@@ -1368,7 +1543,7 @@
   panelClose.addEventListener('click', () => openPanel(false));
   backdrop.addEventListener('click', () => openPanel(false));
   btnReset.addEventListener('click', () => {
-    layout = [...DEFAULT_LAYOUT];
+    layout = buildDefaultLayout();
     saveLayout(layout);
     renderGrid();
     if (panel.classList.contains('is-open')) renderCatalog();
