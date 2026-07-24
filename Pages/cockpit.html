@@ -225,6 +225,7 @@
     display: flex;
     align-items: flex-start;
     gap: var(--space-2);
+    flex: 1;
     min-width: 0;
   }
   .widget__icon {
@@ -252,6 +253,10 @@
     font-size: var(--text-h4);
     font-weight: var(--weight-display);
     line-height: 1.1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
   }
   .widget__source {
     font-size: 12px;
@@ -260,16 +265,14 @@
     letter-spacing: 0.02em;
   }
   .widget__tools {
-    display: flex;
+    display: none;
     align-items: center;
     gap: 4px;
-    opacity: 0;
-    transition: opacity var(--motion-instant) var(--ease-out);
+    flex: none;
   }
-  .widget:hover .widget__tools,
-  body.cockpit-edit .widget__tools,
-  .widget__tools:focus-within {
-    opacity: 1;
+  /* Verschieben / Entfernen nur im Anpassen-Modus */
+  body.cockpit-edit .widget__tools {
+    display: flex;
   }
   .widget__tool {
     display: inline-flex;
@@ -286,7 +289,6 @@
   .widget__tool .material-icons-outlined { font-size: 18px; }
   .widget__tool:hover { background: var(--planet-neutral); color: var(--planet-primary); }
   .widget__tool--drag { cursor: grab; }
-  body.cockpit-edit .widget__tool--drag { cursor: grab; }
   .widget__body {
     padding: var(--space-3);
     flex: 1;
