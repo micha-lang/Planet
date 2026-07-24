@@ -15,11 +15,21 @@
     --cockpit-pad-x: clamp(var(--space-3), 3vw, var(--space-6));
   }
 
-  html, body {
+  html {
+    --bg-dark-mix: 0;
     max-width: 100%;
     overflow-x: hidden;
-    /* Canvas etwas dunkler → weiße Module springen klar hervor */
-    background: var(--cockpit-canvas) !important;
+    /* Canvas → Schwarz beim Soft Planet (wie Landing) */
+    background: color-mix(
+      in srgb,
+      var(--planet-black) calc(var(--bg-dark-mix) * 100%),
+      var(--cockpit-canvas)
+    ) !important;
+  }
+  body {
+    max-width: 100%;
+    overflow-x: hidden;
+    background: transparent !important;
   }
 
   /* —— Shell —— */
@@ -27,10 +37,7 @@
     position: sticky;
     top: 0;
     z-index: 40;
-    background: color-mix(in srgb, var(--cockpit-canvas) 88%, transparent);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border-bottom: 1px solid transparent;
+    background: transparent;
   }
   .cockpit-nav__inner {
     display: flex;
@@ -75,6 +82,18 @@
     height: 40px;
     padding: 0 var(--space-2);
     font-size: var(--text-meta);
+  }
+  .cockpit-nav--on-planet .cockpit-brand {
+    color: var(--planet-white);
+  }
+  .cockpit-nav--on-planet .btn--secondary {
+    border-color: color-mix(in srgb, var(--planet-white) 45%, transparent);
+    color: var(--planet-white);
+    background: transparent;
+  }
+  .cockpit-nav--on-planet .btn:not(.btn--secondary) {
+    background: var(--planet-white);
+    color: var(--planet-primary);
   }
 
   .cockpit-main {
@@ -293,6 +312,8 @@
     padding: var(--space-3);
     flex: 1;
     min-height: 0;
+    display: flex;
+    flex-direction: column;
   }
   .widget__empty {
     font-size: var(--text-meta);
@@ -380,26 +401,12 @@
     margin: calc(-1 * var(--space-3));
     margin-top: 0;
     min-height: 100%;
+    flex: 1;
   }
   .w-photo__media {
     flex: 1;
-    min-height: 200px;
-    aspect-ratio: 3 / 2;
+    min-height: 240px;
     background: var(--planet-tint) center / cover no-repeat;
-  }
-  .w-photo__caption {
-    padding: var(--space-2) var(--space-3) var(--space-3);
-    font-size: var(--text-meta);
-    line-height: 1.35;
-  }
-  .w-photo__caption strong {
-    display: block;
-    font-weight: var(--weight-display);
-    margin-bottom: 2px;
-  }
-  .w-photo__caption span {
-    opacity: 0.55;
-    font-size: 13px;
   }
 
   .w-tiles {
@@ -544,11 +551,127 @@
     }
     .w-tiles { grid-template-columns: 1fr; }
   }
+
+  /* —— Soft Planet Footer (wie Landing) —— */
+  .pillar-band--planet {
+    --planet-blur: 52px;
+    --planet-lead: clamp(120px, 32vh, 360px);
+    position: relative;
+    min-height: calc(100svh + var(--planet-lead));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding:
+      var(--planet-lead)
+      0
+      calc(var(--planet-blur) * 1.25);
+    overflow: visible;
+    background: transparent;
+  }
+  .planet-outro__inner {
+    position: relative;
+    width: min(100vw - 48px, 100svh - 220px);
+    height: min(100vw - 48px, 100svh - 220px);
+    aspect-ratio: 1 / 1;
+    flex: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: visible;
+  }
+  .planet-outro__sphere {
+    position: absolute;
+    inset: calc(var(--planet-blur) * -1.15);
+    border-radius: var(--radius-circle);
+    background: var(--planet-primary);
+    filter: blur(var(--planet-blur));
+  }
+  .planet-outro__logo {
+    position: relative;
+    z-index: 1;
+    font-family: var(--planet-font);
+    font-weight: var(--weight-display);
+    font-size: clamp(64px, 12vw, 160px);
+    line-height: 0.85;
+    letter-spacing: -0.03em;
+    color: var(--planet-white);
+    text-decoration: none;
+  }
+  .planet-outro__logo:hover { opacity: 0.85; text-decoration: none; }
+  .planet-legal {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 2;
+    padding: var(--space-3) 0 calc(var(--space-3) + env(safe-area-inset-bottom, 0px));
+    pointer-events: none;
+  }
+  .planet-legal__grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-2) var(--space-3);
+    align-items: baseline;
+    width: 100%;
+    max-width: 1280px;
+    margin-inline: auto;
+    padding-inline: var(--cockpit-pad-x);
+    font-size: var(--text-meta);
+    letter-spacing: 0.02em;
+    color: var(--planet-white);
+    pointer-events: auto;
+  }
+  .planet-legal__item {
+    text-align: center;
+    opacity: 0;
+    transform: translateY(12px);
+    transition: opacity 700ms var(--ease-out), transform 700ms var(--ease-out);
+  }
+  .planet-legal.is-visible .planet-legal__item {
+    opacity: 0.45;
+    transform: translateY(0);
+  }
+  .planet-legal.is-visible .planet-legal__item:nth-child(1) { transition-delay: 60ms; }
+  .planet-legal.is-visible .planet-legal__item:nth-child(2) { transition-delay: 160ms; }
+  .planet-legal.is-visible .planet-legal__item:nth-child(3) { transition-delay: 260ms; }
+  .planet-legal.is-visible .planet-legal__item:nth-child(4) { transition-delay: 360ms; }
+  a.planet-legal__item {
+    color: inherit;
+    text-decoration: none;
+  }
+  a.planet-legal__item:hover {
+    opacity: 1;
+    color: var(--planet-white);
+  }
+
+  @media (max-width: 640px) {
+    .pillar-band--planet {
+      --planet-blur: 40px;
+      --planet-lead: clamp(72px, 22vh, 200px);
+      min-height: calc(100svh + var(--planet-lead));
+      padding:
+        var(--planet-lead)
+        0
+        calc(var(--planet-blur) * 1.6);
+    }
+    .planet-outro__inner {
+      width: min(72vw, 48svh);
+      height: min(72vw, 48svh);
+    }
+    .planet-legal__grid {
+      grid-template-columns: 1fr 1fr;
+      gap: 2px var(--space-2);
+    }
+    .planet-legal__item--copy { order: 1; }
+    .planet-legal__item--impressum { order: 2; }
+    .planet-legal__item--mail { order: 3; }
+    .planet-legal__item--privacy { order: 4; }
+  }
 </style>
 </head>
 <body>
 
-<header class="cockpit-nav">
+<header class="cockpit-nav" id="top">
   <div class="cockpit-nav__inner">
     <a class="cockpit-brand" href="cockpit.html">Planet</a>
     <div class="cockpit-nav__links">
@@ -589,6 +712,21 @@
 
   <div class="cockpit-grid" id="cockpit-grid" aria-live="polite"></div>
 </main>
+
+<section class="pillar-band pillar-band--planet" id="planet" aria-label="Planet">
+  <div class="planet-outro__inner">
+    <div class="planet-outro__sphere" aria-hidden="true"></div>
+    <a class="planet-outro__logo" href="#top">Planet</a>
+  </div>
+  <footer class="planet-legal">
+    <nav class="planet-legal__grid" aria-label="Legal">
+      <span class="planet-legal__item planet-legal__item--copy">© 2026 PLNT Group</span>
+      <a class="planet-legal__item planet-legal__item--impressum" href="#impressum"><span class="de">Impressum</span><span class="en">Imprint</span></a>
+      <a class="planet-legal__item planet-legal__item--privacy" href="#datenschutz"><span class="de">Datenschutz</span><span class="en">Privacy</span></a>
+      <a class="planet-legal__item planet-legal__item--mail" href="mailto:hello@plnt.group">hello@plnt.group</a>
+    </nav>
+  </footer>
+</section>
 
 <div class="cockpit-backdrop" id="cockpit-backdrop" hidden></div>
 <aside class="cockpit-panel" id="cockpit-panel" aria-hidden="true" aria-label="Widget-Katalog">
@@ -699,12 +837,8 @@
               class="w-photo__media"
               style="background-image: url('../assets/images/Inuvet_Team_J_Rohloff_Ane.jpg');"
               role="img"
-              aria-label="Campus, Sommerlicht"
+              aria-label="Foto des Tages"
             ></div>
-            <div class="w-photo__caption">
-              <strong><span class="de">Licht im Hof</span><span class="en">Light in the courtyard</span></strong>
-              <span><span class="de">Heute · Campus · Redaktion</span><span class="en">Today · Campus · Editorial</span></span>
-            </div>
           </div>`;
       }
     },
@@ -1094,6 +1228,37 @@
   document.head.appendChild(style);
 
   renderGrid();
+
+  /* Soft Planet — Scroll-Fade Canvas → Schwarz + Nav + Legal */
+  (function () {
+    const planet = document.getElementById('planet');
+    const nav = document.querySelector('.cockpit-nav');
+    const legal = document.querySelector('.planet-legal');
+    if (!planet) return;
+
+    function smoothstep(t) {
+      t = Math.max(0, Math.min(1, t));
+      return t * t * (3 - 2 * t);
+    }
+
+    function updatePlanet() {
+      const vh = window.innerHeight;
+      const rect = planet.getBoundingClientRect();
+      const start = vh;
+      const end = vh * 0.2;
+      const dark = smoothstep((start - rect.top) / (start - end));
+      document.documentElement.style.setProperty('--bg-dark-mix', dark.toFixed(4));
+
+      const onPlanet = rect.top < vh * 0.75 && rect.bottom > vh * 0.2;
+      if (nav) nav.classList.toggle('cockpit-nav--on-planet', onPlanet);
+
+      if (legal && dark > 0.55) legal.classList.add('is-visible');
+    }
+
+    updatePlanet();
+    window.addEventListener('scroll', updatePlanet, { passive: true });
+    window.addEventListener('resize', updatePlanet);
+  })();
 })();
 </script>
 </body>
