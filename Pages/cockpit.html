@@ -54,8 +54,10 @@
     justify-content: space-between;
     gap: var(--space-3);
     width: 100%;
-    padding: var(--space-2) var(--cockpit-pad-x);
-    min-height: 72px;
+    box-sizing: border-box;
+    /* wie Styleguide .nav-inner */
+    padding: var(--space-3) var(--cockpit-pad-x);
+    min-height: var(--nav-height);
   }
   .cockpit-brand {
     font-weight: var(--weight-display);
