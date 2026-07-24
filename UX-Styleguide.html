@@ -567,12 +567,17 @@
   }
   .pillar-band--planet {
     --planet-blur: 52px;
+    --planet-lead: clamp(120px, 32vh, 360px);
     position: relative;
-    min-height: 100svh;
+    /* Lead zählt zur Mindesthöhe — sonst frisst border-box das Padding */
+    min-height: calc(100svh + var(--planet-lead));
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: calc(var(--planet-blur) * 1.25) 0;
+    padding:
+      var(--planet-lead)
+      0
+      calc(var(--planet-blur) * 1.25);
     overflow: visible;
     background: transparent;
   }
@@ -651,7 +656,12 @@
   @media (max-width: 640px) {
     .pillar-band--planet {
       --planet-blur: 40px;
-      padding: calc(var(--planet-blur) * 1.4) 0 calc(var(--planet-blur) * 1.6);
+      --planet-lead: clamp(72px, 22vh, 200px);
+      min-height: calc(100svh + var(--planet-lead));
+      padding:
+        var(--planet-lead)
+        0
+        calc(var(--planet-blur) * 1.6);
     }
     .planet-outro__inner {
       width: min(72vw, 48svh);

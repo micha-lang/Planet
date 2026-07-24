@@ -721,21 +721,27 @@ section { padding: var(--space-10) 0; }
   max-width: 28rem;
 }
 
+@media (max-width: 1024px) {
+  /* Orbit-Kreise + Caption: volle Content-Breite wie Landing */
+  .bildsprache-circle .pillar-orbit,
+  .circle-layout .pillar-orbit,
+  .pillar-row .pillar-orbit {
+    width: 100%;
+    max-width: none;
+    margin-inline: 0;
+  }
+  .pillar-orbit__caption text { font-size: 5px; }
+}
+
 @media (max-width: 720px) {
   .circle-layout {
     grid-template-columns: 1fr;
     gap: var(--space-5);
   }
-  .circle-layout .pillar-orbit {
-    width: min(72vw, 18rem);
-    max-width: none;
-    margin-inline: auto;
-  }
-  .pillar-orbit__caption text { font-size: 5.5px; }
 }
 
-@media (max-width: 1024px) and (min-width: 721px) {
-  .pillar-orbit__caption text { font-size: 5px; }
+@media (max-width: 640px) {
+  .pillar-orbit__caption text { font-size: 6px; }
 }
 
 /* ============================================================
