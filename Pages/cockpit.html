@@ -13,6 +13,13 @@
     --cockpit-canvas: var(--planet-neutral);
     --cockpit-widget-min: 320px;
     --cockpit-pad-x: clamp(var(--space-3), 3vw, var(--space-6));
+    /* Type-Rollen — nur Planet-Tokens, keine Sondergrößen */
+    --cockpit-type-page: var(--text-h2);
+    --cockpit-type-brand: var(--text-h3);
+    --cockpit-type-widget: var(--text-h4);
+    --cockpit-type-body: var(--text-meta);
+    --cockpit-type-stat: var(--text-h3);
+    --cockpit-mute: 0.5;
   }
 
   html {
@@ -50,7 +57,7 @@
   }
   .cockpit-brand {
     font-weight: var(--weight-display);
-    font-size: var(--text-h3);
+    font-size: var(--cockpit-type-brand);
     color: var(--planet-primary);
     text-decoration: none;
     line-height: 1;
@@ -67,7 +74,7 @@
   .cockpit-nav .avatar {
     width: 40px;
     height: 40px;
-    font-size: 13px;
+    font-size: var(--cockpit-type-body);
     text-decoration: none;
   }
   .cockpit-nav .avatar:hover { text-decoration: none; opacity: 0.88; }
@@ -81,7 +88,7 @@
   .cockpit-nav .btn {
     height: 40px;
     padding: 0 var(--space-2);
-    font-size: var(--text-meta);
+    font-size: var(--cockpit-type-body);
   }
   .cockpit-nav--on-planet .cockpit-brand {
     color: var(--planet-white);
@@ -109,7 +116,7 @@
     margin-bottom: var(--space-5);
   }
   .cockpit-head h1 {
-    font-size: var(--text-h2);
+    font-size: var(--cockpit-type-page);
     line-height: 0.95;
     letter-spacing: -0.02em;
   }
@@ -122,7 +129,7 @@
   .cockpit-head .btn {
     height: 48px;
     padding: 0 var(--space-3);
-    font-size: var(--text-meta);
+    font-size: var(--cockpit-type-body);
   }
   .cockpit-head .btn.is-active {
     background: var(--planet-primary);
@@ -132,8 +139,8 @@
   .cockpit-hint {
     display: none;
     margin: calc(-1 * var(--space-3)) 0 var(--space-4);
-    font-size: var(--text-meta);
-    opacity: 0.65;
+    font-size: var(--cockpit-type-body);
+    opacity: var(--cockpit-mute);
   }
   body.cockpit-edit .cockpit-hint { display: block; }
 
@@ -256,7 +263,7 @@
     color: var(--planet-secondary) !important;
   }
   .widget--accent-acid .widget__source {
-    opacity: 0.55;
+    opacity: var(--cockpit-mute);
   }
   .widget--accent-acid .widget__tool,
   .widget--accent-acid .widget__tool .material-icons-outlined {
@@ -276,7 +283,7 @@
     color: var(--planet-primary) !important;
   }
   .widget--accent-acid .w-news__kicker {
-    opacity: 0.55;
+    opacity: var(--cockpit-mute);
   }
   body.cockpit-edit .widget--accent-acid .widget__head {
     border-bottom-color: color-mix(in srgb, var(--planet-black) 20%, transparent);
@@ -317,7 +324,7 @@
     flex: none;
   }
   .widget__icon .material-icons-outlined {
-    font-size: 22px;
+    font-size: var(--icon);
     color: var(--planet-primary);
   }
   .widget__title-text {
@@ -328,7 +335,7 @@
     min-width: 0;
   }
   .widget__title-text > span:first-child {
-    font-size: var(--text-h4);
+    font-size: var(--cockpit-type-widget);
     font-weight: var(--weight-display);
     line-height: 1.1;
     white-space: nowrap;
@@ -337,10 +344,9 @@
     max-width: 100%;
   }
   .widget__source {
-    font-size: 12px;
+    font-size: var(--cockpit-type-body);
     font-weight: var(--weight-body);
-    opacity: 0.4;
-    letter-spacing: 0.02em;
+    opacity: var(--cockpit-mute);
   }
   .widget__tools {
     display: none;
@@ -409,7 +415,7 @@
     cursor: pointer;
     color: var(--planet-black);
   }
-  .widget__tool .material-icons-outlined { font-size: 18px; }
+  .widget__tool .material-icons-outlined { font-size: var(--icon-sm); }
   .widget__tool:hover { background: var(--planet-neutral); color: var(--planet-primary); }
   .widget__tool--drag { cursor: grab; }
   .widget__body {
@@ -420,8 +426,8 @@
     flex-direction: column;
   }
   .widget__empty {
-    font-size: var(--text-meta);
-    opacity: 0.5;
+    font-size: var(--cockpit-type-body);
+    opacity: var(--cockpit-mute);
     line-height: 1.4;
   }
 
@@ -439,20 +445,19 @@
     align-items: baseline;
     padding: var(--space-2) 0;
     border-bottom: 1px solid var(--planet-tint);
-    font-size: var(--text-meta);
+    font-size: var(--cockpit-type-body);
     line-height: 1.35;
   }
   .w-list__row:last-child { border-bottom: 0; }
   .w-list__time {
     font-variant-numeric: tabular-nums;
-    opacity: 0.55;
+    opacity: var(--cockpit-mute);
     white-space: nowrap;
   }
   .w-list__main { min-width: 0; }
   .w-list__main strong { font-weight: var(--weight-display); display: block; }
   .w-list__meta {
-    opacity: 0.5;
-    font-size: 13px;
+    opacity: var(--cockpit-mute);
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -466,11 +471,11 @@
   .w-list__action:hover { text-decoration: none; opacity: 0.7; }
 
   .w-welcome h2 {
-    font-size: var(--text-h3);
+    font-size: var(--cockpit-type-brand);
     margin-bottom: var(--space-2);
   }
   .w-welcome p {
-    font-size: var(--text-meta);
+    font-size: var(--cockpit-type-body);
     line-height: 1.4;
     margin-bottom: var(--space-1);
   }
@@ -478,35 +483,34 @@
     margin-top: var(--space-3);
     padding-top: var(--space-3);
     border-top: 1px solid var(--planet-tint);
-    font-size: var(--text-meta);
+    font-size: var(--cockpit-type-body);
   }
   .w-welcome__stat strong {
     display: block;
-    font-size: var(--text-h3);
+    font-size: var(--cockpit-type-stat);
     color: var(--planet-primary);
     line-height: 1;
     margin-bottom: 4px;
   }
 
   .w-news__kicker {
-    font-size: 13px;
-    opacity: 0.5;
+    font-size: var(--cockpit-type-body);
+    opacity: var(--cockpit-mute);
     margin-bottom: var(--space-1);
   }
   .w-news h3 {
-    font-size: var(--text-h4);
+    font-size: var(--cockpit-type-widget);
     margin-bottom: var(--space-2);
     line-height: 1.1;
   }
   .w-news p {
-    font-size: var(--text-meta);
+    font-size: var(--cockpit-type-body);
     line-height: 1.4;
-    opacity: 0.8;
   }
   .w-news ul {
     margin-top: var(--space-2);
     padding-left: 1.1em;
-    font-size: var(--text-meta);
+    font-size: var(--cockpit-type-body);
     line-height: 1.45;
   }
 
@@ -533,16 +537,14 @@
     min-height: 0;
   }
   .w-chart .chart-meta {
-    font-family: var(--planet-font);
-    font-size: 13px;
+    font-size: var(--cockpit-type-body);
     font-weight: var(--weight-display);
-    opacity: 0.45;
+    opacity: var(--cockpit-mute);
     margin: 0;
   }
   .w-chart .chart-figure {
-    font-family: var(--planet-font);
     font-weight: var(--weight-display);
-    font-size: clamp(28px, 3vw, 40px);
+    font-size: var(--cockpit-type-stat);
     line-height: 1;
     letter-spacing: -0.02em;
     margin: var(--space-1) 0 var(--space-2);
@@ -557,8 +559,7 @@
     margin-top: 4px;
   }
   .w-chart .chart-trend {
-    font-family: var(--planet-font);
-    font-size: var(--text-meta);
+    font-size: var(--cockpit-type-body);
     font-weight: var(--weight-display);
     margin-top: auto;
     padding-top: var(--space-2);
@@ -580,7 +581,7 @@
     flex: none;
   }
   .w-chart .donut-legend {
-    font-size: var(--text-meta);
+    font-size: var(--cockpit-type-body);
   }
 
   .w-tiles {
@@ -611,19 +612,19 @@
     font-size: var(--icon);
   }
   .w-tile strong {
-    font-size: var(--text-meta);
+    font-size: var(--cockpit-type-body);
     font-weight: var(--weight-display);
   }
   .w-tile span {
-    font-size: 13px;
-    opacity: 0.5;
+    font-size: var(--cockpit-type-body);
+    opacity: var(--cockpit-mute);
   }
 
   .w-badge {
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    font-size: 13px;
+    font-size: var(--cockpit-type-body);
     font-weight: var(--weight-display);
     font-variant-numeric: tabular-nums;
     color: var(--planet-primary);
@@ -662,7 +663,7 @@
     padding-bottom: var(--space-3);
     border-bottom: 1px solid var(--planet-tint);
   }
-  .cockpit-panel__head h2 { font-size: var(--text-h3); }
+  .cockpit-panel__head h2 { font-size: var(--cockpit-type-brand); }
   .cockpit-panel__list {
     display: flex;
     flex-direction: column;
@@ -681,13 +682,13 @@
   }
   .cockpit-catalog-item strong {
     display: block;
-    font-size: var(--text-meta);
+    font-size: var(--cockpit-type-body);
     font-weight: var(--weight-display);
   }
   .cockpit-catalog-item span {
     display: block;
-    font-size: 13px;
-    opacity: 0.5;
+    font-size: var(--cockpit-type-body);
+    opacity: var(--cockpit-mute);
     margin-top: 2px;
   }
   .cockpit-backdrop {
@@ -766,7 +767,7 @@
     z-index: 1;
     font-family: var(--planet-font);
     font-weight: var(--weight-display);
-    font-size: clamp(64px, 12vw, 160px);
+    font-size: var(--text-display);
     line-height: 0.85;
     letter-spacing: -0.03em;
     color: var(--planet-white);
@@ -791,9 +792,7 @@
     max-width: 1280px;
     margin-inline: auto;
     padding-inline: var(--cockpit-pad-x);
-    font-size: var(--text-meta);
-    letter-spacing: 0.02em;
-    color: var(--planet-white);
+    font-size: var(--cockpit-type-body);
     pointer-events: auto;
   }
   .planet-legal__item {
@@ -803,7 +802,7 @@
     transition: opacity 700ms var(--ease-out), transform 700ms var(--ease-out);
   }
   .planet-legal.is-visible .planet-legal__item {
-    opacity: 0.45;
+    opacity: var(--cockpit-mute);
     transform: translateY(0);
   }
   .planet-legal.is-visible .planet-legal__item:nth-child(1) { transition-delay: 60ms; }
@@ -871,11 +870,11 @@
         <span class="de">Zurücksetzen</span><span class="en">Reset</span>
       </button>
       <button class="btn btn--secondary" type="button" id="btn-catalog">
-        <span class="material-icons-outlined" style="font-size:18px;">add</span>
+        <span class="material-icons-outlined" style="font-size:var(--icon-sm);">add</span>
         <span class="de">Widget</span><span class="en">Widget</span>
       </button>
       <button class="btn" type="button" id="btn-edit">
-        <span class="material-icons-outlined" style="font-size:18px;">tune</span>
+        <span class="material-icons-outlined" style="font-size:var(--icon-sm);">tune</span>
         <span class="de">Anpassen</span><span class="en">Customize</span>
       </button>
     </div>
@@ -911,7 +910,7 @@
       <span class="material-icons-outlined">close</span>
     </button>
   </div>
-  <p style="font-size:var(--text-meta);opacity:0.6;margin-bottom:var(--space-3);line-height:1.4;">
+  <p style="font-size:var(--cockpit-type-body);opacity:var(--cockpit-mute);margin-bottom:var(--space-3);line-height:1.4;">
     <span class="de">Kombiniere Tools flexibel — Kalender, Asana, Personio, Chat und mehr.</span>
     <span class="en">Combine tools flexibly — calendar, Asana, Personio, chat and more.</span>
   </p>
@@ -1446,7 +1445,7 @@
           <strong>${titleFor(mod)}</strong>
           <span>${mod.source}</span>
         </div>
-        <button class="btn ${active ? 'btn--secondary' : ''}" type="button" data-toggle="${mod.id}" style="height:40px;padding:0 16px;font-size:14px;">
+        <button class="btn ${active ? 'btn--secondary' : ''}" type="button" data-toggle="${mod.id}" style="height:40px;padding:0 16px;font-size:var(--cockpit-type-body);">
           ${active
             ? '<span class="de">Entfernen</span><span class="en">Remove</span>'
             : '<span class="de">Hinzufügen</span><span class="en">Add</span>'}
@@ -1460,8 +1459,8 @@
     document.body.classList.toggle('cockpit-edit', on);
     btnEdit.classList.toggle('is-active', on);
     btnEdit.innerHTML = on
-      ? '<span class="material-icons-outlined" style="font-size:18px;">check</span><span class="de">Fertig</span><span class="en">Done</span>'
-      : '<span class="material-icons-outlined" style="font-size:18px;">tune</span><span class="de">Anpassen</span><span class="en">Customize</span>';
+      ? '<span class="material-icons-outlined" style="font-size:var(--icon-sm);">check</span><span class="de">Fertig</span><span class="en">Done</span>'
+      : '<span class="material-icons-outlined" style="font-size:var(--icon-sm);">tune</span><span class="de">Anpassen</span><span class="en">Customize</span>';
     renderGrid();
   }
 
