@@ -178,10 +178,10 @@
   #plattform.plattform-scroll {
     --bg-mix: 0;
     --bg-dark-mix: 0;
-    /* Linien: Blau → Weiß, wenn der Scroll-Hintergrund dunkel wird */
+    /* Linien: weiß auf Blau und auf Schwarz */
     --line-color: color-mix(
       in srgb,
-      var(--planet-primary) calc((1 - var(--bg-dark-mix)) * 100%),
+      var(--planet-primary) calc((1 - max(var(--bg-mix), var(--bg-dark-mix))) * 100%),
       var(--planet-white)
     );
     /* Erst Weiß↔Blau, dann das Ergebnis ↔ Schwarz — ein durchgehender Hintergrund */
@@ -308,10 +308,11 @@
     padding-bottom: 0;
   }
   .section-head--reveal h2 {
-    clip-path: inset(0 100% 0 0);
+    clip-path: inset(0 100% -0.22em 0);
     transition: clip-path 1.1s var(--ease-out);
+    padding-bottom: 0.12em; /* Unterlängen (g, y, p) nicht abschneiden */
   }
-  .section-head--reveal.is-visible h2 { clip-path: inset(0 0 0 0); }
+  .section-head--reveal.is-visible h2 { clip-path: inset(0 0 -0.22em 0); }
   .section-head--reveal::after {
     content: "";
     display: block;
@@ -319,6 +320,8 @@
     background: var(--line-color);
     width: 0;
     margin-top: var(--space-3);
+    align-self: flex-end;
+    margin-bottom: 0.12em;
     transition: width 1.4s var(--ease-out) 200ms;
   }
   .section-head--reveal.is-visible::after { width: 100%; }
@@ -351,7 +354,9 @@
     to { opacity: 0.4; transform: translateY(0); }
   }
 
-  /* Planet — Kreis 1:1, dauerhaft soft */
+  /* Planet — Kreis 1:1, dauerhaft soft
+     Regel: Zielzustand schwarz, aber Band bleibt transparent —
+     Schwärze nur über Scroll-Fade (--bg-dark-mix) am Parent, nie harter Weiß→Schwarz-Schnitt */
   .pillar-band--planet {
     --planet-blur: 52px;
     position: relative;
@@ -363,6 +368,7 @@
     padding: calc(var(--planet-blur) * 1.25) 0;
     /* Blur nicht abschneiden; seitlich clippt html/body (overflow-x) */
     overflow: visible;
+    background: transparent;
   }
   .planet-outro__inner {
     position: relative;
@@ -460,8 +466,13 @@
 
   @media (max-width: 640px) {
     .nav-inner,
-    .nav-overlay,
+    .nav-overlay-header,
+    .nav-overlay-links,
     .container { padding-left: var(--space-3); padding-right: var(--space-3); }
+    .nav-overlay-links {
+      padding-top: calc(var(--nav-height) + var(--space-3));
+      padding-bottom: var(--space-5);
+    }
     .pillar-band { padding: var(--space-5) 0; }
     .pillar-row__body h3 { overflow-wrap: break-word; }
     .section-head--reveal h2 {
@@ -1171,13 +1182,13 @@
     <div class="quote-type__content">
       <blockquote class="quote-type__quote">
         <p class="quote-type__text">
-          <span class="de">Ich habe schneller skaliert, als ich es mir träumen konnte.</span>
-          <span class="en">I scaled faster than I could have dreamed.</span>
+          <span class="de">Das ist der Rhythmus, bei dem ich mit muss.</span>
+          <span class="en">That’s the rhythm I have to keep up with.</span>
         </p>
       </blockquote>
       <footer class="quote-type__who">
-        <strong>Liesel Scharf</strong>
-        <span>Entrepreneur</span>
+        <strong>Michael Hoppe</strong>
+        <span>Designer</span>
       </footer>
     </div>
   </section>
