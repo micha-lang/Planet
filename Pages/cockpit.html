@@ -372,6 +372,34 @@
     line-height: 1.45;
   }
 
+  .w-photo {
+    display: flex;
+    flex-direction: column;
+    margin: calc(-1 * var(--space-3));
+    margin-top: 0;
+    min-height: 100%;
+  }
+  .w-photo__media {
+    flex: 1;
+    min-height: 200px;
+    aspect-ratio: 3 / 2;
+    background: var(--planet-tint) center / cover no-repeat;
+  }
+  .w-photo__caption {
+    padding: var(--space-2) var(--space-3) var(--space-3);
+    font-size: var(--text-meta);
+    line-height: 1.35;
+  }
+  .w-photo__caption strong {
+    display: block;
+    font-weight: var(--weight-display);
+    margin-bottom: 2px;
+  }
+  .w-photo__caption span {
+    opacity: 0.55;
+    font-size: 13px;
+  }
+
   .w-tiles {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -577,7 +605,7 @@
 
 <script>
 (function () {
-  const STORAGE_KEY = 'planet-cockpit-layout-v1';
+  const STORAGE_KEY = 'planet-cockpit-layout-v2';
   const grid = document.getElementById('cockpit-grid');
   const catalogList = document.getElementById('catalog-list');
   const panel = document.getElementById('cockpit-panel');
@@ -651,6 +679,29 @@
               <strong>19</strong>
               <span class="de">Urlaubstage noch in diesem Jahr</span>
               <span class="en">vacation days left this year</span>
+            </div>
+          </div>`;
+      }
+    },
+    photo: {
+      id: 'photo',
+      titleDe: 'Foto des Tages',
+      titleEn: 'Photo of the day',
+      source: 'Kultur',
+      icon: 'photo_camera',
+      tall: true,
+      render() {
+        return `
+          <div class="w-photo">
+            <div
+              class="w-photo__media"
+              style="background-image: url('../assets/images/Inuvet_Team_J_Rohloff_Ane.jpg');"
+              role="img"
+              aria-label="Campus, Sommerlicht"
+            ></div>
+            <div class="w-photo__caption">
+              <strong><span class="de">Licht im Hof</span><span class="en">Light in the courtyard</span></strong>
+              <span><span class="de">Heute · Campus · Redaktion</span><span class="en">Today · Campus · Editorial</span></span>
             </div>
           </div>`;
       }
@@ -844,7 +895,7 @@
     }
   };
 
-  const DEFAULT_LAYOUT = ['day', 'welcome', 'news', 'events', 'birthdays', 'asana'];
+  const DEFAULT_LAYOUT = ['day', 'welcome', 'photo', 'news', 'events', 'birthdays', 'asana'];
 
   function loadLayout() {
     try {
