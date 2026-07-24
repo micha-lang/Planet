@@ -13,13 +13,15 @@
     --cockpit-canvas: var(--planet-neutral);
     --cockpit-widget-min: 320px;
     --cockpit-pad-x: clamp(var(--space-3), 3vw, var(--space-6));
-    /* Type-Rollen — nur Planet-Tokens, keine Sondergrößen */
+    /* Type-Rollen — Planet-Tokens */
     --cockpit-type-page: var(--text-h2);
     --cockpit-type-brand: var(--text-h3);
     --cockpit-type-widget: var(--text-h4);
     --cockpit-type-body: var(--text-meta);
     --cockpit-type-stat: var(--text-h3);
     --cockpit-mute: 0.5;
+    /* Icons: eine Größe, eine Farbe (Primary) — auf Accent Weiß bzw. Primary auf Gelb */
+    --cockpit-icon: var(--icon);
   }
 
   html {
@@ -136,6 +138,96 @@
     color: var(--planet-white);
   }
 
+
+  .cockpit-now {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: var(--space-2) var(--space-3);
+    margin: calc(-1 * var(--space-3)) 0 var(--space-5);
+    padding-bottom: var(--space-3);
+    border-bottom: 1px solid color-mix(in srgb, var(--planet-black) 8%, transparent);
+  }
+  .cockpit-now__label {
+    font-size: var(--cockpit-type-body);
+    font-weight: var(--weight-display);
+    flex: none;
+  }
+  .cockpit-now__items {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-1) var(--space-3);
+    min-width: 0;
+  }
+  .cockpit-now__items a {
+    font-size: var(--cockpit-type-body);
+    color: inherit;
+    text-decoration: none;
+    opacity: var(--cockpit-mute);
+  }
+  .cockpit-now__items a:hover {
+    opacity: 1;
+    color: var(--planet-primary);
+    text-decoration: none;
+  }
+  .cockpit-now__items a strong {
+    font-weight: var(--weight-display);
+    opacity: 1;
+    color: var(--planet-black);
+  }
+  .cockpit-presets {
+    display: none;
+    flex-wrap: wrap;
+    gap: var(--space-1);
+    margin: 0 0 var(--space-4);
+  }
+  body.cockpit-edit .cockpit-presets { display: flex; }
+  .cockpit-presets__label {
+    width: 100%;
+    font-size: var(--cockpit-type-body);
+    opacity: var(--cockpit-mute);
+    margin-bottom: 2px;
+  }
+  .cockpit-preset {
+    height: 40px;
+    padding: 0 var(--space-2);
+    border: 1px solid var(--planet-tint);
+    border-radius: var(--radius-pill);
+    background: var(--planet-white);
+    font: inherit;
+    font-size: var(--cockpit-type-body);
+    font-weight: var(--weight-display);
+    cursor: pointer;
+    color: var(--planet-black);
+  }
+  .cockpit-preset:hover {
+    border-color: var(--planet-primary);
+    color: var(--planet-primary);
+  }
+
+  .cockpit-grid--reveal .widget {
+    animation: cockpit-widget-in 420ms var(--ease-out) both;
+  }
+  .cockpit-grid--reveal .widget:nth-child(1) { animation-delay: 0ms; }
+  .cockpit-grid--reveal .widget:nth-child(2) { animation-delay: 45ms; }
+  .cockpit-grid--reveal .widget:nth-child(3) { animation-delay: 90ms; }
+  .cockpit-grid--reveal .widget:nth-child(4) { animation-delay: 135ms; }
+  .cockpit-grid--reveal .widget:nth-child(5) { animation-delay: 180ms; }
+  .cockpit-grid--reveal .widget:nth-child(6) { animation-delay: 225ms; }
+  .cockpit-grid--reveal .widget:nth-child(7) { animation-delay: 270ms; }
+  .cockpit-grid--reveal .widget:nth-child(8) { animation-delay: 315ms; }
+  .cockpit-grid--reveal .widget:nth-child(9) { animation-delay: 360ms; }
+  .cockpit-grid--reveal .widget:nth-child(10) { animation-delay: 405ms; }
+  .cockpit-grid--reveal .widget:nth-child(11) { animation-delay: 450ms; }
+  .cockpit-grid--reveal .widget:nth-child(12) { animation-delay: 495ms; }
+  @keyframes cockpit-widget-in {
+    from { opacity: 0; transform: translateY(14px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .cockpit-grid--reveal .widget { animation: none; }
+  }
+
   .cockpit-hint {
     display: none;
     margin: calc(-1 * var(--space-3)) 0 var(--space-4);
@@ -204,7 +296,7 @@
     background: color-mix(in srgb, var(--planet-white) 22%, var(--planet-primary));
   }
   .widget--accent .widget__icon .material-icons-outlined {
-    color: var(--planet-secondary) !important;
+    color: var(--planet-white) !important;
   }
   .widget--accent .widget__source {
     opacity: 0.7;
@@ -218,13 +310,13 @@
   }
   .widget--accent .widget__tool:hover,
   .widget--accent .widget__tool:hover .material-icons-outlined {
-    color: var(--planet-secondary) !important;
+    color: var(--planet-white) !important;
   }
   .widget--accent .w-welcome__stat {
     border-top-color: color-mix(in srgb, var(--planet-white) 28%, transparent);
   }
   .widget--accent .w-welcome__stat strong {
-    color: var(--planet-secondary) !important;
+    color: var(--planet-white) !important;
   }
   body.cockpit-edit .widget--accent .widget__head {
     border-bottom-color: color-mix(in srgb, var(--planet-white) 35%, transparent);
@@ -257,10 +349,10 @@
     color: var(--planet-black) !important;
   }
   .widget--accent-acid .widget__icon {
-    background: var(--planet-primary);
+    background: color-mix(in srgb, var(--planet-black) 8%, transparent);
   }
   .widget--accent-acid .widget__icon .material-icons-outlined {
-    color: var(--planet-secondary) !important;
+    color: var(--planet-primary) !important;
   }
   .widget--accent-acid .widget__source {
     opacity: var(--cockpit-mute);
@@ -324,7 +416,7 @@
     flex: none;
   }
   .widget__icon .material-icons-outlined {
-    font-size: var(--icon);
+    font-size: var(--cockpit-icon);
     color: var(--planet-primary);
   }
   .widget__title-text {
@@ -394,12 +486,12 @@
 
   /* Charts auf farbigen Widgets lesbar halten */
   .widget--accent .bar-chart .bar { fill: var(--planet-white); }
-  .widget--accent .bar-chart .bar--highlight { fill: var(--planet-secondary); }
+  .widget--accent .bar-chart .bar--highlight { fill: color-mix(in srgb, var(--planet-white) 55%, transparent); }
   .widget--accent .line-chart .line { stroke: var(--planet-white); }
   .widget--accent .line-chart .area { fill: var(--planet-white); }
-  .widget--accent .line-chart .dot { fill: var(--planet-secondary); }
+  .widget--accent .line-chart .dot { fill: var(--planet-white); }
   .widget--accent .line-chart .grid-line { stroke: color-mix(in srgb, var(--planet-white) 22%, transparent); }
-  .widget--accent .chart-trend--up { color: var(--planet-secondary) !important; }
+  .widget--accent .chart-trend--up { color: var(--planet-white) !important; }
   .widget--accent-acid .bar-chart .bar { fill: var(--planet-primary); }
   .widget--accent-acid .bar-chart .bar--highlight { fill: var(--planet-black); }
   .widget--accent-acid .chart-trend--up { color: var(--planet-primary) !important; }
@@ -415,7 +507,7 @@
     cursor: pointer;
     color: var(--planet-black);
   }
-  .widget__tool .material-icons-outlined { font-size: var(--icon-sm); }
+  .widget__tool .material-icons-outlined { font-size: var(--cockpit-icon); }
   .widget__tool:hover { background: var(--planet-neutral); color: var(--planet-primary); }
   .widget__tool--drag { cursor: grab; }
   .widget__body {
@@ -442,7 +534,7 @@
     display: grid;
     grid-template-columns: subgrid;
     grid-column: 1 / -1;
-    align-items: baseline;
+    align-items: center;
     padding: var(--space-2) 0;
     border-bottom: 1px solid var(--planet-tint);
     font-size: var(--cockpit-type-body);
@@ -463,12 +555,33 @@
     white-space: nowrap;
   }
   .w-list__action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    margin: -4px 0;
+    border-radius: var(--radius-pill);
     color: var(--planet-primary);
     text-decoration: none;
-    font-weight: var(--weight-display);
-    white-space: nowrap;
+    flex: none;
   }
-  .w-list__action:hover { text-decoration: none; opacity: 0.7; }
+  .w-list__action .material-icons-outlined {
+    font-size: var(--cockpit-icon);
+  }
+  .w-list__action:hover {
+    text-decoration: none;
+    background: color-mix(in srgb, var(--planet-primary) 8%, transparent);
+  }
+  .widget--accent .w-list__action {
+    color: var(--planet-white) !important;
+  }
+  .widget--accent .w-list__action:hover {
+    background: color-mix(in srgb, var(--planet-white) 14%, transparent);
+  }
+  .widget--accent-acid .w-list__action:hover {
+    background: color-mix(in srgb, var(--planet-primary) 12%, transparent);
+  }
 
   .w-welcome h2 {
     font-size: var(--cockpit-type-brand);
@@ -558,6 +671,9 @@
   .w-chart .chart-x-labels-anchored {
     margin-top: 4px;
   }
+  .w-chart .chart-trend-icon {
+    font-size: var(--cockpit-icon);
+  }
   .w-chart .chart-trend {
     font-size: var(--cockpit-type-body);
     font-weight: var(--weight-display);
@@ -609,7 +725,7 @@
   }
   .w-tile .material-icons-outlined {
     color: var(--planet-primary);
-    font-size: var(--icon);
+    font-size: var(--cockpit-icon);
   }
   .w-tile strong {
     font-size: var(--cockpit-type-body);
@@ -870,18 +986,35 @@
         <span class="de">Zurücksetzen</span><span class="en">Reset</span>
       </button>
       <button class="btn btn--secondary" type="button" id="btn-catalog">
-        <span class="material-icons-outlined" style="font-size:var(--icon-sm);">add</span>
+        <span class="material-icons-outlined" style="font-size:var(--cockpit-icon);">add</span>
         <span class="de">Widget</span><span class="en">Widget</span>
       </button>
       <button class="btn" type="button" id="btn-edit">
-        <span class="material-icons-outlined" style="font-size:var(--icon-sm);">tune</span>
+        <span class="material-icons-outlined" style="font-size:var(--cockpit-icon);">tune</span>
         <span class="de">Anpassen</span><span class="en">Customize</span>
       </button>
     </div>
   </div>
+
+  <div class="cockpit-now" aria-label="Als Nächstes">
+    <span class="cockpit-now__label"><span class="de">Als Nächstes</span><span class="en">Up next</span></span>
+    <div class="cockpit-now__items">
+      <a href="#"><strong>09:30</strong> · Weekly Asana Check-in</a>
+      <a href="#"><strong>3</strong> <span class="de">Tasks heute</span><span class="en">tasks today</span></a>
+      <a href="#"><strong>1</strong> <span class="de">Freigabe</span><span class="en">approval</span></a>
+    </div>
+  </div>
+
+  <div class="cockpit-presets" id="cockpit-presets">
+    <span class="cockpit-presets__label"><span class="de">Rollen-Layout</span><span class="en">Role layout</span></span>
+    <button type="button" class="cockpit-preset" data-preset="it"><span class="de">IT</span><span class="en">IT</span></button>
+    <button type="button" class="cockpit-preset" data-preset="redaktion"><span class="de">Redaktion</span><span class="en">Editorial</span></button>
+    <button type="button" class="cockpit-preset" data-preset="leadership"><span class="de">Leadership</span><span class="en">Leadership</span></button>
+  </div>
+
   <p class="cockpit-hint">
-    <span class="de">Ziehen zum Sortieren · Farbe wählen · Entfernen über × · Neue Module über „Widget“.</span>
-    <span class="en">Drag to reorder · Pick a color · Remove with × · Add modules via “Widget”.</span>
+    <span class="de">Ziehen zum Sortieren · Farbe wählen · Entfernen über × · Layout-Preset oder „Widget“.</span>
+    <span class="en">Drag to reorder · Pick a color · Remove with × · Role preset or “Widget”.</span>
   </p>
 
   <div class="cockpit-grid" id="cockpit-grid" aria-live="polite"></div>
@@ -962,17 +1095,17 @@
             <div class="w-list__row">
               <span class="w-list__time">09:30–10:00</span>
               <div class="w-list__main"><strong>Weekly Asana Check-in</strong><span class="w-list__meta">Asana · Meet</span></div>
-              <a class="w-list__action" href="#">Teilnehmen</a>
+              <a class="w-list__action" href="#" aria-label="Teilnehmen" title="Teilnehmen"><span class="material-icons-outlined" aria-hidden="true">video_call</span></a>
             </div>
             <div class="w-list__row">
               <span class="w-list__time">11:00–11:45</span>
               <div class="w-list__main"><strong>Campus Theme</strong><span class="w-list__meta">Google Meet</span></div>
-              <a class="w-list__action" href="#">Teilnehmen</a>
+              <a class="w-list__action" href="#" aria-label="Teilnehmen" title="Teilnehmen"><span class="material-icons-outlined" aria-hidden="true">video_call</span></a>
             </div>
             <div class="w-list__row">
               <span class="w-list__time">14:00–14:30</span>
               <div class="w-list__main"><strong>1:1 Jonathan / Alex</strong><span class="w-list__meta">Kalender</span></div>
-              <a class="w-list__action" href="#">Teilnehmen</a>
+              <a class="w-list__action" href="#" aria-label="Teilnehmen" title="Teilnehmen"><span class="material-icons-outlined" aria-hidden="true">video_call</span></a>
             </div>
           </div>`;
       }
@@ -1094,12 +1227,12 @@
             <div class="w-list__row">
               <span class="w-badge">3</span>
               <div class="w-list__main"><strong><span class="de">Heute fällig</span><span class="en">Due today</span></strong><span class="w-list__meta">Cockpit API · Styleguide QA</span></div>
-              <a class="w-list__action" href="#">Öffnen</a>
+              <a class="w-list__action" href="#" aria-label="Öffnen" title="Öffnen"><span class="material-icons-outlined" aria-hidden="true">open_in_new</span></a>
             </div>
             <div class="w-list__row">
               <span class="w-badge">7</span>
               <div class="w-list__main"><strong><span class="de">Diese Woche</span><span class="en">This week</span></strong><span class="w-list__meta">IT Build Board</span></div>
-              <a class="w-list__action" href="#">Board</a>
+              <a class="w-list__action" href="#" aria-label="Board" title="Board"><span class="material-icons-outlined" aria-hidden="true">view_kanban</span></a>
             </div>
           </div>`;
       }
@@ -1116,12 +1249,12 @@
             <div class="w-list__row">
               <span class="w-list__time">10:12</span>
               <div class="w-list__main"><strong>Alex Mertens</strong><span class="w-list__meta">Re: Release Notes Cockpit</span></div>
-              <a class="w-list__action" href="#">Lesen</a>
+              <a class="w-list__action" href="#" aria-label="Lesen" title="Lesen"><span class="material-icons-outlined" aria-hidden="true">mark_email_unread</span></a>
             </div>
             <div class="w-list__row">
               <span class="w-list__time">09:04</span>
               <div class="w-list__main"><strong>Personio</strong><span class="w-list__meta"><span class="de">Freigabe angefragt</span><span class="en">Approval requested</span></span></div>
-              <a class="w-list__action" href="#">Öffnen</a>
+              <a class="w-list__action" href="#" aria-label="Öffnen" title="Öffnen"><span class="material-icons-outlined" aria-hidden="true">open_in_new</span></a>
             </div>
           </div>`;
       }
@@ -1138,12 +1271,12 @@
             <div class="w-list__row">
               <span class="w-badge">12</span>
               <div class="w-list__main"><strong>#it-build</strong><span class="w-list__meta"><span class="de">ungelesen</span><span class="en">unread</span></span></div>
-              <a class="w-list__action" href="#">Öffnen</a>
+              <a class="w-list__action" href="#" aria-label="Öffnen" title="Öffnen"><span class="material-icons-outlined" aria-hidden="true">open_in_new</span></a>
             </div>
             <div class="w-list__row">
               <span class="w-badge">2</span>
               <div class="w-list__main"><strong>Kim Vogt</strong><span class="w-list__meta">DM</span></div>
-              <a class="w-list__action" href="#">Öffnen</a>
+              <a class="w-list__action" href="#" aria-label="Öffnen" title="Öffnen"><span class="material-icons-outlined" aria-hidden="true">open_in_new</span></a>
             </div>
           </div>`;
       }
@@ -1160,7 +1293,7 @@
             <div class="w-list__row">
               <span class="w-badge">4</span>
               <div class="w-list__main"><strong><span class="de">Support-Queue</span><span class="en">Support queue</span></strong><span class="w-list__meta"><span class="de">offene Chats</span><span class="en">open chats</span></span></div>
-              <a class="w-list__action" href="#">Öffnen</a>
+              <a class="w-list__action" href="#" aria-label="Öffnen" title="Öffnen"><span class="material-icons-outlined" aria-hidden="true">open_in_new</span></a>
             </div>
           </div>`;
       }
@@ -1177,12 +1310,12 @@
             <div class="w-list__row">
               <span class="w-list__time">Neu</span>
               <div class="w-list__main"><strong>Q3 Social Kit</strong><span class="w-list__meta"><span class="de">geteilt mit Brand</span><span class="en">shared with Brand</span></span></div>
-              <a class="w-list__action" href="#">Öffnen</a>
+              <a class="w-list__action" href="#" aria-label="Öffnen" title="Öffnen"><span class="material-icons-outlined" aria-hidden="true">open_in_new</span></a>
             </div>
             <div class="w-list__row">
               <span class="w-list__time">Entwurf</span>
               <div class="w-list__main"><strong>Campus Poster</strong><span class="w-list__meta">Brand & Growth</span></div>
-              <a class="w-list__action" href="#">Öffnen</a>
+              <a class="w-list__action" href="#" aria-label="Öffnen" title="Öffnen"><span class="material-icons-outlined" aria-hidden="true">open_in_new</span></a>
             </div>
           </div>`;
       }
@@ -1311,6 +1444,12 @@
 
   const DEFAULT_IDS = ['day', 'welcome', 'photo', 'revenue', 'quarters', 'mix', 'news', 'events', 'birthdays', 'asana'];
 
+  const PRESETS = {
+    it: ['day', 'welcome', 'asana', 'mail', 'chat', 'apps', 'whatsapp'],
+    redaktion: ['day', 'welcome', 'news', 'photo', 'events', 'canva', 'mail'],
+    leadership: ['day', 'welcome', 'revenue', 'quarters', 'mix', 'asana', 'birthdays']
+  };
+
   function defaultTone(mod) {
     if (!mod) return 'default';
     if (mod.accent === 'acid' || mod.accent === 'secondary') return 'acid';
@@ -1417,8 +1556,12 @@
     return el;
   }
 
+  let revealOnce = true;
+
   function renderGrid() {
     grid.innerHTML = '';
+    grid.classList.toggle('cockpit-grid--reveal', revealOnce);
+    if (revealOnce) revealOnce = false;
     if (!layout.length) {
       const empty = document.createElement('p');
       empty.className = 'widget__empty';
@@ -1432,6 +1575,16 @@
       if (widget) grid.appendChild(widget);
     });
     bindWidgetEvents();
+  }
+
+  function applyPreset(key) {
+    const ids = PRESETS[key];
+    if (!ids) return;
+    layout = ids.filter((id) => CATALOG[id]).map((id) => ({ id, tone: defaultTone(CATALOG[id]) }));
+    saveLayout(layout);
+    revealOnce = true;
+    renderGrid();
+    if (panel.classList.contains('is-open')) renderCatalog();
   }
 
   function renderCatalog() {
@@ -1459,8 +1612,8 @@
     document.body.classList.toggle('cockpit-edit', on);
     btnEdit.classList.toggle('is-active', on);
     btnEdit.innerHTML = on
-      ? '<span class="material-icons-outlined" style="font-size:var(--icon-sm);">check</span><span class="de">Fertig</span><span class="en">Done</span>'
-      : '<span class="material-icons-outlined" style="font-size:var(--icon-sm);">tune</span><span class="de">Anpassen</span><span class="en">Customize</span>';
+      ? '<span class="material-icons-outlined" style="font-size:var(--cockpit-icon);">check</span><span class="de">Fertig</span><span class="en">Done</span>'
+      : '<span class="material-icons-outlined" style="font-size:var(--cockpit-icon);">tune</span><span class="de">Anpassen</span><span class="en">Customize</span>';
     renderGrid();
   }
 
@@ -1537,6 +1690,12 @@
     renderCatalog();
   });
 
+  document.getElementById('cockpit-presets')?.addEventListener('click', (e) => {
+    const btn = e.target.closest('[data-preset]');
+    if (!btn) return;
+    applyPreset(btn.dataset.preset);
+  });
+
   btnEdit.addEventListener('click', () => setEditMode(!editMode));
   btnCatalog.addEventListener('click', () => openPanel(true));
   panelClose.addEventListener('click', () => openPanel(false));
@@ -1544,6 +1703,7 @@
   btnReset.addEventListener('click', () => {
     layout = buildDefaultLayout();
     saveLayout(layout);
+    revealOnce = true;
     renderGrid();
     if (panel.classList.contains('is-open')) renderCatalog();
   });
