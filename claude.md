@@ -2,6 +2,13 @@
 
 Patterns that live in the product (and as live examples in `UX-Styleguide.html`) but are not spelled out as separate guide chapters.
 
+## Cockpit (internal dashboard)
+
+- File: `Pages/cockpit.html` — employee dashboard on Planet tokens (`../planet.css`).
+- Modular widgets (Kalender, Personio, Asana, Mail, Chat, WhatsApp, Canva, Apps hub, News, Events, Birthdays).
+- Customizable: edit mode (drag reorder, remove), catalog panel (add/remove), layout in `localStorage` (`planet-cockpit-layout-v1`).
+- Integrations are mocked surfaces for now — ready to swap for real APIs later.
+
 ## Brand & Naming
 
 - In UI, wordmark and voice the brand is **Planet**.

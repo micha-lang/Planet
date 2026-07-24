@@ -1,0 +1,1047 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Planet — Cockpit</title>
+<link rel="stylesheet" href="https://use.typekit.net/phj5hyp.css?v=2026-05-25">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+<link rel="stylesheet" href="../planet.css">
+<style>
+  :root {
+    --cockpit-gap: var(--space-3);
+    --cockpit-canvas: var(--planet-neutral);
+    --cockpit-widget-min: 320px;
+    --cockpit-pad-x: clamp(var(--space-3), 3vw, var(--space-6));
+  }
+
+  html, body {
+    max-width: 100%;
+    overflow-x: hidden;
+    /* Canvas etwas dunkler → weiße Module springen klar hervor */
+    background: var(--cockpit-canvas) !important;
+  }
+
+  /* —— Shell —— */
+  .cockpit-nav {
+    position: sticky;
+    top: 0;
+    z-index: 40;
+    background: color-mix(in srgb, var(--cockpit-canvas) 88%, transparent);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid transparent;
+  }
+  .cockpit-nav__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
+    width: 100%;
+    padding: var(--space-2) var(--cockpit-pad-x);
+    min-height: 72px;
+  }
+  .cockpit-brand {
+    font-weight: var(--weight-display);
+    font-size: var(--text-h3);
+    color: var(--planet-primary);
+    text-decoration: none;
+    line-height: 1;
+  }
+  .cockpit-brand:hover { text-decoration: none; opacity: 0.75; }
+  .cockpit-nav__links {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }
+  /* Avatar wie Styleguide (Foto-Variante ist dort unter #images scoped) */
+  .cockpit-nav .avatar {
+    width: 40px;
+    height: 40px;
+    font-size: 13px;
+    text-decoration: none;
+  }
+  .cockpit-nav .avatar:hover { text-decoration: none; opacity: 0.88; }
+  .cockpit-nav .avatar--photo {
+    color: transparent;
+    background-color: var(--planet-tint);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+  .cockpit-nav .btn {
+    height: 40px;
+    padding: 0 var(--space-2);
+    font-size: var(--text-meta);
+  }
+
+  .cockpit-main {
+    width: 100%;
+    padding: var(--space-5) var(--cockpit-pad-x) var(--space-10);
+  }
+
+  .cockpit-head {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: var(--space-3);
+    margin-bottom: var(--space-5);
+  }
+  .cockpit-head h1 {
+    font-size: var(--text-h2);
+    line-height: 0.95;
+    letter-spacing: -0.02em;
+  }
+  .cockpit-head__actions {
+    display: flex;
+    gap: var(--space-2);
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .cockpit-head .btn {
+    height: 48px;
+    padding: 0 var(--space-3);
+    font-size: var(--text-meta);
+  }
+  .cockpit-head .btn.is-active {
+    background: var(--planet-primary);
+    color: var(--planet-white);
+  }
+
+  .cockpit-hint {
+    display: none;
+    margin: calc(-1 * var(--space-3)) 0 var(--space-4);
+    font-size: var(--text-meta);
+    opacity: 0.65;
+  }
+  body.cockpit-edit .cockpit-hint { display: block; }
+
+  /* —— Grid —— volle Breite, Spaltenzahl skaliert mit Viewport */
+  .cockpit-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, var(--cockpit-widget-min)), 1fr));
+    gap: var(--cockpit-gap);
+    align-items: start;
+  }
+
+  /* —— Widget —— */
+  .widget {
+    background: var(--planet-white);
+    border: 1px solid color-mix(in srgb, var(--planet-black) 6%, transparent);
+    border-radius: var(--radius-card);
+    min-height: 220px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-shadow: 0 1px 0 color-mix(in srgb, var(--planet-black) 4%, transparent);
+    transition: border-color var(--motion-fast) var(--ease-out),
+                transform var(--motion-fast) var(--ease-out),
+                opacity var(--motion-fast) var(--ease-out);
+  }
+  .widget:hover {
+    border-color: color-mix(in srgb, var(--planet-primary) 35%, var(--planet-tint));
+    transform: translateY(-2px);
+  }
+  .widget--wide { grid-column: span 2; }
+  .widget--tall { min-height: 320px; }
+
+  /* Featured / Accent — Primärblau als Highlight */
+  .widget--accent {
+    background: var(--planet-primary);
+    border-color: var(--planet-primary);
+    box-shadow: none;
+    color: var(--planet-white) !important;
+  }
+  .widget--accent:hover {
+    border-color: var(--planet-primary);
+    transform: translateY(-2px);
+  }
+  /* planet.css setzt h1–h4 / body auf Schwarz — hier explizit überschreiben */
+  .widget--accent,
+  .widget--accent .widget__title,
+  .widget--accent .widget__source,
+  .widget--accent .widget__body,
+  .widget--accent h1,
+  .widget--accent h2,
+  .widget--accent h3,
+  .widget--accent h4,
+  .widget--accent p,
+  .widget--accent span,
+  .widget--accent li,
+  .widget--accent a,
+  .widget--accent strong {
+    color: var(--planet-white) !important;
+  }
+  .widget--accent .widget__icon {
+    background: color-mix(in srgb, var(--planet-white) 14%, transparent);
+  }
+  .widget--accent .widget__icon .material-icons-outlined {
+    color: var(--planet-secondary) !important;
+  }
+  .widget--accent .widget__source {
+    opacity: 0.7;
+  }
+  .widget--accent .widget__tool,
+  .widget--accent .widget__tool .material-icons-outlined {
+    color: var(--planet-white) !important;
+  }
+  .widget--accent .widget__tool:hover {
+    background: color-mix(in srgb, var(--planet-white) 16%, transparent);
+  }
+  .widget--accent .widget__tool:hover,
+  .widget--accent .widget__tool:hover .material-icons-outlined {
+    color: var(--planet-secondary) !important;
+  }
+  .widget--accent .w-welcome__stat {
+    border-top-color: color-mix(in srgb, var(--planet-white) 28%, transparent);
+  }
+  .widget--accent .w-welcome__stat strong {
+    color: var(--planet-secondary) !important;
+  }
+  body.cockpit-edit .widget--accent .widget__head {
+    border-bottom-color: color-mix(in srgb, var(--planet-white) 35%, transparent);
+  }
+
+  .widget.is-dragging {
+    opacity: 0.45;
+    border-color: var(--planet-primary);
+    transform: none;
+  }
+  .widget.is-drag-over {
+    border-color: var(--planet-primary);
+    box-shadow: inset 0 0 0 1px var(--planet-primary);
+  }
+
+  .widget__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-2);
+    padding: var(--space-3) var(--space-3) var(--space-2);
+  }
+  .widget__title {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-2);
+    min-width: 0;
+  }
+  .widget__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-circle);
+    background: color-mix(in srgb, var(--planet-primary) 10%, var(--planet-neutral));
+    flex: none;
+  }
+  .widget__icon .material-icons-outlined {
+    font-size: 22px;
+    color: var(--planet-primary);
+  }
+  .widget__title-text {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+    min-width: 0;
+  }
+  .widget__title-text > span:first-child {
+    font-size: var(--text-h4);
+    font-weight: var(--weight-display);
+    line-height: 1.1;
+  }
+  .widget__source {
+    font-size: 12px;
+    font-weight: var(--weight-body);
+    opacity: 0.4;
+    letter-spacing: 0.02em;
+  }
+  .widget__tools {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    opacity: 0;
+    transition: opacity var(--motion-instant) var(--ease-out);
+  }
+  .widget:hover .widget__tools,
+  body.cockpit-edit .widget__tools,
+  .widget__tools:focus-within {
+    opacity: 1;
+  }
+  .widget__tool {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border: 0;
+    background: transparent;
+    border-radius: var(--radius-pill);
+    cursor: pointer;
+    color: var(--planet-black);
+  }
+  .widget__tool .material-icons-outlined { font-size: 18px; }
+  .widget__tool:hover { background: var(--planet-neutral); color: var(--planet-primary); }
+  .widget__tool--drag { cursor: grab; }
+  body.cockpit-edit .widget__tool--drag { cursor: grab; }
+  .widget__body {
+    padding: var(--space-3);
+    flex: 1;
+    min-height: 0;
+  }
+  .widget__empty {
+    font-size: var(--text-meta);
+    opacity: 0.5;
+    line-height: 1.4;
+  }
+
+  /* Widget content patterns */
+  .w-list { display: flex; flex-direction: column; gap: 0; }
+  .w-list__row {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: var(--space-2);
+    align-items: baseline;
+    padding: var(--space-2) 0;
+    border-bottom: 1px solid var(--planet-tint);
+    font-size: var(--text-meta);
+    line-height: 1.35;
+  }
+  .w-list__row:last-child { border-bottom: 0; }
+  .w-list__time {
+    font-variant-numeric: tabular-nums;
+    opacity: 0.55;
+    white-space: nowrap;
+  }
+  .w-list__main { min-width: 0; }
+  .w-list__main strong { font-weight: var(--weight-display); display: block; }
+  .w-list__meta { opacity: 0.5; font-size: 13px; }
+  .w-list__action {
+    color: var(--planet-primary);
+    text-decoration: none;
+    font-weight: var(--weight-display);
+    white-space: nowrap;
+  }
+  .w-list__action:hover { text-decoration: none; opacity: 0.7; }
+
+  .w-welcome h2 {
+    font-size: var(--text-h3);
+    margin-bottom: var(--space-2);
+  }
+  .w-welcome p {
+    font-size: var(--text-meta);
+    line-height: 1.4;
+    margin-bottom: var(--space-1);
+  }
+  .w-welcome__stat {
+    margin-top: var(--space-3);
+    padding-top: var(--space-3);
+    border-top: 1px solid var(--planet-tint);
+    font-size: var(--text-meta);
+  }
+  .w-welcome__stat strong {
+    display: block;
+    font-size: var(--text-h3);
+    color: var(--planet-primary);
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+
+  .w-news__kicker {
+    font-size: 13px;
+    opacity: 0.5;
+    margin-bottom: var(--space-1);
+  }
+  .w-news h3 {
+    font-size: var(--text-h4);
+    margin-bottom: var(--space-2);
+    line-height: 1.1;
+  }
+  .w-news p {
+    font-size: var(--text-meta);
+    line-height: 1.4;
+    opacity: 0.8;
+  }
+  .w-news ul {
+    margin-top: var(--space-2);
+    padding-left: 1.1em;
+    font-size: var(--text-meta);
+    line-height: 1.45;
+  }
+
+  .w-tiles {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-2);
+  }
+  .w-tile {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: var(--space-2);
+    border: 1px solid var(--planet-tint);
+    border-radius: 16px;
+    text-decoration: none;
+    color: inherit;
+    min-height: 88px;
+    transition: border-color var(--motion-instant) var(--ease-out),
+                background var(--motion-instant) var(--ease-out);
+  }
+  .w-tile:hover {
+    border-color: var(--planet-primary);
+    background: var(--planet-neutral);
+    text-decoration: none;
+  }
+  .w-tile .material-icons-outlined {
+    color: var(--planet-primary);
+    font-size: var(--icon);
+  }
+  .w-tile strong {
+    font-size: var(--text-meta);
+    font-weight: var(--weight-display);
+  }
+  .w-tile span {
+    font-size: 13px;
+    opacity: 0.5;
+  }
+
+  .w-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    font-weight: var(--weight-display);
+    color: var(--planet-primary);
+  }
+  .w-badge::before {
+    content: "";
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--planet-primary);
+  }
+
+  /* —— Customize panel —— */
+  .cockpit-panel {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: min(400px, 100vw);
+    height: 100%;
+    z-index: 50;
+    background: var(--planet-white);
+    border-left: 1px solid var(--planet-tint);
+    transform: translateX(100%);
+    transition: transform var(--motion-default) var(--ease-out);
+    display: flex;
+    flex-direction: column;
+    padding: var(--space-4);
+    box-shadow: -12px 0 40px color-mix(in srgb, var(--planet-black) 8%, transparent);
+  }
+  .cockpit-panel.is-open { transform: translateX(0); }
+  .cockpit-panel__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: var(--space-4);
+    padding-bottom: var(--space-3);
+    border-bottom: 1px solid var(--planet-tint);
+  }
+  .cockpit-panel__head h2 { font-size: var(--text-h3); }
+  .cockpit-panel__list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    overflow-y: auto;
+    flex: 1;
+  }
+  .cockpit-catalog-item {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: var(--space-2);
+    align-items: center;
+    padding: var(--space-2);
+    border: 1px solid var(--planet-tint);
+    border-radius: 16px;
+  }
+  .cockpit-catalog-item strong {
+    display: block;
+    font-size: var(--text-meta);
+    font-weight: var(--weight-display);
+  }
+  .cockpit-catalog-item span {
+    display: block;
+    font-size: 13px;
+    opacity: 0.5;
+    margin-top: 2px;
+  }
+  .cockpit-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 45;
+    background: rgba(0, 0, 0, 0.25);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--motion-default) var(--ease-out);
+  }
+  .cockpit-backdrop.is-open {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  body.cockpit-edit .widget {
+    cursor: default;
+  }
+  body.cockpit-edit .widget:hover {
+    transform: none;
+  }
+  body.cockpit-edit .widget__head {
+    border-bottom: 1px dashed color-mix(in srgb, var(--planet-primary) 25%, transparent);
+  }
+
+  @media (min-width: 1800px) {
+    :root { --cockpit-widget-min: 340px; }
+  }
+  @media (max-width: 720px) {
+    .cockpit-main { padding-top: var(--space-4); padding-bottom: var(--space-8); }
+    .widget--wide { grid-column: span 1; }
+    .cockpit-head {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    .w-tiles { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header class="cockpit-nav">
+  <div class="cockpit-nav__inner">
+    <a class="cockpit-brand" href="cockpit.html">Planet</a>
+    <div class="cockpit-nav__links">
+      <a
+        class="avatar avatar--primary avatar--photo"
+        href="#profil"
+        style="background-image: url('../assets/images/Inuvet_Team_J_Rohloff.jpg');"
+        aria-label="Jonathan Jacob"
+        title="Jonathan Jacob"
+      >JJ</a>
+      <button class="btn btn--secondary" type="button" id="lang-toggle" aria-label="Sprache">DE</button>
+      <button class="btn" type="button">Abmelden</button>
+    </div>
+  </div>
+</header>
+
+<main class="cockpit-main">
+  <div class="cockpit-head">
+    <h1><span class="de">Dein Cockpit</span><span class="en">Your Cockpit</span></h1>
+    <div class="cockpit-head__actions">
+      <button class="btn btn--secondary" type="button" id="btn-reset">
+        <span class="de">Zurücksetzen</span><span class="en">Reset</span>
+      </button>
+      <button class="btn btn--secondary" type="button" id="btn-catalog">
+        <span class="material-icons-outlined" style="font-size:18px;">add</span>
+        <span class="de">Widget</span><span class="en">Widget</span>
+      </button>
+      <button class="btn" type="button" id="btn-edit">
+        <span class="material-icons-outlined" style="font-size:18px;">tune</span>
+        <span class="de">Anpassen</span><span class="en">Customize</span>
+      </button>
+    </div>
+  </div>
+  <p class="cockpit-hint">
+    <span class="de">Ziehen zum Sortieren · Entfernen über × · Neue Module über „Widget“.</span>
+    <span class="en">Drag to reorder · Remove with × · Add modules via “Widget”.</span>
+  </p>
+
+  <div class="cockpit-grid" id="cockpit-grid" aria-live="polite"></div>
+</main>
+
+<div class="cockpit-backdrop" id="cockpit-backdrop" hidden></div>
+<aside class="cockpit-panel" id="cockpit-panel" aria-hidden="true" aria-label="Widget-Katalog">
+  <div class="cockpit-panel__head">
+    <h2><span class="de">Module</span><span class="en">Modules</span></h2>
+    <button class="widget__tool" type="button" id="panel-close" aria-label="Schließen">
+      <span class="material-icons-outlined">close</span>
+    </button>
+  </div>
+  <p style="font-size:var(--text-meta);opacity:0.6;margin-bottom:var(--space-3);line-height:1.4;">
+    <span class="de">Kombiniere Tools flexibel — Kalender, Asana, Personio, Chat und mehr.</span>
+    <span class="en">Combine tools flexibly — calendar, Asana, Personio, chat and more.</span>
+  </p>
+  <div class="cockpit-panel__list" id="catalog-list"></div>
+</aside>
+
+<script>
+(function () {
+  const STORAGE_KEY = 'planet-cockpit-layout-v1';
+  const grid = document.getElementById('cockpit-grid');
+  const catalogList = document.getElementById('catalog-list');
+  const panel = document.getElementById('cockpit-panel');
+  const backdrop = document.getElementById('cockpit-backdrop');
+  const btnEdit = document.getElementById('btn-edit');
+  const btnCatalog = document.getElementById('btn-catalog');
+  const btnReset = document.getElementById('btn-reset');
+  const panelClose = document.getElementById('panel-close');
+  const langToggle = document.getElementById('lang-toggle');
+
+  const todayLabel = () => {
+    try {
+      return new Intl.DateTimeFormat(document.documentElement.lang || 'de', {
+        weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'
+      }).format(new Date());
+    } catch {
+      return '23. Juli 2026';
+    }
+  };
+
+  /** Widget catalog — each entry is a pluggable module surface */
+  const CATALOG = {
+    day: {
+      id: 'day',
+      titleDe: 'Dein Tag',
+      titleEn: 'Your day',
+      source: 'Kalender',
+      icon: 'calendar_today',
+      wide: true,
+      tall: true,
+      render() {
+        return `
+          <div class="w-list">
+            <div class="w-list__row">
+              <span class="w-list__time">07:00–09:00</span>
+              <div class="w-list__main"><strong>Blocker meetingfrei</strong><span class="w-list__meta">Fokuszeit</span></div>
+              <span></span>
+            </div>
+            <div class="w-list__row">
+              <span class="w-list__time">09:30–10:00</span>
+              <div class="w-list__main"><strong>Weekly Asana Check-in</strong><span class="w-list__meta">Asana · Meet</span></div>
+              <a class="w-list__action" href="#">Teilnehmen</a>
+            </div>
+            <div class="w-list__row">
+              <span class="w-list__time">11:00–11:45</span>
+              <div class="w-list__main"><strong>Campus Theme</strong><span class="w-list__meta">Google Meet</span></div>
+              <a class="w-list__action" href="#">Teilnehmen</a>
+            </div>
+            <div class="w-list__row">
+              <span class="w-list__time">14:00–14:30</span>
+              <div class="w-list__main"><strong>1:1 Jonathan / Alex</strong><span class="w-list__meta">Kalender</span></div>
+              <a class="w-list__action" href="#">Teilnehmen</a>
+            </div>
+          </div>`;
+      }
+    },
+    welcome: {
+      id: 'welcome',
+      titleDe: 'Willkommen',
+      titleEn: 'Welcome',
+      source: 'Personio',
+      icon: 'waving_hand',
+      accent: true,
+      render() {
+        return `
+          <div class="w-welcome">
+            <h2><span class="de">Hallo, Jonathan!</span><span class="en">Hi, Jonathan!</span></h2>
+            <p>${todayLabel()}</p>
+            <p><span class="de">Verantwortlicher IT Build</span><span class="en">IT Build lead</span></p>
+            <div class="w-welcome__stat">
+              <strong>19</strong>
+              <span class="de">Urlaubstage noch in diesem Jahr</span>
+              <span class="en">vacation days left this year</span>
+            </div>
+          </div>`;
+      }
+    },
+    news: {
+      id: 'news',
+      titleDe: 'Neuigkeiten',
+      titleEn: 'News',
+      source: 'Redaktion',
+      icon: 'newspaper',
+      tall: true,
+      render() {
+        return `
+          <div class="w-news">
+            <div class="w-news__kicker">22. Jul 2026</div>
+            <h3><span class="de">Warum die HR-Abteilung die beste ist</span><span class="en">Why HR is the best department</span></h3>
+            <p><span class="de">Kurzer Einblick in Tools, Rituale und das, was Personio und Team dieses Quartal bewegen.</span>
+               <span class="en">A short look at tools, rituals, and what Personio and the team are moving this quarter.</span></p>
+            <ul>
+              <li><span class="de">Neue Onboarding-Checklisten live</span><span class="en">New onboarding checklists live</span></li>
+              <li><span class="de">Urlaubsfreigaben in unter 24h</span><span class="en">Leave approvals under 24h</span></li>
+            </ul>
+          </div>`;
+      }
+    },
+    events: {
+      id: 'events',
+      titleDe: 'Events',
+      titleEn: 'Events',
+      source: 'Kultur',
+      icon: 'celebration',
+      render() {
+        return `
+          <div class="w-news">
+            <div class="w-news__kicker">21. Jul 2026</div>
+            <h3><span class="de">Ein Gedicht über Giraffen</span><span class="en">A poem about giraffes</span></h3>
+            <p><span class="de">Sommerlicher Campus-Beitrag — langhalsig, gelassen, genau richtig fürs Mittagslesen.</span>
+               <span class="en">A summer campus piece — long-necked, calm, perfect lunch reading.</span></p>
+          </div>`;
+      }
+    },
+    birthdays: {
+      id: 'birthdays',
+      titleDe: 'Geburtstage',
+      titleEn: 'Birthdays',
+      source: 'Personio',
+      icon: 'cake',
+      render() {
+        return `
+          <div class="w-list">
+            <div class="w-list__row">
+              <span class="w-list__time">24. Jul</span>
+              <div class="w-list__main"><strong>Alice Gugel</strong></div>
+              <span></span>
+            </div>
+            <div class="w-list__row">
+              <span class="w-list__time">26. Jul</span>
+              <div class="w-list__main"><strong>Nadine Lang</strong></div>
+              <span></span>
+            </div>
+            <div class="w-list__row">
+              <span class="w-list__time">02. Aug</span>
+              <div class="w-list__main"><strong>Sam Nabholz</strong></div>
+              <span></span>
+            </div>
+          </div>`;
+      }
+    },
+    asana: {
+      id: 'asana',
+      titleDe: 'Asana',
+      titleEn: 'Asana',
+      source: 'Asana',
+      icon: 'task_alt',
+      render() {
+        return `
+          <div class="w-list">
+            <div class="w-list__row">
+              <span class="w-badge">3</span>
+              <div class="w-list__main"><strong><span class="de">Heute fällig</span><span class="en">Due today</span></strong><span class="w-list__meta">Cockpit API · Styleguide QA</span></div>
+              <a class="w-list__action" href="#">Öffnen</a>
+            </div>
+            <div class="w-list__row">
+              <span class="w-badge">7</span>
+              <div class="w-list__main"><strong><span class="de">Diese Woche</span><span class="en">This week</span></strong><span class="w-list__meta">IT Build Board</span></div>
+              <a class="w-list__action" href="#">Board</a>
+            </div>
+          </div>`;
+      }
+    },
+    mail: {
+      id: 'mail',
+      titleDe: 'E-Mail',
+      titleEn: 'Email',
+      source: 'Google',
+      icon: 'mail_outline',
+      render() {
+        return `
+          <div class="w-list">
+            <div class="w-list__row">
+              <span class="w-list__time">10:12</span>
+              <div class="w-list__main"><strong>Alex Mertens</strong><span class="w-list__meta">Re: Release Notes Cockpit</span></div>
+              <a class="w-list__action" href="#">Lesen</a>
+            </div>
+            <div class="w-list__row">
+              <span class="w-list__time">09:04</span>
+              <div class="w-list__main"><strong>Personio</strong><span class="w-list__meta"><span class="de">Freigabe angefragt</span><span class="en">Approval requested</span></span></div>
+              <a class="w-list__action" href="#">Öffnen</a>
+            </div>
+          </div>`;
+      }
+    },
+    chat: {
+      id: 'chat',
+      titleDe: 'Chat',
+      titleEn: 'Chat',
+      source: 'Slack / Chat',
+      icon: 'chat_bubble_outline',
+      render() {
+        return `
+          <div class="w-list">
+            <div class="w-list__row">
+              <span class="w-badge">12</span>
+              <div class="w-list__main"><strong>#it-build</strong><span class="w-list__meta"><span class="de">ungelesen</span><span class="en">unread</span></span></div>
+              <a class="w-list__action" href="#">Öffnen</a>
+            </div>
+            <div class="w-list__row">
+              <span class="w-badge">2</span>
+              <div class="w-list__main"><strong>Kim Vogt</strong><span class="w-list__meta">DM</span></div>
+              <a class="w-list__action" href="#">Öffnen</a>
+            </div>
+          </div>`;
+      }
+    },
+    whatsapp: {
+      id: 'whatsapp',
+      titleDe: 'WhatsApp',
+      titleEn: 'WhatsApp',
+      source: 'WhatsApp Business',
+      icon: 'sms',
+      render() {
+        return `
+          <div class="w-list">
+            <div class="w-list__row">
+              <span class="w-badge">4</span>
+              <div class="w-list__main"><strong><span class="de">Support-Queue</span><span class="en">Support queue</span></strong><span class="w-list__meta"><span class="de">offene Chats</span><span class="en">open chats</span></span></div>
+              <a class="w-list__action" href="#">Öffnen</a>
+            </div>
+          </div>`;
+      }
+    },
+    canva: {
+      id: 'canva',
+      titleDe: 'Canva',
+      titleEn: 'Canva',
+      source: 'Canva',
+      icon: 'palette',
+      render() {
+        return `
+          <div class="w-list">
+            <div class="w-list__row">
+              <span class="w-list__time">Neu</span>
+              <div class="w-list__main"><strong>Q3 Social Kit</strong><span class="w-list__meta"><span class="de">geteilt mit Brand</span><span class="en">shared with Brand</span></span></div>
+              <a class="w-list__action" href="#">Öffnen</a>
+            </div>
+            <div class="w-list__row">
+              <span class="w-list__time">Entwurf</span>
+              <div class="w-list__main"><strong>Campus Poster</strong><span class="w-list__meta">Brand & Growth</span></div>
+              <a class="w-list__action" href="#">Öffnen</a>
+            </div>
+          </div>`;
+      }
+    },
+    apps: {
+      id: 'apps',
+      titleDe: 'Apps',
+      titleEn: 'Apps',
+      source: 'Hub',
+      icon: 'apps',
+      render() {
+        return `
+          <div class="w-tiles">
+            <a class="w-tile" href="#"><span class="material-icons-outlined">task_alt</span><strong>Asana</strong><span>Tasks</span></a>
+            <a class="w-tile" href="#"><span class="material-icons-outlined">mail_outline</span><strong>Gmail</strong><span>Google</span></a>
+            <a class="w-tile" href="#"><span class="material-icons-outlined">badge</span><strong>Personio</strong><span>HR</span></a>
+            <a class="w-tile" href="#"><span class="material-icons-outlined">palette</span><strong>Canva</strong><span>Design</span></a>
+            <a class="w-tile" href="#"><span class="material-icons-outlined">chat_bubble_outline</span><strong>Chat</strong><span>Team</span></a>
+            <a class="w-tile" href="#"><span class="material-icons-outlined">calendar_today</span><strong><span class="de">Kalender</span><span class="en">Calendar</span></strong><span>Google</span></a>
+          </div>`;
+      }
+    }
+  };
+
+  const DEFAULT_LAYOUT = ['day', 'welcome', 'news', 'events', 'birthdays', 'asana'];
+
+  function loadLayout() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return [...DEFAULT_LAYOUT];
+      const parsed = JSON.parse(raw);
+      if (!Array.isArray(parsed)) return [...DEFAULT_LAYOUT];
+      return parsed.filter((id) => CATALOG[id]);
+    } catch {
+      return [...DEFAULT_LAYOUT];
+    }
+  }
+
+  function saveLayout(layout) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(layout));
+  }
+
+  let layout = loadLayout();
+  let editMode = false;
+  let dragId = null;
+
+  function titleFor(mod) {
+    const en = document.body.classList.contains('lang-en');
+    return en ? mod.titleEn : mod.titleDe;
+  }
+
+  function renderWidget(id) {
+    const mod = CATALOG[id];
+    if (!mod) return null;
+    const el = document.createElement('article');
+    el.className = 'widget';
+    if (mod.wide) el.classList.add('widget--wide');
+    if (mod.tall) el.classList.add('widget--tall');
+    if (mod.accent) el.classList.add('widget--accent');
+    el.dataset.widgetId = id;
+    el.draggable = editMode;
+    el.innerHTML = `
+      <div class="widget__head">
+        <div class="widget__title">
+          <span class="widget__icon" aria-hidden="true">
+            <span class="material-icons-outlined">${mod.icon}</span>
+          </span>
+          <div class="widget__title-text">
+            <span>${titleFor(mod)}</span>
+            <span class="widget__source">${mod.source}</span>
+          </div>
+        </div>
+        <div class="widget__tools">
+          <button class="widget__tool widget__tool--drag" type="button" data-drag aria-label="Verschieben" title="Verschieben">
+            <span class="material-icons-outlined">drag_indicator</span>
+          </button>
+          <button class="widget__tool" type="button" data-remove aria-label="Entfernen" title="Entfernen">
+            <span class="material-icons-outlined">close</span>
+          </button>
+        </div>
+      </div>
+      <div class="widget__body">${mod.render()}</div>`;
+    return el;
+  }
+
+  function renderGrid() {
+    grid.innerHTML = '';
+    if (!layout.length) {
+      const empty = document.createElement('p');
+      empty.className = 'widget__empty';
+      empty.style.gridColumn = '1 / -1';
+      empty.innerHTML = '<span class="de">Noch keine Module — öffne „Widget“ und füge welche hinzu.</span><span class="en">No modules yet — open “Widget” and add some.</span>';
+      grid.appendChild(empty);
+      return;
+    }
+    layout.forEach((id) => {
+      const widget = renderWidget(id);
+      if (widget) grid.appendChild(widget);
+    });
+    bindWidgetEvents();
+  }
+
+  function renderCatalog() {
+    catalogList.innerHTML = '';
+    Object.values(CATALOG).forEach((mod) => {
+      const active = layout.includes(mod.id);
+      const row = document.createElement('div');
+      row.className = 'cockpit-catalog-item';
+      row.innerHTML = `
+        <div>
+          <strong>${titleFor(mod)}</strong>
+          <span>${mod.source}</span>
+        </div>
+        <button class="btn ${active ? 'btn--secondary' : ''}" type="button" data-toggle="${mod.id}" style="height:40px;padding:0 16px;font-size:14px;">
+          ${active
+            ? '<span class="de">Entfernen</span><span class="en">Remove</span>'
+            : '<span class="de">Hinzufügen</span><span class="en">Add</span>'}
+        </button>`;
+      catalogList.appendChild(row);
+    });
+  }
+
+  function setEditMode(on) {
+    editMode = on;
+    document.body.classList.toggle('cockpit-edit', on);
+    btnEdit.classList.toggle('is-active', on);
+    btnEdit.innerHTML = on
+      ? '<span class="material-icons-outlined" style="font-size:18px;">check</span><span class="de">Fertig</span><span class="en">Done</span>'
+      : '<span class="material-icons-outlined" style="font-size:18px;">tune</span><span class="de">Anpassen</span><span class="en">Customize</span>';
+    renderGrid();
+  }
+
+  function openPanel(open) {
+    panel.classList.toggle('is-open', open);
+    backdrop.classList.toggle('is-open', open);
+    backdrop.hidden = !open;
+    panel.setAttribute('aria-hidden', open ? 'false' : 'true');
+    if (open) renderCatalog();
+  }
+
+  function bindWidgetEvents() {
+    grid.querySelectorAll('.widget').forEach((widget) => {
+      const id = widget.dataset.widgetId;
+
+      widget.querySelector('[data-remove]')?.addEventListener('click', () => {
+        layout = layout.filter((x) => x !== id);
+        saveLayout(layout);
+        renderGrid();
+        if (panel.classList.contains('is-open')) renderCatalog();
+      });
+
+      widget.addEventListener('dragstart', (e) => {
+        if (!editMode) { e.preventDefault(); return; }
+        dragId = id;
+        widget.classList.add('is-dragging');
+        e.dataTransfer.effectAllowed = 'move';
+        e.dataTransfer.setData('text/plain', id);
+      });
+      widget.addEventListener('dragend', () => {
+        dragId = null;
+        widget.classList.remove('is-dragging');
+        grid.querySelectorAll('.widget').forEach((w) => w.classList.remove('is-drag-over'));
+      });
+      widget.addEventListener('dragover', (e) => {
+        if (!editMode || !dragId || dragId === id) return;
+        e.preventDefault();
+        widget.classList.add('is-drag-over');
+      });
+      widget.addEventListener('dragleave', () => widget.classList.remove('is-drag-over'));
+      widget.addEventListener('drop', (e) => {
+        e.preventDefault();
+        widget.classList.remove('is-drag-over');
+        if (!editMode || !dragId || dragId === id) return;
+        const from = layout.indexOf(dragId);
+        const to = layout.indexOf(id);
+        if (from < 0 || to < 0) return;
+        layout.splice(from, 1);
+        layout.splice(to, 0, dragId);
+        saveLayout(layout);
+        renderGrid();
+      });
+    });
+  }
+
+  catalogList.addEventListener('click', (e) => {
+    const btn = e.target.closest('[data-toggle]');
+    if (!btn) return;
+    const id = btn.getAttribute('data-toggle');
+    if (layout.includes(id)) layout = layout.filter((x) => x !== id);
+    else layout.push(id);
+    saveLayout(layout);
+    renderGrid();
+    renderCatalog();
+  });
+
+  btnEdit.addEventListener('click', () => setEditMode(!editMode));
+  btnCatalog.addEventListener('click', () => openPanel(true));
+  panelClose.addEventListener('click', () => openPanel(false));
+  backdrop.addEventListener('click', () => openPanel(false));
+  btnReset.addEventListener('click', () => {
+    layout = [...DEFAULT_LAYOUT];
+    saveLayout(layout);
+    renderGrid();
+    if (panel.classList.contains('is-open')) renderCatalog();
+  });
+
+  langToggle.addEventListener('click', () => {
+    document.body.classList.toggle('lang-en');
+    const en = document.body.classList.contains('lang-en');
+    document.documentElement.lang = en ? 'en' : 'de';
+    langToggle.textContent = en ? 'EN' : 'DE';
+    renderGrid();
+    if (panel.classList.contains('is-open')) renderCatalog();
+  });
+
+  /* Hide .en by default like styleguide */
+  const style = document.createElement('style');
+  style.textContent = '.en{display:none} body.lang-en .de{display:none} body.lang-en .en{display:inline}';
+  document.head.appendChild(style);
+
+  renderGrid();
+})();
+</script>
+</body>
+</html>
