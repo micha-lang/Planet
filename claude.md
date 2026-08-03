@@ -24,3 +24,9 @@ Patterns that live in the product (and as live examples in `UX-Styleguide.html`)
 - No cards or badges in the first viewport.
 - Type: headline = `--text-display`; on mobile often step down to `--text-h2`.
 - Text-hero (no image) is a secondary variant — not shown as a guide chapter; use the `.hero` pattern from `planet.css` when needed.
+
+## Open todos (`planet-website.html`)
+
+- Telefonnummer unten ergänzen (Footer / Kontakt).
+- E-Mail für Kontaktformular freigeben (FormSubmit-Aktivierung für `hello@plnt.group`).
+- Zahlen für die einzelnen Unternehmen recherchieren und bestätigen lassen (Marken-Metriken / Stats).

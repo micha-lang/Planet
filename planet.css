@@ -18,7 +18,7 @@
 
   /* TYPE SCALE — 8er Vielfache (mit ein paar Zwischenwerten) */
   --text-body: clamp(20px, 2vw, 24px);
-  --text-meta: 16px;
+  --text-meta: clamp(16px, 1.2vw, 20px);
   --text-label: clamp(20px, 2vw, 24px);        /* Kein Uppercase-11 mehr — Labels jetzt in Body-Größe */
   --text-h4: clamp(24px, 2.5vw, 32px);
   --text-h3: clamp(32px, 3vw, 40px);
