@@ -443,19 +443,14 @@
     max-width: 36ch;
     opacity: 0.55;
   }
-  /* Eine Welle statt 8 Einzel-Pops — engerer Stagger, etwas kürzerer Move */
-  .stack__item.reveal {
-    transition-duration: 640ms;
-    transition-delay: 0ms;
-  }
-  .stack__grid.is-in .stack__item.reveal { transition-delay: 0ms; }
-  .stack__grid.is-in .stack__item:nth-child(2).reveal { transition-delay: 40ms; }
-  .stack__grid.is-in .stack__item:nth-child(3).reveal { transition-delay: 80ms; }
-  .stack__grid.is-in .stack__item:nth-child(4).reveal { transition-delay: 40ms; }
-  .stack__grid.is-in .stack__item:nth-child(5).reveal { transition-delay: 80ms; }
-  .stack__grid.is-in .stack__item:nth-child(6).reveal { transition-delay: 120ms; }
-  .stack__grid.is-in .stack__item:nth-child(7).reveal { transition-delay: 80ms; }
-  .stack__grid.is-in .stack__item:nth-child(8).reveal { transition-delay: 120ms; }
+  .stack__item.reveal { transition-delay: 0ms; }
+  .stack__item:nth-child(2).reveal { transition-delay: 60ms; }
+  .stack__item:nth-child(3).reveal { transition-delay: 120ms; }
+  .stack__item:nth-child(4).reveal { transition-delay: 180ms; }
+  .stack__item:nth-child(5).reveal { transition-delay: 240ms; }
+  .stack__item:nth-child(6).reveal { transition-delay: 300ms; }
+  .stack__item:nth-child(7).reveal { transition-delay: 360ms; }
+  .stack__item:nth-child(8).reveal { transition-delay: 420ms; }
   @media (max-width: 1024px) {
     .stack__grid {
       grid-template-columns: 1fr 1fr;
@@ -463,8 +458,6 @@
     }
     .stack__item h3 { max-width: none; }
     .stack__item p { max-width: none; }
-    .stack__grid.is-in .stack__item:nth-child(odd).reveal { transition-delay: 0ms; }
-    .stack__grid.is-in .stack__item:nth-child(even).reveal { transition-delay: 50ms; }
   }
   @media (max-width: 640px) {
     .stack { padding: var(--space-8) 0; }
@@ -1720,25 +1713,15 @@
     text-align: left;
     opacity: 0;
     transform: none;
-    transition: opacity 640ms var(--ease-out);
+    transition: opacity 700ms var(--ease-out);
   }
   .team-strip__person.reveal.is-visible {
     opacity: 1;
     transform: none;
   }
-  /* Eine Welle für die Reihe — weniger Scroll-Pops */
-  .team-strip.is-in .team-strip__person.reveal { transition-delay: 0ms; }
-  .team-strip.is-in .team-strip__person:nth-child(2).reveal { transition-delay: 50ms; }
-  .team-strip.is-in .team-strip__person:nth-child(3).reveal { transition-delay: 100ms; }
-  .team-strip.is-in .team-strip__person:nth-child(4).reveal { transition-delay: 40ms; }
-  .team-strip.is-in .team-strip__person:nth-child(5).reveal { transition-delay: 90ms; }
-  .team-strip.is-in .team-strip__person:nth-child(6).reveal { transition-delay: 140ms; }
   .team-strip__shift {
     --parallax-y: 0px;
     transform: translate3d(0, var(--parallax-y), 0);
-    backface-visibility: hidden;
-  }
-  .team-strip.is-parallaxing .team-strip__shift {
     will-change: transform;
   }
   .team-strip__person:not(:last-child)::after {
@@ -2363,7 +2346,7 @@
       <span class="de">Buchhaltung, IT, Logistik, Controlling, HR — als Alleinunternehmer frisst dich das auf. Als Teil der Planet Group dockst du an eine Infrastruktur an, die all das schon kann. Modular: Du nutzt, was dir fehlt. Was du gut kannst, bleibt bei dir.</span>
       <span class="en">Accounting, IT, logistics, controlling, HR — as a solo founder, that eats you alive. As part of Planet Group you plug into infrastructure that already does all of it. Modular: you use what you lack. What you’re good at stays with you.</span>
     </p>
-    <div class="stack__grid" data-reveal-group>
+    <div class="stack__grid">
       <article class="stack__item flow reveal">
         <span class="material-symbols-outlined icon--lg stack__icon" aria-hidden="true">brush</span>
         <h3><span class="de">Branding</span><span class="en">Branding</span></h3>
@@ -2781,7 +2764,7 @@
         <h2><span class="de">Die Macher dahinter.</span><span class="en">The makers behind it.</span></h2>
       </div>
     </div>
-    <div class="team-strip" data-team-strip data-reveal-group>
+    <div class="team-strip" data-team-strip>
       <article class="team-strip__person reveal">
         <div class="team-strip__shift">
           <div class="team-strip__photo" style="background-image: url('assets/images/Inuvet_Team-Event-2023_224.jpg');" role="img" aria-label="Philipp"></div>
@@ -3479,7 +3462,7 @@ function toggleLang() {
   window.addEventListener('resize', onScroll);
 })();
 
-/* Team — sanfterer Parallax auf .team-strip__shift (weniger Amplitude, keine No-Op-Writes) */
+/* Team — Parallax auf .team-strip__shift (Zellen bleiben layout-stabil) */
 (function() {
   const strip = document.querySelector('[data-team-strip]');
   if (!strip) return;
@@ -3488,22 +3471,15 @@ function toggleLang() {
 
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const mobileMq = window.matchMedia('(max-width: 1024px)');
-  /* Flachere Speeds → weniger Ruckeln neben den Foto-Layern */
-  const speedsDesktop = [0.045, -0.03, 0.05];
-  const speedsMobile = [0.035, -0.035];
-  const lastY = shifts.map(() => null);
+  /* Desktop: jede Spalte eigene Speed · Mobile: linke vs. rechte Spalte (Zeilen gleich) */
+  const speedsDesktop = [0.08, -0.05, 0.09];
+  const speedsMobile = [0.07, -0.07];
 
   let ticking = false;
   function update() {
-    ticking = false;
     if (reduced) {
-      strip.classList.remove('is-parallaxing');
-      shifts.forEach((el, i) => {
-        if (lastY[i] !== 0) {
-          el.style.setProperty('--parallax-y', '0px');
-          lastY[i] = 0;
-        }
-      });
+      shifts.forEach(el => el.style.setProperty('--parallax-y', '0px'));
+      ticking = false;
       return;
     }
 
@@ -3511,33 +3487,16 @@ function toggleLang() {
     const mid = vh * 0.5;
     const section = document.getElementById('team') || strip;
     const sectionRect = section.getBoundingClientRect();
-    const pad = vh * 0.15;
-    const inRange = sectionRect.bottom > -pad && sectionRect.top < vh + pad;
-    strip.classList.toggle('is-parallaxing', inRange);
-
-    if (!inRange) {
-      shifts.forEach((el, i) => {
-        if (lastY[i] !== 0) {
-          el.style.setProperty('--parallax-y', '0px');
-          lastY[i] = 0;
-        }
-      });
-      return;
-    }
-
-    /* smoothstep-Dämpfung am Ein-/Austritt — kein harter Start */
-    const visible = Math.min(sectionRect.bottom, vh) - Math.max(sectionRect.top, 0);
-    const cover = Math.max(0, Math.min(1, visible / Math.min(sectionRect.height, vh)));
-    const ease = cover * cover * (3 - 2 * cover);
-    const shift = (mid - (sectionRect.top + sectionRect.height * 0.45)) * ease;
+    const inRange = sectionRect.bottom > 0 && sectionRect.top < vh;
+    const shift = inRange ? mid - (sectionRect.top + sectionRect.height * 0.45) : 0;
     const speeds = mobileMq.matches ? speedsMobile : speedsDesktop;
 
     shifts.forEach((el, i) => {
       const y = Math.round(shift * (speeds[i % speeds.length] || 0));
-      if (lastY[i] === y) return;
-      lastY[i] = y;
       el.style.setProperty('--parallax-y', `${y}px`);
     });
+
+    ticking = false;
   }
   function onScroll() {
     if (ticking) return;
@@ -3560,9 +3519,7 @@ function toggleLang() {
   }
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
-      if (!entry.isIntersecting) return;
-      logos.classList.add('is-in');
-      observer.unobserve(logos);
+      logos.classList.toggle('is-in', entry.isIntersecting);
     });
   }, { threshold: 0.35, rootMargin: '0px 0px -8% 0px' });
   observer.observe(logos);
@@ -3570,37 +3527,18 @@ function toggleLang() {
 
 (function() {
   const revealSelectors = '.reveal, .reveal-slide-left, .reveal-slide-right, .reveal-scale';
-  const grouped = new Set();
-  document.querySelectorAll('[data-reveal-group]').forEach(group => {
-    group.querySelectorAll(revealSelectors).forEach(el => grouped.add(el));
-  });
-
-  function revealGroup(group) {
-    group.classList.add('is-in');
-    group.querySelectorAll(revealSelectors).forEach(el => el.classList.add('is-visible'));
-  }
-
   if (!('IntersectionObserver' in window)) {
     document.querySelectorAll(revealSelectors).forEach(el => el.classList.add('is-visible'));
-    document.querySelectorAll('[data-reveal-group]').forEach(revealGroup);
   } else {
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
-        if (!entry.isIntersecting) return;
-        const target = entry.target;
-        if (target.hasAttribute('data-reveal-group')) {
-          revealGroup(target);
-        } else {
-          target.classList.add('is-visible');
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+          observer.unobserve(entry.target);
         }
-        observer.unobserve(target);
       });
-    }, { threshold: 0.12, rootMargin: '0px 0px -48px 0px' });
-
-    document.querySelectorAll('[data-reveal-group]').forEach(group => observer.observe(group));
-    document.querySelectorAll(revealSelectors).forEach(el => {
-      if (!grouped.has(el)) observer.observe(el);
-    });
+    }, { threshold: 0.15, rootMargin: '0px 0px -60px 0px' });
+    document.querySelectorAll(revealSelectors).forEach(el => observer.observe(el));
   }
 })();
 

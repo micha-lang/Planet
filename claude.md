@@ -27,6 +27,7 @@ Patterns that live in the product (and as live examples in `UX-Styleguide.html`)
 
 ## Open todos (`planet-website.html`)
 
-- Telefonnummer unten ergänzen (Footer / Kontakt).
-- E-Mail für Kontaktformular freigeben (FormSubmit-Aktivierung für `hello@plnt.group`).
-- Zahlen für die einzelnen Unternehmen recherchieren und bestätigen lassen (Marken-Metriken / Stats).
+1. **Telefonnummer** unten ergänzen (Footer / Kontakt) — inkl. echte `tel:`- und WhatsApp-Links bei „Und wie geht's weiter?“ (Anruf / WhatsApp).
+2. **E-Mail freigeben** fürs Kontaktformular — FormSubmit-Aktivierung für `hello@plnt.group` (Aktivierungslink in der ersten Mail bestätigen).
+3. **Zahlen** für die einzelnen Unternehmen recherchieren und bestätigen lassen (Marken-Metriken / Stats-Strip).
+4. **Domain** `planet.group` verbinden (öffentliche Site statt GitHub-Pages-Vorschau).
