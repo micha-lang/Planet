@@ -7,6 +7,15 @@
 <link rel="stylesheet" href="https://use.typekit.net/phj5hyp.css?v=2026-05-25">
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
 <link rel="stylesheet" href="../planet.css">
+<script>
+  (function () {
+    try {
+      var t = localStorage.getItem('planet-cockpit-theme');
+      if (!t) t = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      if (t === 'dark') document.documentElement.dataset.theme = 'dark';
+    } catch (e) {}
+  })();
+</script>
 <style>
   :root {
     --cockpit-gap: var(--space-3);
@@ -22,16 +31,29 @@
     --cockpit-mute: 0.5;
     /* Icons: eine Größe, eine Farbe (Primary) — auf Accent Weiß bzw. Primary auf Gelb */
     --cockpit-icon: var(--icon);
+    --cockpit-true-black: #000000;
+    --cockpit-true-white: #FFFFFF;
+  }
+
+  /* Dark Mode — Token-Inversion wie Orgchart */
+  [data-theme="dark"] {
+    color-scheme: dark;
+    --planet-black: #FFFFFF;
+    --planet-white: #0F0F0F;
+    --planet-tint: #2A2A2A;
+    --planet-input-fill: #1A1A1A;
+    --planet-neutral: #161616;
   }
 
   html {
     --bg-dark-mix: 0;
     max-width: 100%;
     overflow-x: hidden;
-    /* Canvas → Schwarz beim Soft Planet (wie Landing) */
+    color: var(--planet-black);
+    /* Canvas → echtes Schwarz beim Soft Planet (Token-unabhängig) */
     background: color-mix(
       in srgb,
-      var(--planet-black) calc(var(--bg-dark-mix) * 100%),
+      var(--cockpit-true-black) calc(var(--bg-dark-mix) * 100%),
       var(--cockpit-canvas)
     ) !important;
   }
@@ -39,6 +61,7 @@
     max-width: 100%;
     overflow-x: hidden;
     background: transparent !important;
+    color: var(--planet-black);
   }
 
   /* —— Shell —— */
@@ -95,16 +118,23 @@
     font-size: var(--cockpit-type-body);
   }
   .cockpit-nav--on-planet .cockpit-brand {
-    color: var(--planet-white);
+    color: var(--cockpit-true-white);
   }
   .cockpit-nav--on-planet .btn--secondary {
-    border-color: color-mix(in srgb, var(--planet-white) 45%, transparent);
-    color: var(--planet-white);
+    border-color: color-mix(in srgb, var(--cockpit-true-white) 45%, transparent);
+    color: var(--cockpit-true-white);
     background: transparent;
   }
   .cockpit-nav--on-planet .btn:not(.btn--secondary) {
-    background: var(--planet-white);
+    background: var(--cockpit-true-white);
     color: var(--planet-primary);
+  }
+  .cockpit-nav .btn--icon {
+    width: 40px;
+    padding: 0;
+  }
+  .cockpit-nav .btn--icon .material-icons-outlined {
+    font-size: var(--cockpit-icon);
   }
 
   .cockpit-main {
@@ -246,6 +276,7 @@
 
   /* —— Widget —— */
   .widget {
+    position: relative;
     background: var(--planet-white);
     border: 1px solid color-mix(in srgb, var(--planet-black) 6%, transparent);
     border-radius: var(--radius-card);
@@ -262,15 +293,16 @@
     border-color: color-mix(in srgb, var(--planet-primary) 35%, var(--planet-tint));
     transform: translateY(-2px);
   }
-  .widget--wide { grid-column: span 2; }
+  .widget--size-m { grid-column: span 2; }
+  .widget--size-l { grid-column: span 3; }
   .widget--tall { min-height: 320px; }
 
-  /* Featured / Accent — Primärblau als Highlight */
+  /* Featured / Accent — Primärblau (Text immer echtes Weiß, auch im Dark Mode) */
   .widget--accent {
     background: var(--planet-primary);
     border-color: var(--planet-primary);
     box-shadow: none;
-    color: var(--planet-white) !important;
+    color: var(--cockpit-true-white) !important;
   }
   .widget--accent:hover {
     border-color: var(--planet-primary);
@@ -290,13 +322,13 @@
   .widget--accent li,
   .widget--accent a,
   .widget--accent strong {
-    color: var(--planet-white) !important;
+    color: var(--cockpit-true-white) !important;
   }
   .widget--accent .widget__icon {
-    background: color-mix(in srgb, var(--planet-white) 22%, var(--planet-primary));
+    background: color-mix(in srgb, var(--cockpit-true-white) 22%, var(--planet-primary));
   }
   .widget--accent .widget__icon .material-icons-outlined {
-    color: var(--planet-white) !important;
+    color: var(--cockpit-true-white) !important;
   }
   .widget--accent .widget__source,
   .widget--accent .w-list__time,
@@ -306,33 +338,19 @@
   .widget--accent .w-news p {
     opacity: 0.7 !important;
   }
-  .widget--accent .widget__tool,
-  .widget--accent .widget__tool .material-icons-outlined {
-    color: var(--planet-white) !important;
-  }
-  .widget--accent .widget__tool:hover {
-    background: color-mix(in srgb, var(--planet-white) 16%, transparent);
-  }
-  .widget--accent .widget__tool:hover,
-  .widget--accent .widget__tool:hover .material-icons-outlined {
-    color: var(--planet-white) !important;
-  }
   .widget--accent .w-welcome__stat {
-    border-top-color: color-mix(in srgb, var(--planet-white) 28%, transparent);
+    border-top-color: color-mix(in srgb, var(--cockpit-true-white) 28%, transparent);
   }
   .widget--accent .w-welcome__stat strong {
-    color: var(--planet-white) !important;
-  }
-  body.cockpit-edit .widget--accent .widget__head {
-    border-bottom-color: color-mix(in srgb, var(--planet-white) 35%, transparent);
+    color: var(--cockpit-true-white) !important;
   }
 
-  /* Featured / Accent — Acid-Gelb */
+  /* Featured / Accent — Acid-Gelb (Text immer echtes Schwarz) */
   .widget--accent-acid {
     background: var(--planet-secondary);
     border-color: var(--planet-secondary);
     box-shadow: none;
-    color: var(--planet-black) !important;
+    color: var(--cockpit-true-black) !important;
   }
   .widget--accent-acid:hover {
     border-color: var(--planet-secondary);
@@ -351,10 +369,10 @@
   .widget--accent-acid li,
   .widget--accent-acid a,
   .widget--accent-acid strong {
-    color: var(--planet-black) !important;
+    color: var(--cockpit-true-black) !important;
   }
   .widget--accent-acid .widget__icon {
-    background: color-mix(in srgb, var(--planet-black) 8%, transparent);
+    background: color-mix(in srgb, var(--cockpit-true-black) 8%, transparent);
   }
   .widget--accent-acid .widget__icon .material-icons-outlined {
     color: var(--planet-primary) !important;
@@ -366,25 +384,11 @@
   .widget--accent-acid .w-chart .chart-meta {
     opacity: 0.7 !important;
   }
-  .widget--accent-acid .widget__tool,
-  .widget--accent-acid .widget__tool .material-icons-outlined {
-    color: var(--planet-black) !important;
-  }
-  .widget--accent-acid .widget__tool:hover {
-    background: color-mix(in srgb, var(--planet-black) 10%, transparent);
-    color: var(--planet-primary) !important;
-  }
-  .widget--accent-acid .widget__tool:hover .material-icons-outlined {
-    color: var(--planet-primary) !important;
-  }
   .widget--accent-acid .w-list__row {
-    border-bottom-color: color-mix(in srgb, var(--planet-black) 12%, transparent);
+    border-bottom-color: color-mix(in srgb, var(--cockpit-true-black) 12%, transparent);
   }
   .widget--accent-acid .w-list__action {
     color: var(--planet-primary) !important;
-  }
-  body.cockpit-edit .widget--accent-acid .widget__head {
-    border-bottom-color: color-mix(in srgb, var(--planet-black) 20%, transparent);
   }
 
   .widget.is-dragging {
@@ -446,21 +450,73 @@
     font-weight: var(--weight-body);
     opacity: var(--cockpit-mute);
   }
+  /* Edit-Leiste: vertikal über dem Titel (Flow, kein Overlay) */
   .widget__tools {
     display: none;
     align-items: center;
-    gap: 4px;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 6px;
     flex: none;
+    margin: var(--space-2) var(--space-2) 0;
+    padding: 6px 8px;
+    border-radius: var(--radius-pill);
+    background: color-mix(in srgb, var(--planet-white) 92%, transparent);
+    border: 1px solid color-mix(in srgb, var(--planet-black) 8%, transparent);
+    box-shadow: 0 4px 16px color-mix(in srgb, var(--planet-black) 8%, transparent);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    color: var(--planet-black);
   }
-  /* Verschieben / Entfernen / Farbe nur im Anpassen-Modus */
   body.cockpit-edit .widget__tools {
     display: flex;
   }
+  /* Leiste bleibt hell — unabhängig von Accent-Widget-Farben */
+  .widget--accent .widget__tools,
+  .widget--accent .widget__tools span,
+  .widget--accent .widget__tools button,
+  .widget--accent-acid .widget__tools,
+  .widget--accent-acid .widget__tools span,
+  .widget--accent-acid .widget__tools button {
+    color: var(--cockpit-true-black) !important;
+  }
+  .widget__span {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    padding: 2px;
+    border-radius: var(--radius-pill);
+    background: color-mix(in srgb, var(--planet-black) 5%, transparent);
+  }
+  .widget__span-btn {
+    min-width: 28px;
+    height: 28px;
+    padding: 0 6px;
+    border: 0;
+    border-radius: var(--radius-pill);
+    background: transparent;
+    color: var(--planet-black);
+    font: inherit;
+    font-size: var(--cockpit-type-body);
+    font-weight: var(--weight-display);
+    font-variant-numeric: tabular-nums;
+    cursor: pointer;
+    opacity: 0.55;
+  }
+  .widget__span-btn:hover { opacity: 1; }
+  .widget__span-btn.is-active {
+    background: var(--planet-white);
+    opacity: 1;
+    box-shadow: 0 0 0 1px color-mix(in srgb, var(--planet-black) 8%, transparent);
+  }
+  @media (max-width: 720px) {
+    .widget__span { display: none; }
+  }
+
   .widget__tones {
     display: flex;
     align-items: center;
     gap: 6px;
-    margin-right: 2px;
   }
   .widget__tone {
     width: 18px;
@@ -483,23 +539,17 @@
   .widget__tone.is-active {
     box-shadow: 0 0 0 2px var(--planet-white), 0 0 0 4px var(--planet-primary);
   }
-  .widget--accent .widget__tone.is-active {
-    box-shadow: 0 0 0 2px var(--planet-primary), 0 0 0 4px var(--planet-white);
-  }
-  .widget--accent-acid .widget__tone.is-active {
-    box-shadow: 0 0 0 2px var(--planet-secondary), 0 0 0 4px var(--planet-black);
-  }
 
   /* Charts auf farbigen Widgets lesbar halten */
-  .widget--accent .bar-chart .bar { fill: var(--planet-white); }
-  .widget--accent .bar-chart .bar--highlight { fill: color-mix(in srgb, var(--planet-white) 55%, transparent); }
-  .widget--accent .line-chart .line { stroke: var(--planet-white); }
-  .widget--accent .line-chart .area { fill: var(--planet-white); }
-  .widget--accent .line-chart .dot { fill: var(--planet-white); }
-  .widget--accent .line-chart .grid-line { stroke: color-mix(in srgb, var(--planet-white) 22%, transparent); }
-  .widget--accent .chart-trend--up { color: var(--planet-white) !important; }
+  .widget--accent .bar-chart .bar { fill: var(--cockpit-true-white); }
+  .widget--accent .bar-chart .bar--highlight { fill: color-mix(in srgb, var(--cockpit-true-white) 55%, transparent); }
+  .widget--accent .line-chart .line { stroke: var(--cockpit-true-white); }
+  .widget--accent .line-chart .area { fill: var(--cockpit-true-white); }
+  .widget--accent .line-chart .dot { fill: var(--cockpit-true-white); }
+  .widget--accent .line-chart .grid-line { stroke: color-mix(in srgb, var(--cockpit-true-white) 22%, transparent); }
+  .widget--accent .chart-trend--up { color: var(--cockpit-true-white) !important; }
   .widget--accent-acid .bar-chart .bar { fill: var(--planet-primary); }
-  .widget--accent-acid .bar-chart .bar--highlight { fill: var(--planet-black); }
+  .widget--accent-acid .bar-chart .bar--highlight { fill: var(--cockpit-true-black); }
   .widget--accent-acid .chart-trend--up { color: var(--planet-primary) !important; }
   .widget__tool {
     display: inline-flex;
@@ -580,10 +630,10 @@
     background: color-mix(in srgb, var(--planet-primary) 8%, transparent);
   }
   .widget--accent .w-list__action {
-    color: var(--planet-white) !important;
+    color: var(--cockpit-true-white) !important;
   }
   .widget--accent .w-list__action:hover {
-    background: color-mix(in srgb, var(--planet-white) 14%, transparent);
+    background: color-mix(in srgb, var(--cockpit-true-white) 14%, transparent);
   }
   .widget--accent-acid .w-list__action:hover {
     background: color-mix(in srgb, var(--planet-primary) 12%, transparent);
@@ -833,8 +883,8 @@
   body.cockpit-edit .widget:hover {
     transform: none;
   }
-  body.cockpit-edit .widget__head {
-    border-bottom: 1px dashed color-mix(in srgb, var(--planet-primary) 25%, transparent);
+  body.cockpit-edit .widget {
+    border-color: color-mix(in srgb, var(--planet-primary) 28%, var(--planet-tint));
   }
 
   @media (min-width: 1800px) {
@@ -842,7 +892,8 @@
   }
   @media (max-width: 720px) {
     .cockpit-main { padding-top: var(--space-4); padding-bottom: var(--space-8); }
-    .widget--wide { grid-column: span 1; }
+    .widget--size-m,
+    .widget--size-l { grid-column: span 1; }
     .cockpit-head {
       flex-direction: column;
       align-items: flex-start;
@@ -892,7 +943,7 @@
     font-size: var(--text-display);
     line-height: 0.85;
     letter-spacing: -0.03em;
-    color: var(--planet-white);
+    color: var(--cockpit-true-white);
     text-decoration: none;
   }
   .planet-outro__logo:hover { opacity: 0.85; text-decoration: none; }
@@ -904,6 +955,7 @@
     z-index: 2;
     padding: var(--space-3) 0 calc(var(--space-3) + env(safe-area-inset-bottom, 0px));
     pointer-events: none;
+    color: var(--cockpit-true-white);
   }
   .planet-legal__grid {
     display: grid;
@@ -937,7 +989,7 @@
   }
   a.planet-legal__item:hover {
     opacity: 1;
-    color: var(--planet-white);
+    color: var(--cockpit-true-white);
   }
 
   @media (max-width: 640px) {
@@ -978,6 +1030,9 @@
         aria-label="Jonathan Jacob"
         title="Jonathan Jacob"
       >JJ</a>
+      <button class="btn btn--secondary btn--icon" type="button" id="theme-toggle" aria-label="Darstellung" title="Dark Mode">
+        <span class="material-icons-outlined" id="theme-toggle-icon">dark_mode</span>
+      </button>
       <button class="btn btn--secondary" type="button" id="lang-toggle" aria-label="Sprache">DE</button>
       <button class="btn" type="button">Abmelden</button>
     </div>
@@ -1019,8 +1074,8 @@
   </div>
 
   <p class="cockpit-hint">
-    <span class="de">Ziehen zum Sortieren · Farbe wählen · Entfernen über × · Layout-Preset oder „Widget“.</span>
-    <span class="en">Drag to reorder · Pick a color · Remove with × · Role preset or “Widget”.</span>
+    <span class="de">Ziehen zum Sortieren · Größe S/M/L · Farbe wählen · Entfernen über × · Layout-Preset oder „Widget“.</span>
+    <span class="en">Drag to reorder · Size S/M/L · Pick a color · Remove with × · Role preset or “Widget”.</span>
   </p>
 
   <div class="cockpit-grid" id="cockpit-grid" aria-live="polite"></div>
@@ -1058,8 +1113,9 @@
 
 <script>
 (function () {
-  const STORAGE_KEY = 'planet-cockpit-layout-v6';
+  const STORAGE_KEY = 'planet-cockpit-layout-v8';
   const TONES = ['default', 'primary', 'acid'];
+  const SIZES = ['S', 'M', 'L'];
   const grid = document.getElementById('cockpit-grid');
   const catalogList = document.getElementById('catalog-list');
   const panel = document.getElementById('cockpit-panel');
@@ -1069,6 +1125,33 @@
   const btnReset = document.getElementById('btn-reset');
   const panelClose = document.getElementById('panel-close');
   const langToggle = document.getElementById('lang-toggle');
+  const themeToggle = document.getElementById('theme-toggle');
+  const themeToggleIcon = document.getElementById('theme-toggle-icon');
+  const THEME_KEY = 'planet-cockpit-theme';
+
+  function isDarkTheme() {
+    return document.documentElement.dataset.theme === 'dark';
+  }
+
+  function applyTheme(dark) {
+    document.documentElement.dataset.theme = dark ? 'dark' : '';
+    if (themeToggleIcon) {
+      themeToggleIcon.textContent = dark ? 'light_mode' : 'dark_mode';
+    }
+    if (themeToggle) {
+      themeToggle.title = dark ? 'Light Mode' : 'Dark Mode';
+      themeToggle.setAttribute('aria-label', dark ? 'Light Mode' : 'Dark Mode');
+    }
+  }
+
+  function toggleTheme() {
+    const dark = !isDarkTheme();
+    try { localStorage.setItem(THEME_KEY, dark ? 'dark' : 'light'); } catch (e) {}
+    applyTheme(dark);
+  }
+
+  applyTheme(isDarkTheme());
+  themeToggle?.addEventListener('click', toggleTheme);
 
   const todayLabel = () => {
     try {
@@ -1392,7 +1475,7 @@
             <div class="chart-meta"><span class="de">Umsatz je Quartal · 2024–2026</span><span class="en">Revenue per quarter · 2024–2026</span></div>
             <div class="chart-figure">Q3 ’26</div>
             <svg class="chart-svg" viewBox="0 0 320 168" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
-              <line x1="0" y1="160" x2="320" y2="160" stroke="#ECECEC" stroke-width="1"/>
+              <line x1="0" y1="160" x2="320" y2="160" stroke="var(--planet-tint)" stroke-width="1"/>
               <rect class="bar" x="8"   y="120" width="24" height="40"  rx="6"/>
               <rect class="bar" x="48"  y="90"  width="24" height="70"  rx="6"/>
               <rect class="bar" x="88"  y="100" width="24" height="60"  rx="6"/>
@@ -1426,18 +1509,18 @@
             <div class="chart-meta"><span class="de">Anteil am Umsatz · letzte 4 Quartale</span><span class="en">Share of revenue · last 4 quarters</span></div>
             <div class="donut-wrap">
               <svg class="donut-svg" viewBox="0 0 100 100" aria-hidden="true">
-                <circle cx="50" cy="50" r="40" fill="none" stroke="#ECECEC" stroke-width="16"/>
-                <circle cx="50" cy="50" r="40" fill="none" stroke="#0000FF" stroke-width="16"
+                <circle cx="50" cy="50" r="40" fill="none" stroke="var(--planet-tint)" stroke-width="16"/>
+                <circle cx="50" cy="50" r="40" fill="none" stroke="var(--planet-primary)" stroke-width="16"
                         stroke-dasharray="120.6 251.3" stroke-dashoffset="0" transform="rotate(-90 50 50)"/>
-                <circle cx="50" cy="50" r="40" fill="none" stroke="#000000" stroke-width="16"
+                <circle cx="50" cy="50" r="40" fill="none" stroke="var(--planet-black)" stroke-width="16"
                         stroke-dasharray="80.4 251.3" stroke-dashoffset="-120.6" transform="rotate(-90 50 50)"/>
-                <circle cx="50" cy="50" r="40" fill="none" stroke="#D4FF00" stroke-width="16"
+                <circle cx="50" cy="50" r="40" fill="none" stroke="var(--planet-secondary)" stroke-width="16"
                         stroke-dasharray="50.3 251.3" stroke-dashoffset="-201" transform="rotate(-90 50 50)"/>
               </svg>
               <div class="donut-legend">
-                <div class="donut-legend-row"><span class="donut-legend-dot" style="background:#0000FF;"></span>Brand · 48%</div>
-                <div class="donut-legend-row"><span class="donut-legend-dot" style="background:#000000;"></span>Product · 32%</div>
-                <div class="donut-legend-row"><span class="donut-legend-dot" style="background:#D4FF00;"></span>Editorial · 20%</div>
+                <div class="donut-legend-row"><span class="donut-legend-dot" style="background:var(--planet-primary);"></span>Brand · 48%</div>
+                <div class="donut-legend-row"><span class="donut-legend-dot" style="background:var(--planet-black);"></span>Product · 32%</div>
+                <div class="donut-legend-row"><span class="donut-legend-dot" style="background:var(--planet-secondary);"></span>Editorial · 20%</div>
               </div>
             </div>
             <div class="chart-trend">
@@ -1469,20 +1552,44 @@
     return 'default';
   }
 
+  function defaultSize(mod) {
+    return mod && mod.wide ? 'M' : 'S';
+  }
+
+  function normalizeSize(value, mod) {
+    if (SIZES.includes(value)) return value;
+    if (value === 3 || value === '3') return 'L';
+    if (value === 2 || value === '2' || value === true) return 'M';
+    if (value === 1 || value === '1' || value === false) return 'S';
+    return defaultSize(mod);
+  }
+
+  function layoutItem(id, overrides = {}) {
+    const mod = CATALOG[id];
+    if (!mod) return null;
+    const tone = TONES.includes(overrides.tone) ? overrides.tone : defaultTone(mod);
+    const size = normalizeSize(
+      overrides.size != null ? overrides.size : overrides.cols != null ? overrides.cols : overrides.wide,
+      mod
+    );
+    return { id, tone, size };
+  }
+
   function buildDefaultLayout() {
-    return DEFAULT_IDS.map((id) => ({ id, tone: defaultTone(CATALOG[id]) }));
+    return DEFAULT_IDS.map((id) => layoutItem(id)).filter(Boolean);
   }
 
   function normalizeLayout(raw) {
     if (!Array.isArray(raw)) return buildDefaultLayout();
     return raw.map((item) => {
-      if (typeof item === 'string') {
-        if (!CATALOG[item]) return null;
-        return { id: item, tone: defaultTone(CATALOG[item]) };
-      }
+      if (typeof item === 'string') return layoutItem(item);
       if (item && item.id && CATALOG[item.id]) {
-        const tone = TONES.includes(item.tone) ? item.tone : defaultTone(CATALOG[item.id]);
-        return { id: item.id, tone };
+        return layoutItem(item.id, {
+          tone: item.tone,
+          size: item.size,
+          cols: item.cols,
+          wide: item.wide
+        });
       }
       return null;
     }).filter(Boolean);
@@ -1490,8 +1597,19 @@
 
   function loadLayout() {
     try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      if (!raw) return buildDefaultLayout();
+      let raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) {
+        for (const key of ['planet-cockpit-layout-v7', 'planet-cockpit-layout-v6']) {
+          raw = localStorage.getItem(key);
+          if (raw) break;
+        }
+        if (raw) {
+          const migrated = normalizeLayout(JSON.parse(raw));
+          saveLayout(migrated);
+          return migrated;
+        }
+        return buildDefaultLayout();
+      }
       return normalizeLayout(JSON.parse(raw));
     } catch {
       return buildDefaultLayout();
@@ -1508,6 +1626,12 @@
 
   function setTone(id, tone) {
     layout = layout.map((item) => (item.id === id ? { ...item, tone } : item));
+    saveLayout(layout);
+  }
+
+  function setSize(id, size) {
+    const next = SIZES.includes(size) ? size : 'S';
+    layout = layout.map((item) => (item.id === id ? { ...item, size: next } : item));
     saveLayout(layout);
   }
 
@@ -1528,18 +1652,41 @@
 
   function renderWidget(item) {
     const id = typeof item === 'string' ? item : item.id;
-    const tone = typeof item === 'string' ? defaultTone(CATALOG[id]) : (item.tone || 'default');
     const mod = CATALOG[id];
     if (!mod) return null;
+    const tone = typeof item === 'string' ? defaultTone(mod) : (item.tone || defaultTone(mod));
+    const size = typeof item === 'string'
+      ? defaultSize(mod)
+      : normalizeSize(item.size != null ? item.size : item.cols, mod);
     const el = document.createElement('article');
     el.className = 'widget';
-    if (mod.wide) el.classList.add('widget--wide');
+    if (size === 'M') el.classList.add('widget--size-m');
+    if (size === 'L') el.classList.add('widget--size-l');
     if (mod.tall) el.classList.add('widget--tall');
     applyToneClass(el, tone);
     el.dataset.widgetId = id;
     el.dataset.tone = tone;
+    el.dataset.size = size;
     el.draggable = editMode;
     el.innerHTML = `
+      <div class="widget__tools" aria-label="Widget anpassen">
+        <button class="widget__tool widget__tool--drag" type="button" data-drag aria-label="Verschieben" title="Verschieben">
+          <span class="material-icons-outlined">drag_indicator</span>
+        </button>
+        <div class="widget__span" role="group" aria-label="Größe">
+          <button type="button" class="widget__span-btn${size === 'S' ? ' is-active' : ''}" data-size="S" aria-label="Klein" title="S">S</button>
+          <button type="button" class="widget__span-btn${size === 'M' ? ' is-active' : ''}" data-size="M" aria-label="Mittel" title="M">M</button>
+          <button type="button" class="widget__span-btn${size === 'L' ? ' is-active' : ''}" data-size="L" aria-label="Groß" title="L">L</button>
+        </div>
+        <div class="widget__tones" role="group" aria-label="Hintergrundfarbe">
+          <button type="button" class="widget__tone${tone === 'default' ? ' is-active' : ''}" data-tone="default" aria-label="Weiß" title="Weiß"></button>
+          <button type="button" class="widget__tone${tone === 'primary' ? ' is-active' : ''}" data-tone="primary" aria-label="Blau" title="Blau"></button>
+          <button type="button" class="widget__tone${tone === 'acid' ? ' is-active' : ''}" data-tone="acid" aria-label="Gelb" title="Gelb"></button>
+        </div>
+        <button class="widget__tool" type="button" data-remove aria-label="Entfernen" title="Entfernen">
+          <span class="material-icons-outlined">close</span>
+        </button>
+      </div>
       <div class="widget__head">
         <div class="widget__title">
           <span class="widget__icon" aria-hidden="true">
@@ -1549,19 +1696,6 @@
             <span>${titleFor(mod)}</span>
             <span class="widget__source">${mod.source}</span>
           </div>
-        </div>
-        <div class="widget__tools">
-          <div class="widget__tones" role="group" aria-label="Hintergrundfarbe">
-            <button type="button" class="widget__tone${tone === 'default' ? ' is-active' : ''}" data-tone="default" aria-label="Weiß" title="Weiß"></button>
-            <button type="button" class="widget__tone${tone === 'primary' ? ' is-active' : ''}" data-tone="primary" aria-label="Blau" title="Blau"></button>
-            <button type="button" class="widget__tone${tone === 'acid' ? ' is-active' : ''}" data-tone="acid" aria-label="Gelb" title="Gelb"></button>
-          </div>
-          <button class="widget__tool widget__tool--drag" type="button" data-drag aria-label="Verschieben" title="Verschieben">
-            <span class="material-icons-outlined">drag_indicator</span>
-          </button>
-          <button class="widget__tool" type="button" data-remove aria-label="Entfernen" title="Entfernen">
-            <span class="material-icons-outlined">close</span>
-          </button>
         </div>
       </div>
       <div class="widget__body">${mod.render()}</div>`;
@@ -1592,7 +1726,7 @@
   function applyPreset(key) {
     const ids = PRESETS[key];
     if (!ids) return;
-    layout = ids.filter((id) => CATALOG[id]).map((id) => ({ id, tone: defaultTone(CATALOG[id]) }));
+    layout = ids.map((id) => layoutItem(id)).filter(Boolean);
     saveLayout(layout);
     revealOnce = true;
     renderGrid();
@@ -1651,6 +1785,16 @@
         });
       });
 
+      widget.querySelectorAll('[data-size]').forEach((btn) => {
+        btn.addEventListener('mousedown', (e) => e.stopPropagation());
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          if (!editMode) return;
+          setSize(id, btn.dataset.size);
+          renderGrid();
+        });
+      });
+
       widget.querySelector('[data-remove]')?.addEventListener('click', () => {
         layout = layout.filter((x) => x.id !== id);
         saveLayout(layout);
@@ -1696,7 +1840,10 @@
     if (!btn) return;
     const id = btn.getAttribute('data-toggle');
     if (layoutHas(id)) layout = layout.filter((x) => x.id !== id);
-    else layout.push({ id, tone: defaultTone(CATALOG[id]) });
+    else {
+      const item = layoutItem(id);
+      if (item) layout.push(item);
+    }
     saveLayout(layout);
     renderGrid();
     renderCatalog();
