@@ -1,0 +1,4406 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Planet — Gesunde Tiere. Starke Marken. (v2)</title>
+<!-- Experimentelle Variante — Änderungen hier testen, ohne planet-website.html zu berühren. -->
+<link rel="stylesheet" href="https://use.typekit.net/phj5hyp.css?v=2026-05-25">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="planet.css">
+<style>
+  /* Sprach-Logik (funktional, kein visuelles Override) */
+  .en { display: none; }
+  body.lang-en .de { display: none; }
+  body.lang-en .en { display: inline; }
+
+  /* Material Symbols — feinere Strichstärke als Icons Outlined */
+  .material-symbols-outlined {
+    font-family: 'Material Symbols Outlined';
+    font-weight: normal;
+    font-style: normal;
+    font-size: var(--icon);
+    line-height: 1;
+    letter-spacing: normal;
+    text-transform: none;
+    display: inline-block;
+    white-space: nowrap;
+    word-wrap: normal;
+    direction: ltr;
+    -webkit-font-smoothing: antialiased;
+    font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+  }
+  .material-symbols-outlined.icon--lg {
+    font-size: var(--icon-lg);
+    font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 40;
+  }
+
+  html, body {
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  :root {
+    --line-width: 1px;
+  }
+
+  /*
+    Scroll-Farbe auf html — kein Sektions-Rand zum Content darüber
+    (!important: planet.css setzt html/body auf Weiß)
+    Regel: Sektionen bleiben transparent, nur html fadet.
+  */
+  html {
+    --bg-mix: 0;
+    --bg-dark-mix: 0;
+    --text-invert: 0;
+    --line-color: color-mix(
+      in srgb,
+      var(--planet-primary) calc((1 - max(var(--bg-mix), var(--bg-dark-mix))) * 100%),
+      var(--planet-white)
+    );
+    background-color: color-mix(
+      in srgb,
+      color-mix(
+        in srgb,
+        var(--planet-white) calc((1 - var(--bg-mix)) * 100%),
+        var(--planet-primary)
+      ) calc((1 - var(--bg-dark-mix)) * 100%),
+      var(--planet-black)
+    ) !important;
+    scroll-padding-top: 88px;
+    scroll-behavior: smooth;
+  }
+  body {
+    background: transparent !important;
+  }
+
+  .section-head {
+    border-bottom: var(--line-width) solid var(--line-color);
+  }
+
+  /* Full-Screen Hero */
+  .hero-full {
+    position: relative;
+    min-height: 100svh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    color: var(--planet-white);
+  }
+  .hero-full__media {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+  }
+  .hero-full__media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 35%;
+    transform: scale(1.02);
+    animation: hero-zoom 12s var(--ease-out) forwards;
+  }
+  .hero-full__overlay {
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(to bottom, rgba(0,0,0,0.45) 0%, rgba(0,0,0,0.15) 38%, rgba(0,0,0,0.55) 100%),
+      radial-gradient(ellipse at center, transparent 0%, rgba(0,0,0,0.35) 100%);
+    animation: hero-overlay-in 1.6s var(--ease-out) both;
+  }
+  .hero-full__content {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: var(--space-16) var(--space-4) var(--space-12);
+    max-width: 960px;
+  }
+  .hero-full h1 {
+    font-size: var(--text-display);
+    line-height: 0.9;
+    letter-spacing: -0.025em;
+    color: var(--planet-white);
+    max-width: min(12ch, 100%);
+    margin-bottom: 0;
+    animation: hero-rise 1200ms var(--ease-out) both;
+  }
+  .hero-full__content.flow > h1 + * { --flow-space: var(--space-2); }
+  .hero-full__sub {
+    font-size: clamp(20px, 2.2vw, 28px);
+    line-height: 1.35;
+    font-weight: var(--weight-body);
+    color: rgba(255,255,255,0.88);
+    max-width: 36ch;
+    animation: hero-rise 1200ms var(--ease-out) 180ms both;
+  }
+  .hero-full__scroll {
+    position: absolute;
+    bottom: var(--space-5);
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-1);
+    color: rgba(255,255,255,0.55);
+    font-size: var(--text-meta);
+    font-weight: var(--weight-display);
+    animation: hero-rise 1200ms var(--ease-out) 360ms both;
+  }
+  .hero-full__scroll .material-symbols-outlined {
+    font-size: var(--icon);
+    animation: hero-bounce 2s ease-in-out infinite;
+  }
+  .hero-full__scroll:hover { color: var(--planet-white); text-decoration: none; }
+
+  /* Bildunterschrift — mini, vertikal am rechten Rand, von unten nach oben */
+  .photo-credit {
+    position: absolute;
+    right: max(var(--space-2), env(safe-area-inset-right, 0px));
+    bottom: var(--space-5);
+    z-index: 2;
+    margin: 0;
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    font-family: var(--planet-font);
+    font-size: clamp(12px, 1.05vw, 15px);
+    font-weight: var(--weight-body);
+    letter-spacing: 0.06em;
+    line-height: 1;
+    color: rgba(255, 255, 255, 0.55);
+    pointer-events: none;
+    user-select: none;
+  }
+
+  /* Stats — monumentale Typo-Zeile, ohne Kacheln */
+  .stat-strip {
+    position: relative;
+    z-index: 2;
+    padding: var(--space-8) 0;
+  }
+  .stat-strip__grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-4);
+    align-items: start;
+  }
+  .stat-strip__item {
+    position: relative;
+    padding-right: var(--space-3);
+    min-width: 0;
+  }
+  .stat-strip__item:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    right: 0;
+    top: 0.12em;
+    bottom: 0.2em;
+    width: var(--line-width);
+    background: var(--line-color);
+  }
+  .stat-strip__num {
+    font-family: var(--planet-font);
+    font-weight: var(--weight-display);
+    font-size: var(--text-stat-xl);
+    line-height: 0.9;
+    letter-spacing: -0.03em;
+    font-variant-numeric: tabular-nums;
+    color: var(--planet-black);
+  }
+  .stat-strip__item:nth-child(odd) .stat-strip__num {
+    color: var(--planet-primary);
+  }
+  .stat-strip__label {
+    margin-top: var(--space-2);
+    font-size: var(--text-meta);
+    line-height: 1.35;
+    max-width: 18ch;
+    opacity: 0.55;
+  }
+  .stat-strip__item.reveal {
+    transition-delay: 0ms;
+  }
+  .stat-strip__item:nth-child(2).reveal { transition-delay: 80ms; }
+  .stat-strip__item:nth-child(3).reveal { transition-delay: 160ms; }
+  .stat-strip__item:nth-child(4).reveal { transition-delay: 240ms; }
+
+  @media (max-width: 1024px) {
+    .stat-strip__grid { grid-template-columns: repeat(2, 1fr); gap: var(--space-5) var(--space-3); }
+    .stat-strip__item:nth-child(2)::after { display: none; }
+    .stat-strip__item:nth-child(even) { padding-right: 0; }
+  }
+  @media (max-width: 640px) {
+    .stat-strip { padding: var(--space-6) 0; }
+    .stat-strip__num { font-size: var(--text-stat-lg); }
+  }
+
+  /* Stance — editoriale Haltung, Headline als Section-Head Reveal */
+  .stance {
+    padding: var(--space-10) 0;
+  }
+  .stance + .stance {
+    padding-top: var(--space-4);
+  }
+  .stance:has(+ .stance) {
+    padding-bottom: var(--space-4);
+  }
+  .stance .section-head--bottom {
+    margin-top: 0;
+    margin-bottom: var(--space-5);
+  }
+  .stance__grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-5);
+    align-items: center;
+  }
+  .stance__grid > * { min-width: 0; }
+  .stance__media {
+    width: 100%;
+    overflow: visible;
+  }
+  .stance__body.flow > * + * { --flow-space: var(--space-3); }
+  .stance__body p {
+    font-size: var(--text-body);
+    line-height: 1.4;
+    color: var(--planet-black);
+  }
+  /* #karten — Blau über html-Scroll-Farbe, Sektion transparent (keine Ränder) */
+  #karten {
+    background: transparent;
+  }
+  #karten .stance__body p {
+    color: color-mix(
+      in srgb,
+      var(--planet-black) calc((1 - var(--text-invert, 0)) * 100%),
+      var(--planet-white)
+    );
+  }
+  #karten .pillar-orbit__caption text {
+    fill: color-mix(
+      in srgb,
+      var(--planet-primary) calc((1 - var(--text-invert, 0)) * 100%),
+      var(--planet-white)
+    );
+  }
+  @media (max-width: 1024px) {
+    .stance__grid { grid-template-columns: 1fr; gap: var(--space-4); }
+    .stance--flip .stance__media { order: -1; }
+  }
+  @media (max-width: 640px) {
+    .stance { padding: var(--space-8) 0; }
+  }
+
+  /* Zwei Wege — transparent, damit Scroll-Blau weich ausfadet (keine Kante) */
+  .paths {
+    padding: var(--space-10) 0;
+  }
+  #wege.paths-scroll {
+    --line-color: color-mix(
+      in srgb,
+      var(--planet-primary) calc((1 - var(--text-invert, 0)) * 100%),
+      var(--planet-white)
+    );
+    background: transparent;
+    color: color-mix(
+      in srgb,
+      var(--planet-black) calc((1 - var(--text-invert, 0)) * 100%),
+      var(--planet-white)
+    );
+  }
+  #wege.paths-scroll .section-head h2,
+  #wege.paths-scroll .paths__way h2,
+  #wege.paths-scroll .paths__body p {
+    color: color-mix(
+      in srgb,
+      var(--planet-black) calc((1 - var(--text-invert, 0)) * 100%),
+      var(--planet-white)
+    );
+  }
+  .paths .section-head {
+    margin-bottom: var(--space-6);
+  }
+  .paths__grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-6) var(--space-7);
+    align-items: start;
+  }
+  .paths__grid > * { min-width: 0; }
+  .paths__way.flow > * + * { --flow-space: var(--space-3); }
+  .paths__head {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    min-width: 0;
+  }
+  .paths__index {
+    flex: none;
+    font-family: var(--planet-font);
+    font-size: clamp(11px, 1vw, 13px);
+    font-weight: var(--weight-body);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.04em;
+    line-height: 1;
+    color: color-mix(
+      in srgb,
+      var(--planet-primary) calc((1 - var(--text-invert, 0)) * 100%),
+      var(--planet-white)
+    );
+  }
+  .paths__rule {
+    flex: none;
+    width: 0;
+    height: var(--line-width);
+    background: color-mix(
+      in srgb,
+      var(--planet-primary) calc((1 - var(--text-invert, 0)) * 100%),
+      var(--planet-white)
+    );
+    transition: width 900ms var(--ease-out);
+  }
+  .paths__way.is-visible .paths__rule {
+    width: clamp(2rem, 4vw, 3.5rem);
+  }
+  .paths__way:nth-child(1).is-visible .paths__rule { transition-delay: 80ms; }
+  .paths__way:nth-child(2).is-visible .paths__rule { transition-delay: 200ms; }
+  .paths__way h2 {
+    /* gleiche Type Scale wie .section-head h2 */
+    max-width: 18ch;
+    margin: 0;
+  }
+  @media (max-width: 640px) {
+    .paths__way h2 {
+      font-size: var(--text-h3); /* analog planet.css .section-head h2 */
+    }
+  }
+  .paths__body.flow > * + * { --flow-space: var(--space-3); }
+  .paths__body p {
+    font-size: var(--text-body);
+    line-height: 1.4;
+    max-width: 36ch;
+  }
+  .paths__way:nth-child(1).reveal { transition-delay: 0ms; }
+  .paths__way:nth-child(2).reveal { transition-delay: 120ms; }
+  @media (max-width: 1024px) {
+    .paths__grid {
+      grid-template-columns: 1fr;
+      gap: 0;
+    }
+    .paths__way + .paths__way {
+      margin-top: var(--space-6);
+      padding-top: var(--space-5);
+    }
+    .paths__body p { max-width: none; }
+  }
+  @media (max-width: 640px) {
+    .paths { padding: var(--space-8) 0; }
+  }
+
+  /* Infrastruktur — Kompetenzfelder als Linien-Raster, keine Card-Kästen */
+  .stack {
+    padding: var(--space-10) 0;
+    background: transparent;
+  }
+  .stack .section-head {
+    margin-bottom: var(--space-4);
+  }
+  .stack__intro {
+    max-width: 52ch;
+    font-size: var(--text-body);
+    line-height: 1.4;
+    margin-bottom: var(--space-6);
+  }
+  .stack__grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-6) var(--space-5);
+  }
+  .stack__item {
+    min-width: 0;
+    padding: 0;
+  }
+  .stack__item.flow > * + * { --flow-space: var(--space-2); }
+  .stack__item.flow > .stack__icon + * { --flow-space: var(--space-3); }
+  .stack__icon {
+    display: block;
+    color: var(--planet-primary);
+    line-height: 1;
+  }
+  .stack__item h3 {
+    font-size: var(--text-h3);
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    max-width: 16ch;
+  }
+  .stack__item p {
+    font-size: var(--text-meta);
+    line-height: 1.4;
+    max-width: 36ch;
+    opacity: 0.55;
+  }
+  .stack__item.reveal { transition-delay: 0ms; }
+  .stack__item:nth-child(2).reveal { transition-delay: 60ms; }
+  .stack__item:nth-child(3).reveal { transition-delay: 120ms; }
+  .stack__item:nth-child(4).reveal { transition-delay: 180ms; }
+  .stack__item:nth-child(5).reveal { transition-delay: 240ms; }
+  .stack__item:nth-child(6).reveal { transition-delay: 300ms; }
+  .stack__item:nth-child(7).reveal { transition-delay: 360ms; }
+  .stack__item:nth-child(8).reveal { transition-delay: 420ms; }
+  .stack__item:nth-child(9).reveal { transition-delay: 480ms; }
+  @media (max-width: 1024px) {
+    .stack__grid {
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-5) var(--space-4);
+    }
+    .stack__item h3 { max-width: none; }
+    .stack__item p { max-width: none; }
+  }
+  @media (max-width: 640px) {
+    .stack { padding: var(--space-8) 0; }
+  }
+
+  /* Pillars — Bänder transparent; Fade nur auf html (keine Sektions-Kanten) */
+  /* overflow sichtbar: sonst wird Planet-Blur oben/unten mitgeclippt (overflow-x ≠ visible → y wird auto) */
+  #plattform { padding: 0; overflow: visible; }
+  #plattform.plattform-scroll {
+    --bg-mix: 0;
+    --bg-dark-mix: 0;
+    --line-color: color-mix(
+      in srgb,
+      var(--planet-primary) calc((1 - max(var(--bg-mix), var(--bg-dark-mix))) * 100%),
+      var(--planet-white)
+    );
+    background: transparent;
+  }
+  .pillar-band { padding: var(--space-6) 0; background: transparent; }
+  .pillar-band--blue .pillar-row__body h3,
+  .pillar-band--blue .pillar-row__body p { color: var(--planet-white); }
+  .plattform-scroll .section-head--bottom h2,
+  .plattform-scroll .section-head--reveal h2 {
+    color: color-mix(in srgb, var(--planet-black) calc((1 - var(--bg-dark-mix)) * 100%), var(--planet-white));
+  }
+
+  .pillar-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-5);
+    align-items: center;
+  }
+  .pillar-row > * { min-width: 0; }
+  .pillar-row--reverse .pillar-row__img { order: 2; }
+  .pillar-row--reverse .pillar-row__body { order: 1; }
+  .pillar-row__img {
+    width: 100%;
+    max-width: 100%;
+    justify-self: stretch;
+    overflow: visible;
+    transition: transform var(--motion-default) var(--ease-out);
+  }
+  .pillar-row--reverse .pillar-row__img { justify-self: stretch; }
+
+  /* Orbit-Caption um Kreisbild */
+  .pillar-orbit {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+  }
+  .pillar-orbit__media {
+    position: absolute;
+    inset: 8%;
+    border-radius: var(--radius-circle);
+    overflow: hidden;
+  }
+  .pillar-circle-img {
+    width: 100%;
+    height: 100%;
+    aspect-ratio: 1 / 1;
+    border-radius: var(--radius-circle);
+    background-size: cover;
+    background-position: center;
+    transform-box: fill-box;
+    transform-origin: 50% 50%;
+    will-change: transform;
+  }
+  .pillar-orbit__caption {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+    pointer-events: none;
+    transform-box: view-box;
+    transform-origin: 50% 50%;
+    will-change: transform;
+  }
+  .pillar-orbit__caption text {
+    font-family: var(--planet-font);
+    font-size: 3.25px;
+    font-weight: var(--weight-body);
+    letter-spacing: 0.12em;
+    fill: var(--planet-primary);
+  }
+  .pillar-band--blue .pillar-orbit__caption text { fill: var(--planet-white); }
+
+  .pillar-row:hover .pillar-row__img.reveal-scale.is-visible,
+  .pillar-row:focus-within .pillar-row__img.reveal-scale.is-visible {
+    transform: scale(1.03);
+  }
+  .pillar-row__body h3 { font-size: var(--text-h2); }
+  .pillar-row__body.flow > h3 + * { --flow-space: var(--space-1); }
+
+  /* Scroll-Reveals */
+  .reveal-slide-left,
+  .reveal-slide-right,
+  .reveal-scale {
+    opacity: 0;
+    transition: opacity 900ms var(--ease-out), transform 900ms var(--ease-out);
+  }
+  .reveal-slide-left { transform: translate3d(-48px, 0, 0); }
+  .reveal-slide-right { transform: translate3d(48px, 0, 0); }
+  .reveal-scale { transform: scale(0.88); }
+  .reveal-scale.is-visible {
+    opacity: 1;
+    transform: scale(1);
+  }
+  .reveal-slide-left.is-visible,
+  .reveal-slide-right.is-visible {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+
+  .pillar-band:nth-child(1) .pillar-row__img.reveal-scale { transition-delay: 0ms; }
+  .pillar-band:nth-child(1) .reveal-slide-right { transition-delay: 140ms; }
+  .pillar-band:nth-child(2) .pillar-row__img.reveal-scale { transition-delay: 80ms; }
+  .pillar-band:nth-child(2) .reveal-slide-left { transition-delay: 220ms; }
+  .pillar-band:nth-child(3) .pillar-row__img.reveal-scale { transition-delay: 160ms; }
+  .pillar-band:nth-child(3) .reveal-slide-right { transition-delay: 300ms; }
+
+  /*
+    Section-Head Reveal — wiederverwendbar
+    Nutzung: class="section-head section-head--reveal reveal"
+    Optional Layout: section-head--bottom (Linie oben statt unten)
+  */
+  .section-head--reveal {
+    border-bottom: 0;
+    padding-bottom: 0;
+  }
+  .section-head--reveal h2 {
+    clip-path: inset(0 100% -0.22em 0);
+    transition: clip-path 1.1s var(--ease-out);
+    padding-bottom: 0.12em; /* Unterlängen (g, y, p) nicht abschneiden */
+  }
+  .section-head--reveal.is-visible h2 { clip-path: inset(0 0 -0.22em 0); }
+  .section-head--reveal::after {
+    content: "";
+    display: block;
+    height: var(--line-width);
+    background: var(--line-color);
+    width: 0;
+    margin-top: var(--space-3);
+    align-self: flex-end;
+    margin-bottom: 0.12em;
+    transition: width 1.4s var(--ease-out) 200ms;
+  }
+  .section-head--reveal.is-visible::after { width: 100%; }
+
+  /* Layout-Variante: am unteren Ende einer Sektion */
+  .section-head--bottom {
+    margin-bottom: 0;
+    margin-top: var(--space-5);
+    padding-bottom: 0;
+    padding-top: var(--space-2);
+    border-bottom: 0;
+    border-top: var(--line-width) solid var(--line-color);
+  }
+
+  /* Nav-Overlay Stagger */
+  .nav-overlay.is-open .nav-overlay-link {
+    animation: nav-link-in 700ms var(--ease-out) both;
+  }
+  .nav-overlay.is-open .nav-overlay-link:nth-child(1) { animation-delay: 60ms; }
+  .nav-overlay.is-open .nav-overlay-link:nth-child(2) { animation-delay: 120ms; }
+  .nav-overlay.is-open .nav-overlay-link:nth-child(3) { animation-delay: 180ms; }
+  .nav-overlay.is-open .nav-overlay-link:nth-child(4) { animation-delay: 240ms; }
+  .nav-overlay.is-open .nav-overlay-link:nth-child(5) { animation-delay: 300ms; }
+  .nav-overlay.is-open .nav-overlay-link:nth-child(6) { animation-delay: 360ms; }
+  .nav-overlay.is-open .nav-overlay-link:nth-child(7) { animation-delay: 420ms; }
+    .nav-overlay.is-open .nav-overlay-link:nth-child(8) { animation-delay: 480ms; }
+    .nav-overlay.is-open .nav-overlay-link:nth-child(9) { animation-delay: 540ms; }
+  .nav-overlay.is-open .nav-overlay-link:nth-child(9) { animation-delay: 540ms; }
+  .nav-overlay.is-open .nav-overlay-link:nth-child(10) { animation-delay: 600ms; }
+  .nav-overlay.is-open .nav-overlay-link:nth-child(11) { animation-delay: 660ms; }
+  .nav-overlay.is-open .nav-overlay-link:nth-child(12) { animation-delay: 720ms; }
+  .nav-overlay.is-open .nav-overlay-link:nth-child(13) { animation-delay: 780ms; }
+
+  @keyframes hero-overlay-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  @keyframes nav-link-in {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 0.4; transform: translateY(0); }
+  }
+
+  /* Planet — Kreis 1:1, dauerhaft soft
+     Regel: Zielzustand schwarz, aber Band bleibt transparent —
+     Schwärze nur über Scroll-Fade (--bg-dark-mix) am Parent, nie harter Weiß→Schwarz-Schnitt */
+  .pillar-band--planet {
+    --planet-blur: 88px;
+    --planet-lead: clamp(120px, 32vh, 360px);
+    position: relative;
+    /* Lead zählt zur Mindesthöhe — sonst frisst border-box das Padding */
+    min-height: calc(100svh + var(--planet-lead));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding:
+      var(--planet-lead)
+      0
+      calc(var(--planet-blur) * 1.25);
+    /* Blur nicht abschneiden; seitlich clippt html/body (overflow-x) */
+    overflow: visible;
+    background: transparent;
+  }
+  .planet-outro__inner {
+    position: relative;
+    /* Extra Luft zur Viewport-Kante, damit Soft-Edges nicht clippen */
+    width: min(100vw - 48px, 100svh - 220px);
+    height: min(100vw - 48px, 100svh - 220px);
+    aspect-ratio: 1 / 1;
+    flex: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: visible;
+    /* Kein transform hier — sonst clippt der Blur der Sphere */
+  }
+  .planet-outro__sphere {
+    position: absolute;
+    /* Paint-Box größer als der Kreis → Blur bleibt im Element */
+    inset: calc(var(--planet-blur) * -1.15);
+    border-radius: var(--radius-circle);
+    background: var(--planet-primary);
+    filter: blur(var(--planet-blur));
+  }
+  .planet-outro__logo {
+    position: relative;
+    z-index: 1;
+    font-family: var(--planet-font);
+    font-weight: var(--weight-display);
+    font-size: clamp(64px, 12vw, 160px);
+    line-height: 0.85;
+    letter-spacing: -0.03em;
+    color: var(--planet-white);
+    text-decoration: none;
+  }
+  .planet-outro__logo:hover { opacity: 0.85; text-decoration: none; }
+
+  .planet-legal {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 2;
+    padding: var(--space-3) 0 calc(var(--space-3) + env(safe-area-inset-bottom, 0px));
+    pointer-events: none;
+  }
+  .planet-legal__grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-2) var(--space-3);
+    align-items: baseline;
+    width: 100%;
+    max-width: 1280px;
+    margin-inline: auto;
+    font-size: var(--text-meta);
+    letter-spacing: 0.02em;
+    color: var(--planet-white);
+    pointer-events: auto;
+  }
+  .planet-legal__item {
+    text-align: center;
+    opacity: 0;
+    transform: translateY(12px);
+    transition: opacity 700ms var(--ease-out), transform 700ms var(--ease-out);
+  }
+  .planet-legal.is-visible .planet-legal__item {
+    opacity: 0.45;
+    transform: translateY(0);
+  }
+  .planet-legal.is-visible .planet-legal__item:nth-child(1) { transition-delay: 60ms; }
+  .planet-legal.is-visible .planet-legal__item:nth-child(2) { transition-delay: 160ms; }
+  .planet-legal.is-visible .planet-legal__item:nth-child(3) { transition-delay: 260ms; }
+  .planet-legal.is-visible .planet-legal__item:nth-child(4) { transition-delay: 360ms; }
+  .planet-legal__item a,
+  a.planet-legal__item {
+    color: inherit;
+    text-decoration: none;
+  }
+  .planet-legal__item a:hover,
+  a.planet-legal__item:hover {
+    opacity: 1;
+    color: var(--planet-white);
+  }
+  .planet-legal.is-visible a.planet-legal__item:hover {
+    opacity: 1;
+  }
+
+  @media (max-width: 1024px) {
+    .pillar-row,
+    .pillar-row--reverse { grid-template-columns: 1fr; gap: var(--space-3); }
+    .pillar-row--reverse .pillar-row__img,
+    .pillar-row--reverse .pillar-row__body { order: unset; }
+    .pillar-row__img { max-width: none; width: 100%; justify-self: stretch; }
+    /* SVG-Text skaliert mit dem Kreis — etwas größer halten */
+    .pillar-orbit__caption text { font-size: 4px; }
+  }
+
+  @media (max-width: 640px) {
+    .nav-inner,
+    .nav-overlay-header,
+    .nav-overlay-links,
+    .container { padding-left: var(--space-3); padding-right: var(--space-3); }
+    .nav-overlay-links {
+      padding-top: calc(var(--nav-height) + var(--space-3));
+      padding-bottom: var(--space-5);
+    }
+    .pillar-band { padding: var(--space-5) 0; }
+    .pillar-row__body h3 { overflow-wrap: break-word; }
+    .section-head--reveal h2 {
+      overflow-wrap: normal;
+      word-break: normal;
+    }
+    .pillar-orbit__caption text { font-size: 4.75px; }
+    .pillar-band--planet {
+      --planet-blur: 40px;
+      --planet-lead: clamp(72px, 22vh, 200px);
+      min-height: calc(100svh + var(--planet-lead));
+      padding:
+        var(--planet-lead)
+        0
+        calc(var(--planet-blur) * 1.6);
+    }
+    .planet-outro__inner {
+      width: min(72vw, 48svh);
+      height: min(72vw, 48svh);
+    }
+    .planet-legal {
+      padding: var(--space-1) 0 calc(var(--space-3) + env(safe-area-inset-bottom, 0px));
+    }
+    /* 2 Spalten: © + Mail links, Impressum / Datenschutz rechts untereinander */
+    .planet-legal__grid {
+      grid-template-columns: 1fr 1fr;
+      gap: 2px var(--space-2);
+    }
+    .planet-legal__item--copy { order: 1; }
+    .planet-legal__item--impressum { order: 2; }
+    .planet-legal__item--mail { order: 3; }
+    .planet-legal__item--privacy { order: 4; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .hero-full__media img { animation: none; transform: none; }
+    .hero-full__overlay { animation: none; }
+    .hero-full h1,
+    .hero-full__sub,
+    .hero-full__scroll { animation: none; }
+    .hero-full__scroll .material-symbols-outlined { animation: none; }
+    .reveal-slide-left,
+    .reveal-slide-right,
+    .reveal-scale,
+    .section-head--reveal h2,
+    .section-head--reveal::after,
+    .nav-overlay.is-open .nav-overlay-link { animation: none; transition: none; }
+    .reveal-slide-left,
+    .reveal-slide-right,
+    .reveal-scale { opacity: 1; transform: none; }
+    .section-head--reveal h2 { clip-path: none; }
+    .section-head--reveal.is-visible::after,
+    .section-head--reveal::after { width: 100%; }
+    .paths__rule,
+    .paths__way.is-visible .paths__rule {
+      width: clamp(2rem, 4vw, 3.5rem);
+      transition: none;
+    }
+    .fit__rule,
+    .fit__item.is-visible .fit__rule {
+      width: clamp(2rem, 4vw, 3.5rem);
+      transition: none;
+    }
+    .brands__spark-line,
+    .brands__brand.is-visible .brands__spark-line {
+      stroke-dashoffset: 0;
+      transition: none;
+    }
+    .brands__spark-dot,
+    .brands__brand.is-visible .brands__spark-dot {
+      opacity: 1;
+      transition: none;
+    }
+    .brands__logos > li,
+    .brands__logos.is-in > li {
+      opacity: 1;
+      transform: none;
+      transition: none;
+    }
+    .fit__mark::before,
+    .fit__item.is-visible .fit__mark::before {
+      transform: none;
+      transition: none;
+    }
+    .team-strip__person:not(:last-child)::after {
+      transform: scaleY(1);
+      transition: none;
+    }
+    .compare__side,
+    .compare__a,
+    .compare__b,
+    .compare__closing,
+    .compare__layout.is-visible .compare__side,
+    .compare__layout.is-visible .compare__a,
+    .compare__layout.is-visible .compare__b,
+    .compare__layout.is-visible .compare__closing {
+      opacity: 1;
+      transform: none;
+      transition: none;
+    }
+    .compare__label,
+    .compare__layout.is-visible .compare__label {
+      opacity: 1;
+      transform: translate(-50%, -50%);
+      transition: none;
+    }
+    .compare__rows::before,
+    .compare__layout.is-visible .compare__rows::before {
+      transform: translateX(-50%) scaleY(1);
+      transition: none;
+    }
+    .compare__rule::before,
+    .compare__layout.is-visible .compare__rule::before {
+      transform: scaleX(1);
+      transition: none;
+    }
+    .planet-legal__item {
+      opacity: 0.45;
+      transform: none;
+      transition: none;
+    }
+    #plattform.plattform-scroll { background: transparent; }
+    #karten {
+      --text-invert: 1;
+    }
+    #karten .stance__body p {
+      color: var(--planet-white);
+    }
+    #karten .pillar-orbit__caption text {
+      fill: var(--planet-white);
+    }
+    #weiter {
+      --text-invert: 1;
+    }
+    #weiter .section-head h2,
+    #weiter .fit__intro,
+    #weiter .fit__text {
+      color: var(--planet-white);
+    }
+    #weiter .fit__index { color: var(--planet-white); }
+    #weiter .fit__rule { background: var(--planet-white); }
+    #mission {
+      --text-invert: 1;
+    }
+    #mission .section-head h2,
+    #mission .mission__body p {
+      color: var(--planet-white);
+    }
+    #mission .pillar-orbit__caption text {
+      fill: var(--planet-white);
+    }
+    .pillar-band--white { background: transparent; }
+    .pillar-band--blue { background: transparent; }
+    .pillar-band--planet {
+      background: transparent;
+    }
+    .quote-scroll {
+      background: var(--planet-primary);
+      color: var(--planet-white);
+    }
+    .quote-scroll__media img {
+      transform: none;
+    }
+  }
+
+  @keyframes hero-rise {
+    from { opacity: 0; transform: translateY(28px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes hero-zoom {
+    from { transform: scale(1.06); }
+    to { transform: scale(1.02); }
+  }
+  @keyframes hero-bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(6px); }
+  }
+
+
+  /* Nav: fixed über Hero, Farbe folgt Scroll-Hintergrund + Frosted Glass */
+  .nav {
+    --bg-mix: 0;
+    --bg-dark-mix: 0;
+    --nav-invert: 0;
+    --quote-bg: 0;
+    --nav-fg: max(var(--nav-invert), var(--quote-bg));
+    --nav-glass: color-mix(
+      in srgb,
+      color-mix(
+        in srgb,
+        color-mix(
+          in srgb,
+          var(--planet-white) calc((1 - var(--bg-mix)) * 100%),
+          var(--planet-primary)
+        ) calc((1 - var(--bg-dark-mix)) * 100%),
+        var(--planet-black)
+      ) calc((1 - var(--quote-bg)) * 100%),
+      transparent
+    );
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 101;
+    background: color-mix(in srgb, var(--nav-glass) 58%, transparent);
+    border-bottom-color: color-mix(
+      in srgb,
+      var(--planet-tint) calc((1 - var(--nav-fg)) * 100%),
+      transparent
+    );
+    -webkit-backdrop-filter: blur(12px) saturate(1.15);
+    backdrop-filter: blur(12px) saturate(1.15);
+    transition: none;
+  }
+  @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+    .nav {
+      background: var(--nav-glass);
+    }
+  }
+  .nav:not(.overlay-open):not(.nav--on-hero):not(.nav--on-planet) .logo {
+    color: color-mix(
+      in srgb,
+      var(--planet-primary) calc((1 - var(--nav-fg)) * 100%),
+      var(--planet-white)
+    );
+  }
+  .nav:not(.overlay-open):not(.nav--on-hero):not(.nav--on-planet) .nav-toggle span {
+    background: color-mix(
+      in srgb,
+      var(--planet-primary) calc((1 - var(--nav-fg)) * 100%),
+      var(--planet-white)
+    );
+  }
+  .nav:not(.overlay-open):not(.nav--on-hero):not(.nav--on-planet) .lang-toggle {
+    border-color: color-mix(
+      in srgb,
+      var(--planet-black) calc((1 - var(--nav-fg)) * 100%),
+      rgba(255, 255, 255, 0.45)
+    );
+    color: color-mix(
+      in srgb,
+      var(--planet-black) calc((1 - var(--nav-fg)) * 100%),
+      var(--planet-white)
+    );
+  }
+  .nav:not(.overlay-open):not(.nav--on-hero):not(.nav--on-planet) .lang-toggle:hover {
+    background: color-mix(
+      in srgb,
+      var(--planet-black) calc((1 - var(--nav-fg)) * 100%),
+      var(--planet-white)
+    );
+    color: color-mix(
+      in srgb,
+      var(--planet-white) calc((1 - var(--nav-fg)) * 100%),
+      var(--planet-primary)
+    );
+  }
+
+  .nav--on-hero {
+    background: transparent;
+    border-bottom-color: transparent;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+  .nav--on-hero .logo { color: var(--planet-white); }
+  .nav--on-hero .nav-toggle span { background: var(--planet-white); }
+  .nav--on-hero .lang-toggle {
+    border-color: rgba(255,255,255,0.45);
+    color: var(--planet-white);
+  }
+  .nav--on-hero .lang-toggle:hover {
+    background: var(--planet-white);
+    color: var(--planet-black);
+  }
+
+  .nav--on-planet {
+    background: transparent;
+    border-bottom-color: transparent;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+  .nav--on-planet .logo { opacity: 0; pointer-events: none; }
+  .nav--on-planet .nav-toggle span { background: var(--planet-white); }
+  .nav--on-planet .lang-toggle {
+    border-color: rgba(255,255,255,0.45);
+    color: var(--planet-white);
+  }
+  .nav--on-planet .lang-toggle:hover {
+    background: var(--planet-white);
+    color: var(--planet-black);
+  }
+
+  .nav.overlay-open {
+    background: transparent;
+    border-bottom-color: transparent;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+
+  .nav-right { display: flex; align-items: center; gap: var(--space-2); }
+  .lang-toggle {
+    font-family: var(--planet-font);
+    font-weight: var(--weight-display);
+    font-size: var(--text-meta);
+    height: 40px;
+    padding: 0 var(--space-2);
+    border-radius: var(--radius-pill);
+    border: 1.5px solid var(--planet-black);
+    background: transparent;
+    color: var(--planet-black);
+    cursor: pointer;
+    transition: background var(--motion-instant) var(--ease-out),
+                color var(--motion-instant) var(--ease-out);
+  }
+  .lang-toggle:hover { background: var(--planet-black); color: var(--planet-white); }
+  .nav.overlay-open .lang-toggle { border-color: var(--planet-white); color: var(--planet-white); }
+  .nav.overlay-open .lang-toggle:hover { background: var(--planet-white); color: var(--planet-primary); }
+
+  /*
+    Zitat Variante B (Landing-Test):
+    Foto sofort sichtbar im Band, scrollt langsam (Parallax).
+    Text scrollt normal mit. Styleguide behält quote-type (Fade).
+  */
+  .quote-scroll {
+    --quote-y: 0px;
+    position: relative;
+    z-index: 1;
+    min-height: 100svh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-8) 0 calc(var(--space-6) + env(safe-area-inset-bottom, 0px));
+    overflow: hidden;
+    background: var(--planet-black);
+    color: var(--planet-white);
+  }
+  .quote-scroll__media {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+    pointer-events: none;
+    opacity: 1; /* hart visible — kein Fade */
+  }
+  .quote-scroll__media img {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: -20%;
+    width: 100%;
+    height: 140%;
+    object-fit: cover;
+    object-position: center 30%;
+    opacity: 1;
+    transform: translate3d(0, var(--quote-y), 0);
+    will-change: transform;
+  }
+  .quote-scroll__veil {
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(to bottom, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.25) 45%, rgba(0,0,0,0.55) 100%),
+      radial-gradient(ellipse at 50% 40%, transparent 0%, rgba(0,0,0,0.35) 100%);
+  }
+  .quote-scroll__content {
+    position: relative;
+    z-index: 1;
+    width: min(100%, 1480px);
+    padding: 0 var(--space-5);
+    text-align: center;
+  }
+  .quote-scroll__content.reveal {
+    transition: opacity 1.2s var(--ease-out), transform 1.2s var(--ease-out);
+    transition-delay: 120ms;
+  }
+  @media (min-width: 1025px) {
+    .quote-scroll__content {
+      width: min(92vw, 1680px);
+      padding: 0 var(--space-6);
+    }
+  }
+  .quote-scroll__quote { margin: 0; }
+  .quote-scroll__text {
+    font-family: var(--planet-font);
+    font-weight: var(--weight-display);
+    font-style: normal;
+    font-size: var(--text-display);
+    line-height: 0.9;
+    letter-spacing: -0.025em;
+    color: inherit;
+    text-wrap: balance;
+    margin: 0;
+  }
+  @media (max-width: 1024px) {
+    .quote-scroll__text {
+      font-size: var(--text-h2);
+      line-height: 0.95;
+      letter-spacing: normal;
+    }
+  }
+  .quote-scroll__who {
+    margin-top: var(--space-5);
+    text-align: center;
+    font-size: var(--text-body);
+    line-height: 1.3;
+    opacity: 0.85;
+    color: inherit;
+  }
+  .quote-scroll__who a {
+    color: inherit;
+    text-decoration: none;
+  }
+  .quote-scroll__who a:hover {
+    text-decoration: none;
+  }
+  /* Gelb-Markierung wie bei #weiter */
+  .quote-scroll__who .fit__mark {
+    color: var(--planet-black);
+    isolation: isolate;
+  }
+  .quote-scroll__who .fit__mark::before,
+  .quote-scroll__content.is-visible .fit__mark::before {
+    transform: scaleX(1);
+    transition-delay: 0ms;
+  }
+  /* Grundsätz-Zitat: weicher Fade; Quelle weiß auf Gelb-Fläche (kein ::before-Strich) */
+  #grundsatz-zitat.quote-type {
+    color: var(--planet-white);
+  }
+  #grundsatz-zitat .quote-type__who {
+    opacity: 1;
+  }
+  #grundsatz-zitat .quote-type__who .fit__mark {
+    color: var(--planet-white);
+    background: var(--planet-secondary);
+    padding: 0.12em 0.3em;
+    border-radius: 0.05em;
+    isolation: auto;
+  }
+  #grundsatz-zitat .quote-type__who .fit__mark::before {
+    content: none;
+  }
+  #grundsatz-zitat .quote-type__who .fit__mark .de,
+  #grundsatz-zitat .quote-type__who .fit__mark .en {
+    display: inline;
+    opacity: 1;
+    color: inherit;
+  }
+  #grundsatz-zitat .photo-credit {
+    z-index: 2;
+  }
+  .quote-scroll__who strong {
+    display: block;
+    font-size: inherit;
+    font-weight: var(--weight-display);
+    font-style: normal;
+    line-height: inherit;
+  }
+  .quote-scroll__who > span {
+    display: block;
+    font-size: inherit;
+    font-weight: var(--weight-body);
+    line-height: inherit;
+    opacity: 0.65;
+  }
+
+  /* Kontakt — Blau über html-Scroll-Fade (data-band-blue); helles Chrome */
+  .contact-band {
+    --line-color: color-mix(in srgb, var(--planet-white) 55%, transparent);
+    padding: var(--space-8) 0 var(--space-16);
+    background: transparent;
+    color: var(--planet-white);
+  }
+  .contact-band .section-head {
+    margin-bottom: var(--space-6);
+    border-bottom-color: var(--line-color);
+  }
+  .contact-band .section-head h2,
+  .contact-band .contact-intro p,
+  .contact-band .contact-success h3,
+  .contact-band .contact-success p {
+    color: var(--planet-white);
+  }
+  .contact-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+    gap: var(--space-6) var(--space-5);
+    align-items: start;
+  }
+  .contact-intro p {
+    max-width: 28ch;
+    margin-top: var(--space-3);
+    line-height: 1.3;
+    opacity: 0.85;
+  }
+  .contact-intro__channels {
+    display: grid;
+    justify-items: start;
+    gap: var(--space-2);
+    margin-top: var(--space-4);
+  }
+  .contact-intro__mail {
+    display: inline-block;
+    font-weight: var(--weight-display);
+    font-size: var(--text-body);
+    color: var(--planet-white);
+    text-decoration: none;
+    border-bottom: var(--line-width) solid color-mix(in srgb, var(--planet-white) 70%, transparent);
+    padding-bottom: 0.1em;
+    transition: opacity var(--motion-instant) var(--ease-out), border-color var(--motion-instant) var(--ease-out);
+  }
+  .contact-intro__mail:hover {
+    opacity: 0.65;
+    text-decoration: none;
+    border-bottom-color: var(--planet-white);
+  }
+
+  .contact-form {
+    display: grid;
+    gap: var(--space-4);
+  }
+  .contact-form__row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-4);
+  }
+  .contact-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35em;
+    border-bottom: var(--line-width) solid color-mix(in srgb, var(--planet-white) 35%, transparent);
+    transition: border-color var(--motion-fast) var(--ease-out);
+  }
+  .contact-field:focus-within {
+    border-bottom-color: var(--planet-white);
+  }
+  .contact-field label {
+    font-family: var(--planet-font);
+    font-weight: var(--weight-display);
+    font-size: var(--text-meta);
+    line-height: 1.2;
+    color: var(--planet-white);
+    opacity: 1;
+  }
+  .contact-field input,
+  .contact-field textarea {
+    width: 100%;
+    border: 0;
+    outline: 0;
+    background: transparent;
+    border-radius: 0;
+    appearance: none;
+    font-family: var(--planet-font);
+    font-size: var(--text-body);
+    font-weight: var(--weight-body);
+    line-height: 1.35;
+    color: var(--planet-white);
+    caret-color: var(--planet-white);
+    padding: 0.15em 0 0.65em;
+    resize: none;
+  }
+  .contact-field textarea {
+    min-height: 7.5em;
+    line-height: 1.4;
+  }
+  .contact-field input::placeholder,
+  .contact-field textarea::placeholder {
+    color: var(--planet-white);
+    opacity: 0.35;
+  }
+  .contact-field input:-webkit-autofill,
+  .contact-field textarea:-webkit-autofill {
+    -webkit-text-fill-color: var(--planet-white);
+    caret-color: var(--planet-white);
+    transition: background-color 9999s ease-out;
+    box-shadow: 0 0 0 1000px transparent inset;
+  }
+  .contact-form__foot {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
+    margin-top: var(--space-1);
+  }
+  .contact-form__note {
+    font-size: var(--text-meta);
+    line-height: 1.35;
+    color: var(--planet-white);
+    opacity: 0.5;
+    max-width: 28ch;
+  }
+  .contact-form__submit {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    width: auto;
+    min-width: 200px;
+    background: var(--planet-secondary);
+    color: var(--planet-black);
+  }
+  .contact-form__submit:hover {
+    background: var(--planet-black);
+    color: var(--planet-secondary);
+  }
+  .contact-form__submit:focus-visible {
+    outline-color: var(--planet-secondary);
+  }
+  .contact-form__submit .material-symbols-outlined {
+    transition: transform var(--motion-fast) var(--ease-out);
+  }
+  .contact-form__submit:hover .material-symbols-outlined {
+    transform: translateX(4px);
+  }
+
+  .contact-form.is-sending .contact-form__submit { opacity: 0.55; pointer-events: none; }
+  .contact-form.is-sent { display: none; }
+  .contact-form__error {
+    display: none;
+    margin: 0;
+    font-size: var(--text-meta);
+    line-height: 1.35;
+    color: var(--planet-secondary);
+    max-width: 36ch;
+  }
+  .contact-form__error.is-visible { display: block; }
+  .contact-success {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    gap: var(--space-3);
+    min-height: 280px;
+    padding: var(--space-5) 0;
+    border-top: var(--line-width) solid color-mix(in srgb, var(--planet-white) 35%, transparent);
+    color: var(--planet-white);
+  }
+  .contact-success.is-visible {
+    display: flex;
+    animation: contact-success-in 520ms var(--ease-out) both;
+  }
+  .contact-success__icon {
+    width: 2.5rem;
+    height: 2.5rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius-circle);
+    background: var(--planet-secondary);
+    color: var(--planet-black);
+  }
+  .contact-success__icon .material-symbols-outlined {
+    font-size: 1.35rem;
+    font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  }
+  .contact-success h3 {
+    font-size: var(--text-h2);
+    line-height: 0.95;
+    max-width: 16ch;
+    color: var(--planet-white);
+    margin: 0;
+  }
+  .contact-success p {
+    max-width: 34ch;
+    line-height: 1.35;
+    opacity: 0.8;
+    color: var(--planet-white);
+    margin: 0;
+  }
+  @keyframes contact-success-in {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (max-width: 1024px) {
+    .contact-layout { grid-template-columns: 1fr; gap: var(--space-5); }
+    .contact-intro p { max-width: 36ch; }
+  }
+  @media (max-width: 640px) {
+    .contact-band { padding: var(--space-6) 0 var(--space-12); }
+    .contact-form__row { grid-template-columns: 1fr; gap: var(--space-3); }
+    .contact-form__foot { flex-direction: column; align-items: stretch; }
+    .contact-form__submit { width: 100%; justify-content: center; }
+    .contact-success h3 { font-size: var(--text-h3); }
+  }
+
+  /* Marken — Entwicklungen seit Gründung */
+  .brands {
+    padding: var(--space-10) 0;
+    background: transparent;
+  }
+  .brands .section-head {
+    margin-bottom: var(--space-4);
+  }
+  .brands__scope {
+    margin: var(--space-5) 0 0;
+    max-width: 52ch;
+    font-size: var(--text-body);
+    line-height: 1.45;
+    color: color-mix(in srgb, var(--planet-black) 78%, transparent);
+  }
+  .brands__logos {
+    list-style: none;
+    margin: 0 0 var(--space-6);
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: var(--space-4) var(--space-5);
+    width: 100%;
+    max-width: none;
+  }
+  .brands__logos > li {
+    min-width: 0;
+    opacity: 0;
+    transform: translate3d(0, 2.5rem, 0);
+    transition:
+      opacity 700ms var(--ease-out),
+      transform 1000ms var(--ease-out);
+    will-change: transform, opacity;
+  }
+  .brands__logos.is-in > li {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+  .brands__logos > li:nth-child(1) { transition-delay: 0ms; }
+  .brands__logos > li:nth-child(2) { transition-delay: 90ms; }
+  .brands__logos > li:nth-child(3) { transition-delay: 180ms; }
+  .brands__logos > li:nth-child(4) { transition-delay: 270ms; }
+  /* Beim Rausgleiten: Reihenfolge umkehren */
+  .brands__logos:not(.is-in) > li:nth-child(1) { transition-delay: 270ms; }
+  .brands__logos:not(.is-in) > li:nth-child(2) { transition-delay: 180ms; }
+  .brands__logos:not(.is-in) > li:nth-child(3) { transition-delay: 90ms; }
+  .brands__logos:not(.is-in) > li:nth-child(4) { transition-delay: 0ms; }
+  .brands__cluster {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+  }
+  .brands__cluster > .brands__logo-wrap {
+    width: 100%;
+    flex-shrink: 0;
+  }
+  .brands__cluster-line {
+    display: block;
+    width: var(--line-width);
+    height: clamp(0.85rem, 2.2vw, 1.35rem);
+    background: var(--planet-primary);
+    flex-shrink: 0;
+  }
+  .brands__logo-wrap {
+    position: relative;
+    width: 100%;
+  }
+  .brands__logo-index {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    pointer-events: none;
+    font-family: var(--planet-font);
+    font-size: clamp(10px, 0.95vw, 12px);
+    font-weight: var(--weight-body);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.04em;
+    line-height: 1;
+    color: var(--planet-primary);
+    transform: translate(-0.15em, -0.55em);
+  }
+  .brands__logo {
+    --brand-accent: var(--planet-primary);
+    display: grid;
+    place-items: center;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    padding: 22%;
+    box-sizing: border-box;
+    border-radius: var(--radius-circle);
+    border: none;
+    color: color-mix(in srgb, var(--planet-black) 38%, transparent);
+    background: color-mix(in srgb, var(--planet-black) 4%, transparent);
+    text-decoration: none;
+    transition:
+      color 220ms var(--ease-out),
+      background 220ms var(--ease-out);
+  }
+  .brands__logo:hover,
+  .brands__logo:focus-visible {
+    color: var(--brand-accent);
+    background: color-mix(in srgb, var(--brand-accent) 10%, transparent);
+    text-decoration: none;
+  }
+  .brands__logo:focus-visible {
+    outline: 2px solid var(--planet-primary);
+    outline-offset: 4px;
+  }
+  .brands__logo svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+    max-width: 100%;
+    max-height: 100%;
+  }
+  .brands__logo--inuvet {
+    --brand-accent: #78b41b;
+    padding: 20%;
+  }
+  .brands__logo--eqx {
+    --brand-accent: #006838;
+    padding: 18% 22%;
+  }
+  .brands__logo--byox {
+    --brand-accent: #009fe3;
+    padding: 18% 22%;
+  }
+  .brands__logo--manukalind {
+    --brand-accent: #00a76d;
+    padding: 14%;
+  }
+  .brands__logo--planimol {
+    --brand-accent: #39b54a;
+    padding: 0 7%;
+  }
+  .brands__list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+  .brands__brand {
+    padding: var(--space-6) 0;
+    border-top: var(--line-width) solid var(--line-color, var(--planet-primary));
+    scroll-margin-top: calc(var(--nav-height) + var(--space-3));
+  }
+  .brands__brand:last-child {
+    border-bottom: var(--line-width) solid var(--line-color, var(--planet-primary));
+  }
+  /* Inuvet / EQX — weißes Band um das Zitat hart abzusetzen */
+  .brands__brand--solid {
+    position: relative;
+    z-index: 0;
+    isolation: isolate;
+  }
+  .brands__brand--solid::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    width: 100vw;
+    transform: translateX(-50%);
+    background: var(--planet-white);
+    z-index: -1;
+  }
+  /* Vor dem Zitat (Inuvet): Trennlinie nach oben behalten, unten keine */
+  .brands__brand.brands__brand--solid-before,
+  .brands__brand.brands__brand--solid-before:last-child {
+    border-bottom: 0;
+  }
+  /* Nach dem Zitat (EQX): oben keine Linie (harter Bildabschluss) */
+  .brands__brand.brands__brand--solid-after,
+  .brands__brand.brands__brand--solid-after:last-child {
+    border-top: 0;
+  }
+  .brands__top {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+    gap: var(--space-5) var(--space-7);
+    align-items: start;
+    margin-bottom: var(--space-5);
+  }
+  .brands__name {
+    font-size: var(--text-h2);
+    line-height: 0.95;
+    margin: 0;
+  }
+  .brands__since {
+    display: block;
+    margin-top: var(--space-2);
+    font-size: var(--text-meta);
+    opacity: 0.55;
+  }
+  .brands__copy {
+    font-size: var(--text-body);
+    line-height: 1.4;
+    max-width: 40ch;
+    margin: 0;
+  }
+  .brands__copy + .brands__copy {
+    margin-top: var(--space-3);
+  }
+  .brands__metrics {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-4) var(--space-5);
+  }
+  .brands__metrics:has(.brands__metric:nth-child(2):last-child) {
+    grid-template-columns: repeat(2, 1fr);
+    max-width: 66.666%;
+  }
+  .brands__metric {
+    min-width: 0;
+  }
+  .brands__metric-label {
+    display: block;
+    font-size: var(--text-meta);
+    opacity: 0.55;
+    margin-bottom: 2px;
+    line-height: 1.2;
+  }
+  .brands__metric-value {
+    display: block;
+    font-family: var(--planet-font);
+    font-weight: var(--weight-display);
+    font-size: var(--text-h2);
+    line-height: 0.95;
+    letter-spacing: -0.02em;
+    color: var(--planet-primary);
+    margin-bottom: 2px;
+    font-variant-numeric: tabular-nums;
+  }
+  .brands__spark-wrap {
+    position: relative;
+    height: 48px;
+  }
+  .brands__spark {
+    display: block;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+  .brands__spark-area {
+    fill: var(--planet-primary);
+    opacity: 0.12;
+  }
+  .brands__spark-line {
+    fill: none;
+    stroke: var(--planet-primary);
+    stroke-width: 1;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    transition: stroke-dashoffset 1.1s var(--ease-out);
+  }
+  .brands__spark-dot {
+    position: absolute;
+    right: 0;
+    top: var(--dot-y, 12%);
+    width: 7px;
+    height: 7px;
+    border-radius: var(--radius-circle);
+    background: var(--planet-primary);
+    transform: translate(40%, -50%);
+    opacity: 0;
+    transition: opacity 400ms var(--ease-out);
+  }
+  .brands__brand.is-visible .brands__spark-line {
+    stroke-dashoffset: 0;
+  }
+  .brands__brand.is-visible .brands__spark-dot {
+    opacity: 1;
+    transition-delay: 900ms;
+  }
+  .brands__metric:nth-child(1) .brands__spark-line { transition-delay: 80ms; }
+  .brands__metric:nth-child(2) .brands__spark-line { transition-delay: 180ms; }
+  .brands__metric:nth-child(3) .brands__spark-line { transition-delay: 280ms; }
+  .brands__metric:nth-child(1) .brands__spark-dot { transition-delay: 980ms; }
+  .brands__metric:nth-child(2) .brands__spark-dot { transition-delay: 1080ms; }
+  .brands__metric:nth-child(3) .brands__spark-dot { transition-delay: 1180ms; }
+  .brands__metric-years,
+  .brands__metric-range {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 2px;
+    font-size: clamp(11px, 1vw, 13px);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.02em;
+    opacity: 0.55;
+  }
+  @media (max-width: 1024px) {
+    .brands__top {
+      grid-template-columns: 1fr;
+      gap: var(--space-3);
+      margin-bottom: var(--space-4);
+    }
+    .brands__metrics,
+    .brands__metrics:has(.brands__metric:nth-child(2):last-child) {
+      grid-template-columns: 1fr;
+      max-width: none;
+      gap: var(--space-4);
+    }
+    .brands__logos {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      max-width: none;
+      gap: var(--space-3) var(--space-4);
+    }
+  }
+  @media (max-width: 640px) {
+    .brands { padding: var(--space-8) 0; }
+    .brands__brand { padding: var(--space-5) 0; }
+    .brands__name,
+    .brands__metric-value { font-size: var(--text-h3); }
+    .brands__logos {
+      margin-bottom: var(--space-5);
+      gap: var(--space-3);
+    }
+  }
+
+  /* Team — Focus-Strip (im durchgehenden Scroll-Hintergrund) */
+  .team-section {
+    padding: var(--space-8) 0;
+    background: transparent;
+  }
+  .team-section .section-head { margin-bottom: var(--space-6); }
+
+  .team-strip {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-6) 0;
+    align-items: start;
+    overflow: visible;
+  }
+  .team-section { overflow: visible; }
+  /*
+    Reveal nur Opacity auf der Zelle; Parallax auf .team-strip__shift —
+    so kein Konflikt mit planet.css .reveal und kein Opacity-Dimmen.
+  */
+  .team-strip__person.reveal {
+    position: relative;
+    padding: 0 var(--space-3);
+    text-align: left;
+    opacity: 0;
+    transform: none;
+    transition: opacity 700ms var(--ease-out);
+  }
+  .team-strip__person.reveal.is-visible {
+    opacity: 1;
+    transform: none;
+  }
+  .team-strip__shift {
+    --parallax-y: 0px;
+    transform: translate3d(0, var(--parallax-y), 0);
+    will-change: transform;
+  }
+  .team-strip__person:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    right: 0;
+    top: 8%;
+    bottom: 28%;
+    width: var(--line-width);
+    background: var(--line-color);
+    transform: scaleY(0);
+    transform-origin: top center;
+    transition: transform 1.1s var(--ease-out);
+  }
+  .team-strip__person.is-visible:not(:last-child)::after {
+    transform: scaleY(1);
+  }
+  .team-strip__person:nth-child(3n)::after { display: none; }
+  .team-strip__person:nth-child(1).is-visible:not(:last-child)::after { transition-delay: 100ms; }
+  .team-strip__person:nth-child(2).is-visible:not(:last-child)::after { transition-delay: 220ms; }
+  .team-strip__person:nth-child(4).is-visible:not(:last-child)::after { transition-delay: 100ms; }
+  .team-strip__person:nth-child(5).is-visible:not(:last-child)::after { transition-delay: 220ms; }
+  .team-strip__photo {
+    width: 100%;
+    max-width: none;
+    aspect-ratio: 1;
+    margin: 0 0 var(--space-3);
+    border-radius: var(--radius-circle);
+    background-size: cover;
+    background-position: center;
+  }
+  .team-strip__person h3 {
+    font-size: var(--text-h3);
+    font-weight: var(--weight-display);
+    letter-spacing: -0.02em;
+  }
+  .team-strip__role {
+    font-size: var(--text-meta);
+    color: var(--planet-primary);
+    margin-top: var(--space-1);
+  }
+  .team-strip__bio {
+    font-size: var(--text-meta);
+    opacity: 0.55;
+    margin-top: var(--space-2);
+    max-width: 28ch;
+    margin-inline: 0;
+    line-height: 1.4;
+  }
+
+  @media (max-width: 1024px) {
+    .team-strip {
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--space-5) var(--space-4);
+    }
+    .team-strip__person:nth-child(2n)::after { display: none; }
+    .team-strip__person.reveal,
+    .team-strip__person.reveal.is-visible {
+      opacity: 1;
+      transform: none;
+      padding: 0;
+    }
+    .team-strip__person:nth-child(odd)::after {
+      top: 4%;
+      bottom: 18%;
+      right: calc(var(--space-4) / -2);
+    }
+    .team-strip__photo { width: 100%; max-width: none; }
+    .team-strip__bio { max-width: 18ch; }
+  }
+  @media (max-width: 640px) {
+    .team-section { padding: var(--space-6) 0; }
+    .team-strip__bio { max-width: none; }
+    .team-strip { grid-template-columns: 1fr 1fr; }
+  }
+
+  /* Kriterien — nummerierte Linien wie Zwei Wege */
+  .fit {
+    padding: var(--space-10) 0;
+  }
+  .fit .section-head {
+    margin-bottom: var(--space-4);
+  }
+  .fit__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: var(--space-6);
+    row-gap: var(--space-4);
+  }
+  .fit__item {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-3);
+    padding: 0;
+    border: 0;
+    min-width: 0;
+  }
+  .fit__cue {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    flex: none;
+    height: 1.15em;
+    font-size: var(--text-h3);
+  }
+  .fit__index {
+    font-family: var(--planet-font);
+    font-size: clamp(11px, 1vw, 13px);
+    font-weight: var(--weight-body);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.04em;
+    line-height: 1;
+    color: var(--planet-primary);
+  }
+  .fit__rule {
+    flex: none;
+    width: 0;
+    height: var(--line-width);
+    background: var(--planet-primary);
+    transition: width 900ms var(--ease-out);
+  }
+  .fit__item.is-visible .fit__rule {
+    width: clamp(2rem, 4vw, 3.5rem);
+  }
+  .fit__item:nth-child(1).is-visible .fit__rule { transition-delay: 60ms; }
+  .fit__item:nth-child(2).is-visible .fit__rule { transition-delay: 120ms; }
+  .fit__item:nth-child(3).is-visible .fit__rule { transition-delay: 180ms; }
+  .fit__item:nth-child(4).is-visible .fit__rule { transition-delay: 240ms; }
+  .fit__text {
+    font-size: var(--text-h3);
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    max-width: 22ch;
+    margin: 0;
+  }
+  .fit--deal .fit__text {
+    max-width: 34ch;
+  }
+  .fit__intro {
+    max-width: 52ch;
+    font-size: var(--text-body);
+    line-height: 1.4;
+    margin: 0 0 var(--space-6);
+  }
+  .fit--next .fit__text {
+    max-width: 42ch;
+  }
+  .fit__subhead {
+    margin-top: var(--space-8);
+  }
+  .fit__payoff {
+    margin: var(--space-6) 0 0;
+    max-width: 42ch;
+    font-size: var(--text-body);
+    line-height: 1.35;
+    font-weight: var(--weight-display);
+  }
+  /* Vergleich — 2-Spalten-Raster + Desktop-Abbinder als 3. Spalte */
+  .compare {
+    --compare-main: minmax(0, 1.75fr);
+    --compare-aside: minmax(14rem, 0.7fr);
+    --compare-gap: clamp(var(--space-5), 4vw, var(--space-8));
+    padding: var(--space-10) 0;
+    background: transparent;
+  }
+  .compare .section-head--reveal::after {
+    background: var(--planet-primary);
+  }
+  .compare__layout {
+    display: grid;
+    gap: 0;
+  }
+  /* Parent nur als Trigger — kein eigener Fade (Kinder animieren) */
+  .compare__layout.reveal {
+    opacity: 1;
+    transform: none;
+  }
+  .compare__head {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    /* gleicher Abstand zur Linie wie Zellen darunter (padding-bottom der Zellen) */
+    padding-bottom: var(--space-5);
+    margin-bottom: 0;
+  }
+  .compare__side {
+    font-size: var(--text-h3);
+    line-height: 1.1;
+    letter-spacing: -0.015em;
+    font-weight: var(--weight-display);
+    opacity: 0;
+    transition: opacity 700ms var(--ease-out), transform 700ms var(--ease-out);
+  }
+  .compare__side--pe {
+    padding-right: clamp(1.25rem, 3vw, 2.5rem);
+    transform: translate3d(-28px, 0, 0);
+  }
+  .compare__side--planet {
+    color: var(--planet-primary);
+    padding-left: clamp(1.25rem, 3vw, 2.5rem);
+    transform: translate3d(28px, 0, 0);
+  }
+  .compare__layout.is-visible .compare__side {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+  .compare__layout.is-visible .compare__side--pe { transition-delay: 0ms; }
+  .compare__layout.is-visible .compare__side--planet { transition-delay: 70ms; }
+  .compare__rows {
+    position: relative;
+    min-width: 0;
+  }
+  .compare__rows::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    border-left: 1px dashed var(--planet-primary);
+    transform: translateX(-50%) scaleY(0);
+    transform-origin: top center;
+    transition: transform 1100ms var(--ease-out);
+    pointer-events: none;
+  }
+  .compare__layout.is-visible .compare__rows::before {
+    transform: translateX(-50%) scaleY(1);
+    transition-delay: 60ms;
+  }
+  .compare__row { overflow: visible; }
+  .compare__rule {
+    position: relative;
+  }
+  /* Horizontale Linie: aus der Mitte heraus zeichnen */
+  .compare__rule::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    border-top: 1px dashed var(--planet-primary);
+    transform: scaleX(0);
+    transform-origin: center;
+    transition: transform 850ms var(--ease-out);
+    pointer-events: none;
+  }
+  .compare__layout.is-visible .compare__rule::before {
+    transform: scaleX(1);
+  }
+  .compare__rule-slot {
+    position: relative;
+    display: block;
+    width: 100%;
+  }
+  .compare__label {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    z-index: 1;
+    transform: translate(-50%, -50%);
+    padding: 0.35em 0.75em;
+    /* Gleicher Fade wie html — kein fester Weiß-Fleck beim Scroll-Farbwechsel */
+    background: color-mix(
+      in srgb,
+      color-mix(
+        in srgb,
+        var(--planet-white) calc((1 - var(--bg-mix, 0)) * 100%),
+        var(--planet-primary)
+      ) calc((1 - var(--bg-dark-mix, 0)) * 100%),
+      var(--planet-black)
+    );
+    color: var(--line-color);
+    font-size: clamp(11px, 1vw, 13px);
+    letter-spacing: 0.04em;
+    line-height: 1;
+    font-weight: var(--weight-body);
+    text-align: center;
+    white-space: nowrap;
+    opacity: 0;
+    transition: opacity 450ms var(--ease-out);
+  }
+  .compare__layout.is-visible .compare__label {
+    opacity: 1;
+  }
+  .compare__cells {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    padding: var(--space-4) 0 var(--space-5);
+  }
+  .compare__a,
+  .compare__b {
+    font-size: var(--text-h3);
+    line-height: 1.15;
+    letter-spacing: -0.015em;
+    font-weight: var(--weight-body);
+    opacity: 0;
+    transition: opacity 700ms var(--ease-out), transform 700ms var(--ease-out);
+  }
+  .compare__a {
+    padding-right: clamp(1.25rem, 3vw, 2.5rem);
+    transform: translate3d(-28px, 0, 0);
+  }
+  .compare__b {
+    color: var(--planet-primary);
+    padding-left: clamp(1.25rem, 3vw, 2.5rem);
+    transform: translate3d(28px, 0, 0);
+  }
+  .compare__layout.is-visible .compare__a,
+  .compare__layout.is-visible .compare__b {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+  /* Stagger: Linie → Label → Investor → Planet, Zeile für Zeile */
+  .compare__layout.is-visible .compare__rule--span::before { transition-delay: 100ms; }
+  .compare__layout.is-visible .compare__rule--span .compare__label { transition-delay: 260ms; }
+  .compare__layout.is-visible .compare__row:nth-child(1) .compare__a { transition-delay: 300ms; }
+  .compare__layout.is-visible .compare__row:nth-child(1) .compare__b { transition-delay: 380ms; }
+  .compare__layout.is-visible .compare__row:nth-child(2) .compare__rule::before { transition-delay: 460ms; }
+  .compare__layout.is-visible .compare__row:nth-child(2) .compare__label { transition-delay: 600ms; }
+  .compare__layout.is-visible .compare__row:nth-child(2) .compare__a { transition-delay: 640ms; }
+  .compare__layout.is-visible .compare__row:nth-child(2) .compare__b { transition-delay: 720ms; }
+  .compare__layout.is-visible .compare__row:nth-child(3) .compare__rule::before { transition-delay: 800ms; }
+  .compare__layout.is-visible .compare__row:nth-child(3) .compare__label { transition-delay: 940ms; }
+  .compare__layout.is-visible .compare__row:nth-child(3) .compare__a { transition-delay: 980ms; }
+  .compare__layout.is-visible .compare__row:nth-child(3) .compare__b { transition-delay: 1060ms; }
+  .compare__layout.is-visible .compare__row:nth-child(4) .compare__rule::before { transition-delay: 1140ms; }
+  .compare__layout.is-visible .compare__row:nth-child(4) .compare__label { transition-delay: 1280ms; }
+  .compare__layout.is-visible .compare__row:nth-child(4) .compare__a { transition-delay: 1320ms; }
+  .compare__layout.is-visible .compare__row:nth-child(4) .compare__b { transition-delay: 1400ms; }
+  .compare__closing {
+    margin: var(--space-7) 0 0;
+    max-width: 48ch;
+    font-size: var(--text-body);
+    line-height: 1.4;
+    font-weight: var(--weight-body);
+    font-style: normal;
+    color: inherit;
+    opacity: 0;
+    transform: translate3d(0, 14px, 0);
+    transition: opacity 700ms var(--ease-out), transform 700ms var(--ease-out);
+  }
+  .compare__layout.is-visible .compare__closing {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+    transition-delay: 1480ms;
+  }
+  @media (min-width: 1100px) {
+    .compare__layout {
+      grid-template-columns: var(--compare-main) var(--compare-aside);
+      column-gap: var(--compare-gap);
+      row-gap: 0;
+      align-items: start;
+    }
+    .compare__head {
+      grid-column: 1;
+      grid-row: 1;
+    }
+    /* Haltedauer-Linie über alle drei Spalten; Label bleibt über Investor|Planet */
+    .compare__rule--span {
+      grid-column: 1 / -1;
+      grid-row: 2;
+      display: grid;
+      grid-template-columns: var(--compare-main) var(--compare-aside);
+      column-gap: var(--compare-gap);
+    }
+    .compare__rows {
+      grid-column: 1;
+      grid-row: 3;
+    }
+    .compare__closing {
+      grid-column: 2;
+      grid-row: 3;
+      margin-top: 0;
+      max-width: 18ch;
+      padding-top: var(--space-4);
+      font-size: var(--text-h3);
+      line-height: 1.15;
+      letter-spacing: -0.015em;
+      font-style: italic;
+      color: var(--planet-primary);
+    }
+  }
+  @media (max-width: 720px) {
+    .compare { padding: var(--space-8) 0; }
+    .compare__side,
+    .compare__a,
+    .compare__b {
+      font-size: var(--text-body);
+      line-height: 1.25;
+    }
+    .compare__side--pe,
+    .compare__a { padding-right: var(--space-3); }
+    .compare__side--planet,
+    .compare__b { padding-left: var(--space-3); }
+    .compare__head { padding-bottom: var(--space-4); }
+    .compare__cells { padding: var(--space-3) 0 var(--space-4); }
+  }
+
+  /* Unternehmer — Abbinder nach nummerierter Liste */
+  .stance-lines__close {
+    margin: var(--space-6) 0 0;
+    max-width: 36ch;
+    font-size: var(--text-body);
+    line-height: 1.35;
+  }
+  #unternehmer .fit__list {
+    margin-top: var(--space-2);
+  }
+
+  /* Mission — transparent wie Karten; Blau nur über html-Scroll (gemeinsames Band mit #wege) */
+  .mission {
+    padding: var(--space-10) 0;
+    background: transparent;
+  }
+  #mission {
+    --line-color: color-mix(
+      in srgb,
+      var(--planet-primary) calc((1 - var(--text-invert, 0)) * 100%),
+      var(--planet-white)
+    );
+  }
+  #mission .section-head h2,
+  #mission .mission__body p {
+    color: color-mix(
+      in srgb,
+      var(--planet-black) calc((1 - var(--text-invert, 0)) * 100%),
+      var(--planet-white)
+    );
+  }
+  #mission .pillar-orbit__caption text {
+    fill: color-mix(
+      in srgb,
+      var(--planet-primary) calc((1 - var(--text-invert, 0)) * 100%),
+      var(--planet-white)
+    );
+  }
+  .mission__body {
+    max-width: 42ch;
+  }
+  .mission__body.flow > * + * { --flow-space: var(--space-3); }
+  .mission__body p {
+    font-size: var(--text-body);
+    line-height: 1.4;
+  }
+  @media (max-width: 640px) {
+    .mission { padding: var(--space-8) 0; }
+  }
+
+  /* Legal-Overlays via :target (ohne JS-Änderung) */
+  .legal-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    background: var(--planet-white);
+    color: var(--planet-black);
+    opacity: 0;
+    pointer-events: none;
+    visibility: hidden;
+    transition: opacity 320ms var(--ease-out), visibility 320ms var(--ease-out);
+  }
+  .legal-overlay:target {
+    opacity: 1;
+    pointer-events: auto;
+    visibility: visible;
+  }
+  .legal-overlay__scroll {
+    flex: 1;
+    overflow-y: auto;
+    padding:
+      calc(var(--nav-height, 4rem) + var(--space-4))
+      0
+      var(--space-8);
+  }
+  .legal-overlay__inner {
+    max-width: 1280px;
+    margin: 0 auto;
+    width: 100%;
+    padding: 0 var(--space-4);
+    box-sizing: border-box;
+  }
+  .legal-overlay__close {
+    display: inline-block;
+    margin-bottom: var(--space-4);
+    font-size: var(--text-meta);
+    color: var(--planet-primary);
+    text-decoration: none;
+    border-bottom: var(--line-width) solid var(--planet-primary);
+  }
+  .legal-overlay__close:hover { opacity: 0.55; text-decoration: none; }
+  .legal-overlay__title {
+    margin: 0 0 var(--space-4);
+    font-size: var(--text-h2);
+    line-height: 0.95;
+  }
+  .legal-overlay__body {
+    max-width: 52ch;
+    font-size: var(--text-body);
+    line-height: 1.4;
+  }
+  .legal-overlay__body p + p { margin-top: var(--space-3); }
+  .legal-overlay__note {
+    margin-top: var(--space-4);
+    font-size: var(--text-meta);
+    opacity: 0.55;
+  }
+  @media (max-width: 640px) {
+    .legal-overlay__inner { padding-inline: var(--space-3); }
+  }
+
+  /* #weiter — Blau über html-Scroll-Fade, Sektion transparent (keine Kante) */
+  #weiter {
+    background: transparent;
+    --line-color: color-mix(
+      in srgb,
+      var(--planet-primary) calc((1 - var(--text-invert, 0)) * 100%),
+      var(--planet-white)
+    );
+  }
+  #weiter .section-head h2,
+  #weiter .fit__intro,
+  #weiter .fit__text {
+    color: color-mix(
+      in srgb,
+      var(--planet-black) calc((1 - var(--text-invert, 0)) * 100%),
+      var(--planet-white)
+    );
+  }
+  #weiter .fit__index {
+    color: color-mix(
+      in srgb,
+      var(--planet-primary) calc((1 - var(--text-invert, 0)) * 100%),
+      var(--planet-white)
+    );
+  }
+  #weiter .fit__rule {
+    background: color-mix(
+      in srgb,
+      var(--planet-primary) calc((1 - var(--text-invert, 0)) * 100%),
+      var(--planet-white)
+    );
+  }
+  /* Auf Blau: Gelb bleibt, Text wird schwarz — Weiß-auf-Gelb wäre unsichtbar */
+  #weiter .fit__mark {
+    color: var(--planet-black);
+    isolation: isolate; /* ::before nicht hinter den Blau-Hintergrund rutschen lassen */
+  }
+  #weiter .fit__mark:focus-visible {
+    outline-color: var(--planet-white);
+  }
+  .fit__mark {
+    color: inherit;
+    text-decoration: none;
+    position: relative;
+    z-index: 0;
+    padding: 0 0.08em;
+    margin: 0 -0.02em;
+    border-radius: 0.05em;
+  }
+  .fit__mark:hover,
+  .fit__mark:focus {
+    text-decoration: none;
+  }
+  .fit__mark::before {
+    content: "";
+    position: absolute;
+    top: 0.1em;
+    bottom: 0.08em;
+    left: 0;
+    right: 0;
+    z-index: -1;
+    border-radius: 0.05em;
+    background: var(--planet-secondary);
+    transform: scaleX(0);
+    transform-origin: left center;
+    transition:
+      transform 650ms var(--ease-out) 320ms,
+      top 180ms var(--ease-out),
+      bottom 180ms var(--ease-out),
+      left 180ms var(--ease-out),
+      right 180ms var(--ease-out);
+  }
+  .fit__item.is-visible .fit__mark::before {
+    transform: scaleX(1);
+    transition:
+      transform 180ms var(--ease-out),
+      top 180ms var(--ease-out),
+      bottom 180ms var(--ease-out),
+      left 180ms var(--ease-out),
+      right 180ms var(--ease-out);
+  }
+  .fit__item.is-visible .fit__mark:hover::before,
+  .fit__item.is-visible .fit__mark:focus-visible::before {
+    top: 0.02em;
+    bottom: 0;
+    left: -0.08em;
+    right: -0.08em;
+  }
+  .fit__mark:focus-visible {
+    outline: 2px solid var(--planet-black);
+    outline-offset: 3px;
+  }
+  @media (max-width: 640px) {
+    .fit { padding: var(--space-8) 0; }
+    .fit__list {
+      grid-template-columns: 1fr;
+      column-gap: 0;
+      row-gap: var(--space-3);
+    }
+    .fit__text { max-width: none; }
+    .fit__item { gap: var(--space-2); }
+    .fit .section-head { margin-bottom: var(--space-3); }
+    .fit__intro { margin-bottom: var(--space-4); }
+  }
+
+  /* Grundsätze — Fullscreen Gelb (hebt sich vom Blau-Glas-Menü ab) */
+  .principles-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 100; /* wie .nav-overlay — Nav (101) bleibt darüber, X = Menü-Toggle */
+    display: flex;
+    flex-direction: column;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 320ms var(--ease-out);
+    background: var(--planet-secondary);
+    color: var(--planet-black);
+  }
+  .principles-overlay.is-open {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  body.is-principles-open {
+    overflow: hidden;
+  }
+  /*
+    Nav auf Gelb: schwarz (overlay-open wäre sonst weiß).
+    Hintergrund deckend = Scroll-Text läuft nicht unter Logo/X durch.
+  */
+  body.is-principles-open .nav.overlay-open {
+    background: var(--planet-secondary);
+    border-bottom-color: transparent;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+  body.is-principles-open .nav.overlay-open .logo {
+    color: var(--planet-black);
+  }
+  body.is-principles-open .nav.overlay-open .nav-toggle span {
+    background: var(--planet-black);
+  }
+  body.is-principles-open .nav.overlay-open .lang-toggle {
+    border-color: var(--planet-black);
+    color: var(--planet-black);
+  }
+  body.is-principles-open .nav.overlay-open .lang-toggle:hover {
+    background: var(--planet-black);
+    color: var(--planet-secondary);
+  }
+  .principles-overlay__scroll {
+    flex: 1;
+    overflow-x: hidden;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    /* Nur vertikal — horizontaler Satzspiegel wie .nav-inner / .container */
+    padding:
+      calc(var(--nav-height, 4rem) + var(--space-4))
+      0
+      var(--space-8);
+  }
+  .principles-overlay__inner {
+    max-width: 1280px;
+    margin: 0 auto;
+    width: 100%;
+    padding: 0 var(--space-4);
+    box-sizing: border-box;
+  }
+  .principles-overlay__title {
+    margin: 0 0 var(--space-5);
+    font-family: var(--planet-font);
+    font-weight: var(--weight-display);
+    font-size: var(--text-h2);
+    line-height: 1;
+    letter-spacing: -0.02em;
+    color: var(--planet-black);
+  }
+  .principles-overlay__grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: var(--space-5) var(--space-4);
+    align-items: start;
+  }
+  .principles-overlay__col:nth-child(1) { margin-top: clamp(4rem, 14vh, 9rem); }
+  .principles-overlay__col:nth-child(2) { margin-top: clamp(2.5rem, 9vh, 6rem); }
+  .principles-overlay__col:nth-child(3) { margin-top: clamp(1rem, 4vh, 2.5rem); }
+  .principles-overlay__col:nth-child(4) { margin-top: 0; }
+  .principles-overlay__col h3 {
+    margin: 0 0 var(--space-3);
+    font-family: var(--planet-font);
+    font-weight: var(--weight-display);
+    font-size: clamp(1.75rem, 3.2vw, 2.75rem);
+    line-height: 1;
+    letter-spacing: -0.025em;
+    color: var(--planet-black);
+  }
+  .principles-overlay__col ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .principles-overlay__col:nth-child(1) { --col-delay: 80ms; }
+  .principles-overlay__col:nth-child(2) { --col-delay: 160ms; }
+  .principles-overlay__col:nth-child(3) { --col-delay: 240ms; }
+  .principles-overlay__col:nth-child(4) { --col-delay: 320ms; }
+  .principles-overlay__col li {
+    --item-delay: 0ms;
+    --rule-w: clamp(1.25rem, 2.2vw, 2rem);
+    position: relative;
+    margin: 0 0 0.7em;
+    padding-left: calc(var(--rule-w) + 0.65em);
+    font-size: var(--text-body);
+    line-height: 1.35;
+    color: var(--planet-black);
+  }
+  .principles-overlay__col li:nth-child(1) { --item-delay: 0ms; }
+  .principles-overlay__col li:nth-child(2) { --item-delay: 55ms; }
+  .principles-overlay__col li:nth-child(3) { --item-delay: 110ms; }
+  .principles-overlay__col li:nth-child(4) { --item-delay: 165ms; }
+  .principles-overlay__col li:nth-child(5) { --item-delay: 220ms; }
+  .principles-overlay__col li:nth-child(6) { --item-delay: 275ms; }
+  .principles-overlay__col li:nth-child(7) { --item-delay: 330ms; }
+  .principles-overlay__col li:nth-child(8) { --item-delay: 385ms; }
+  .principles-overlay__col li:nth-child(9) { --item-delay: 440ms; }
+  .principles-overlay__col li:last-child { margin-bottom: 0; }
+  /* Filigrane Linie links statt Bullet — wächst beim Öffnen */
+  .principles-overlay__col li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0.65em;
+    width: 0;
+    height: var(--line-width, 1px);
+    background: var(--planet-black);
+    transform-origin: left center;
+    transition: width 720ms var(--ease-out);
+  }
+  .principles-overlay.is-open .principles-overlay__col li::before {
+    width: var(--rule-w);
+    transition-delay: calc(var(--col-delay) + var(--item-delay));
+  }
+  @media (max-width: 1024px) {
+    .principles-overlay__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--space-5);
+    }
+    .principles-overlay__col:nth-child(n) { margin-top: 0; }
+  }
+  @media (max-width: 640px) {
+    .principles-overlay__grid {
+      grid-template-columns: 1fr;
+      gap: var(--space-5);
+    }
+    .principles-overlay__inner {
+      padding-inline: var(--space-3);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .principles-overlay { transition: none; }
+    .principles-overlay__col li::before {
+      width: var(--rule-w);
+      transition: none;
+    }
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav nav--on-hero">
+  <div class="nav-inner">
+    <a class="logo" href="#top">Planet</a>
+    <div class="nav-right">
+      <button class="lang-toggle" onclick="toggleLang()"><span class="de">EN</span><span class="en">DE</span></button>
+      <button class="nav-toggle" aria-label="Menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<div class="nav-overlay" role="dialog" aria-label="Navigation">
+  <nav class="nav-overlay-links">
+    <a class="nav-overlay-link" href="#haltung"><span class="de">Haltung</span><span class="en">Stance</span></a>
+    <a class="nav-overlay-link" href="#unterschied"><span class="de">Unterschied</span><span class="en">Difference</span></a>
+    <a class="nav-overlay-link" href="#unternehmer"><span class="de">Unternehmer</span><span class="en">Entrepreneurs</span></a>
+    <a class="nav-overlay-link" href="#mission"><span class="de">Mission</span><span class="en">Mission</span></a>
+    <a class="nav-overlay-link" href="#wege"><span class="de">Zwei Wege</span><span class="en">Two paths</span></a>
+    <a class="nav-overlay-link" href="#infrastruktur"><span class="de">Infrastruktur</span><span class="en">Infrastructure</span></a>
+    <a class="nav-overlay-link" href="#marken"><span class="de">Marken</span><span class="en">Brands</span></a>
+    <a class="nav-overlay-link" href="#zitat"><span class="de">Zitat</span><span class="en">Quote</span></a>
+    <a class="nav-overlay-link" href="#team"><span class="de">Team</span><span class="en">Team</span></a>
+    <a class="nav-overlay-link" href="#partnerschaft"><span class="de">Partnerschaft</span><span class="en">Partnership</span></a>
+    <a class="nav-overlay-link" href="#kriterien"><span class="de">Kriterien</span><span class="en">Criteria</span></a>
+    <a class="nav-overlay-link" href="#weiter"><span class="de">Weiter</span><span class="en">Next</span></a>
+    <a class="nav-overlay-link" href="#kontakt"><span class="de">Kontakt</span><span class="en">Get in touch</span></a>
+  </nav>
+</div>
+
+<div class="principles-overlay" id="grundsaetze" role="dialog" aria-modal="true" aria-labelledby="principles-title" aria-hidden="true">
+  <div class="principles-overlay__scroll">
+    <div class="principles-overlay__inner">
+      <h2 class="principles-overlay__title" id="principles-title">
+        <span class="de">Grundsätze</span>
+        <span class="en">Principles</span>
+      </h2>
+      <div class="principles-overlay__grid">
+        <article class="principles-overlay__col">
+          <h3><span class="de">Fokus</span><span class="en">Focus</span></h3>
+          <ul>
+            <li><span class="de">Wir machen Kunden zu Fans.</span><span class="en">We turn customers into fans.</span></li>
+            <li><span class="de">Wir geben mehr als wir versprechen.</span><span class="en">We give more than we promise.</span></li>
+            <li><span class="de">Wir setzen uns Ziele.</span><span class="en">We set goals.</span></li>
+            <li><span class="de">Wir halten uns an Termine und Verpflichtungen.</span><span class="en">We keep deadlines and commitments.</span></li>
+          </ul>
+        </article>
+        <article class="principles-overlay__col">
+          <h3><span class="de">Teamgeist</span><span class="en">Team spirit</span></h3>
+          <ul>
+            <li><span class="de">Wir mögen Menschen. Wir lieben Tiere.</span><span class="en">We like people. We love animals.</span></li>
+            <li><span class="de">Wir sind ein geiles Team und haben Spaß.</span><span class="en">We’re a great team and we have fun.</span></li>
+            <li><span class="de">Wir helfen uns gegenseitig (zur Selbsthilfe).</span><span class="en">We help each other (toward self-help).</span></li>
+            <li><span class="de">Wir feiern zusammen unsere Erfolge.</span><span class="en">We celebrate our successes together.</span></li>
+            <li><span class="de">Wir sind offen und direkt.</span><span class="en">We’re open and direct.</span></li>
+            <li><span class="de">Wir finden für jeden, der unsere Grundsätze lebt, den richtigen Job.</span><span class="en">For everyone who lives our principles, we find the right job.</span></li>
+          </ul>
+        </article>
+        <article class="principles-overlay__col">
+          <h3><span class="de">Werte</span><span class="en">Values</span></h3>
+          <ul>
+            <li><span class="de">Wir haben Spaß.</span><span class="en">We have fun.</span></li>
+            <li><span class="de">Wir teilen unser Wissen.</span><span class="en">We share our knowledge.</span></li>
+            <li><span class="de">Jede Tätigkeit ist gleich viel wert.</span><span class="en">Every task is equally valuable.</span></li>
+            <li><span class="de">Die richtigen Fragen bringen die besten Lösungen.</span><span class="en">The right questions lead to the best solutions.</span></li>
+            <li><span class="de">Wir arbeiten immer im konstruktiven Modus. Im Zentrum jeder Diskussion steht die angestrebte Lösung.</span><span class="en">We always work in constructive mode. Every discussion centers on the intended solution.</span></li>
+            <li><span class="de">Festina Lente — Eile mit Weile, schnell und agil, aber nicht überhastet.</span><span class="en">Festina lente — make haste slowly: fast and agile, but never rushed.</span></li>
+          </ul>
+        </article>
+        <article class="principles-overlay__col">
+          <h3><span class="de">Entwicklung</span><span class="en">Growth</span></h3>
+          <ul>
+            <li><span class="de">Ich nehme mich selbst nicht so ernst.</span><span class="en">I don’t take myself too seriously.</span></li>
+            <li><span class="de">Ich bin immer ehrlich (besonders zu mir selbst).</span><span class="en">I’m always honest (especially with myself).</span></li>
+            <li><span class="de">Ich darf so sein wie ich bin.</span><span class="en">I’m allowed to be who I am.</span></li>
+            <li><span class="de">Ich bin neugierig wie ein kleines Kind.</span><span class="en">I’m curious like a little kid.</span></li>
+            <li><span class="de">Ich liebe Veränderung.</span><span class="en">I love change.</span></li>
+            <li><span class="de">Ich arbeite jeden Tag an mir (Zeit für Lesen und Nachdenken).</span><span class="en">I work on myself every day (time to read and think).</span></li>
+            <li><span class="de">Ich mache mich nicht zum Opfer.</span><span class="en">I don’t cast myself as the victim.</span></li>
+            <li><span class="de">Ich entscheide selbst und übernehme Verantwortung.</span><span class="en">I decide for myself and take responsibility.</span></li>
+            <li><span class="de">Ich bin dankbar.</span><span class="en">I’m grateful.</span></li>
+          </ul>
+        </article>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- IMPRESSUM / DATENSCHUTZ — :target-Overlays, Platzhalter bis juristische Texte liegen -->
+<div class="legal-overlay" id="impressum" role="dialog" aria-modal="true" aria-labelledby="impressum-title">
+  <div class="legal-overlay__scroll">
+    <div class="legal-overlay__inner">
+      <a class="legal-overlay__close" href="#top"><span class="de">Schließen</span><span class="en">Close</span></a>
+      <h2 class="legal-overlay__title" id="impressum-title"><span class="de">Impressum</span><span class="en">Imprint</span></h2>
+      <div class="legal-overlay__body">
+        <p>
+          <span class="de">Platzhalter — der verbindliche Impressumstext wird juristisch geliefert und hier eingesetzt.</span>
+          <span class="en">Placeholder — the binding imprint text will be provided legally and inserted here.</span>
+        </p>
+        <p>
+          <span class="de">PLNT Group<br>hello@plnt.group</span>
+          <span class="en">PLNT Group<br>hello@plnt.group</span>
+        </p>
+      </div>
+      <p class="legal-overlay__note">
+        <span class="de">Noch kein rechtsgültiger Inhalt.</span>
+        <span class="en">Not yet legally binding content.</span>
+      </p>
+    </div>
+  </div>
+</div>
+
+<div class="legal-overlay" id="datenschutz" role="dialog" aria-modal="true" aria-labelledby="datenschutz-title">
+  <div class="legal-overlay__scroll">
+    <div class="legal-overlay__inner">
+      <a class="legal-overlay__close" href="#top"><span class="de">Schließen</span><span class="en">Close</span></a>
+      <h2 class="legal-overlay__title" id="datenschutz-title"><span class="de">Datenschutz</span><span class="en">Privacy</span></h2>
+      <div class="legal-overlay__body">
+        <p>
+          <span class="de">Platzhalter — die verbindliche Datenschutzerklärung wird juristisch geliefert und hier eingesetzt.</span>
+          <span class="en">Placeholder — the binding privacy policy will be provided legally and inserted here.</span>
+        </p>
+      </div>
+      <p class="legal-overlay__note">
+        <span class="de">Noch kein rechtsgültiger Inhalt.</span>
+        <span class="en">Not yet legally binding content.</span>
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- HERO -->
+<section class="hero-full" id="top">
+  <div class="hero-full__media" aria-hidden="true">
+    <img src="assets/images/283---Inuvet-Sommerfest-2026_Tag-01_283.jpg" alt="">
+    <div class="hero-full__overlay"></div>
+  </div>
+  <div class="hero-full__content flow">
+    <h1><span class="de">Gesunde Tiere. Starke Marken.</span><span class="en">Healthy animals. Strong brands.</span></h1>
+    <p class="hero-full__sub">
+      <span class="de">Planet ist die Unternehmergruppe für Tiergesundheit — und hilft dir, dein Unternehmen weiterzubauen.</span>
+      <span class="en">Planet is the entrepreneurial group for animal health — and helps you keep building your company.</span>
+    </p>
+  </div>
+  <a class="hero-full__scroll" href="#stats" aria-label="Scroll">
+    <span class="material-symbols-outlined">expand_more</span>
+  </a>
+  <p class="photo-credit">
+    <span class="de">Bild: Planet Sommerparty 2026</span>
+    <span class="en">Image: Planet Summer Party 2026</span>
+  </p>
+</section>
+
+<!-- STATS -->
+<section class="stat-strip" id="stats">
+  <div class="container">
+    <div class="stat-strip__grid">
+      <div class="stat-strip__item reveal">
+        <div class="stat-strip__num"><span class="counter" data-target="2011" data-start="2000">2000</span></div>
+        <p class="stat-strip__label"><span class="de">Gründung des ersten Unternehmens</span><span class="en">First company founded</span></p>
+      </div>
+      <div class="stat-strip__item reveal">
+        <div class="stat-strip__num"><span class="counter" data-target="150" data-suffix="+">0</span></div>
+        <p class="stat-strip__label"><span class="de">Mitarbeitende in der Gruppe</span><span class="en">Employees across the group</span></p>
+      </div>
+      <div class="stat-strip__item reveal">
+        <div class="stat-strip__num"><span class="counter" data-target="4">0</span></div>
+        <p class="stat-strip__label"><span class="de">Marken unter einem Dach</span><span class="en">Brands under one roof</span></p>
+      </div>
+      <div class="stat-strip__item reveal">
+        <div class="stat-strip__num"><span class="counter" data-target="33" data-suffix="&nbsp;%" data-start="0">0&nbsp;%</span></div>
+        <p class="stat-strip__label"><span class="de">Ø jährliches Umsatzwachstum der Gruppe</span><span class="en">Avg. annual revenue growth of the group</span></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HALTUNG -->
+<section class="stance" id="haltung">
+  <div class="container">
+    <div class="section-head section-head--bottom section-head--reveal reveal">
+      <div>
+        <h2>
+          <span class="de">Kein Fonds. Keine Bank. Unternehmer – genau wie du.</span>
+          <span class="en">Not a fund. Not a bank. Entrepreneurs — just like you.</span>
+        </h2>
+      </div>
+    </div>
+    <div class="stance__grid">
+      <div class="stance__media reveal-scale">
+        <div class="pillar-orbit">
+          <div class="pillar-orbit__media">
+            <div class="pillar-circle-img" style="background-image: url('assets/images/3---Inuvet-Sommerfest-2026_Tag-01_001.jpg');" role="img" aria-label=""></div>
+          </div>
+          <svg class="pillar-orbit__caption" viewBox="0 0 100 100" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+            <defs>
+              <path id="orbit-haltung" fill="none" d="M50,50 m-47,0 a47,47 0 1,1 94,0 a47,47 0 1,1 -94,0"/>
+            </defs>
+            <text>
+              <textPath href="#orbit-haltung" xlink:href="#orbit-haltung" startOffset="8%">Bild: Planet Sommerparty 2026</textPath>
+            </text>
+          </svg>
+        </div>
+      </div>
+      <div class="stance__body flow reveal-slide-right">
+        <p>
+          <span class="de">Vielleicht hast du dein Unternehmen gegründet, weil dir etwas gefehlt hat: ein Produkt, das es für dein Tier so nicht gab. Bei uns war es genauso.</span>
+          <span class="en">Maybe you started your company because something was missing: a product that didn’t exist for your animal. It was the same for us.</span>
+        </p>
+        <p>
+          <span class="de">Aus dieser Tierliebe ist die Planet Group gewachsen — ein Unternehmen mit einer Mission: Tiere natürlich gesund machen. Und mit einer Leidenschaft: Unternehmen beim Wachsen begleiten. Deins vielleicht auch.</span>
+          <span class="en">From that love of animals, Planet Group has grown — a company with a mission: making animals naturally healthy. And with a passion: helping companies grow. Yours, perhaps, too.</span>
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- OFFENE KARTEN — Bildtext, Text links / Bild rechts -->
+<section class="stance stance--flip" id="karten" data-band-blue>
+  <div class="container">
+    <div class="stance__grid">
+      <div class="stance__body flow reveal-slide-left">
+        <p>
+          <span class="de">Wenn du mit uns sprichst, sitzt dir deshalb kein Private-Equity-Fonds gegenüber und keine Bank — sondern Unternehmer, denen die Gruppe zu 100&nbsp;% selbst gehört. Niemand, der dein Lebenswerk nach acht Jahren weiterverkaufen muss. Niemand, der nur deine Zahlen sieht und nicht die Tiere dahinter.</span>
+          <span class="en">So when you talk to us, you’re not facing a private-equity fund or a bank — but entrepreneurs who own the group 100%. No one who has to sell on your life’s work after eight years. No one who only sees your numbers and not the animals behind them.</span>
+        </p>
+        <p>
+          <span class="de">Und ja: Geld verdienen wollen wir trotzdem — wie du auch. Wir spielen mit offenen Karten. Das kannst du von uns erwarten.</span>
+          <span class="en">And yes: we still want to make money — just like you. We play with open cards. You can expect that from us.</span>
+        </p>
+      </div>
+      <div class="stance__media reveal-scale">
+        <div class="pillar-orbit">
+          <div class="pillar-orbit__media">
+            <div class="pillar-circle-img" style="background-image: url('assets/images/279---Inuvet-Sommerfest-2026_Tag-01_279.jpg');" role="img" aria-label=""></div>
+          </div>
+          <svg class="pillar-orbit__caption" viewBox="0 0 100 100" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+            <defs>
+              <path id="orbit-karten" fill="none" d="M50,50 m-47,0 a47,47 0 1,1 94,0 a47,47 0 1,1 -94,0"/>
+            </defs>
+            <text>
+              <textPath href="#orbit-karten" xlink:href="#orbit-karten" startOffset="8%">Bild: Planet Sommerparty 2026</textPath>
+            </text>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- UNTERSCHIED -->
+<section class="compare" id="unterschied">
+  <div class="container">
+    <div class="section-head section-head--reveal reveal">
+      <div>
+        <h2>
+          <span class="de">Ein Unterschied, der zählt.</span>
+          <span class="en">A difference that matters.</span>
+        </h2>
+      </div>
+    </div>
+    <div class="compare__layout reveal">
+      <div class="compare__head">
+        <span class="compare__side compare__side--pe">
+          <span class="de">Investor</span>
+          <span class="en">Investor</span>
+        </span>
+        <span class="compare__side compare__side--planet">Planet</span>
+      </div>
+      <div class="compare__rule compare__rule--span">
+        <span class="compare__rule-slot">
+          <span class="compare__label"><span class="de">Haltedauer</span><span class="en">Holding period</span></span>
+        </span>
+      </div>
+      <div class="compare__rows">
+        <div class="compare__row">
+          <div class="compare__cells">
+            <span class="compare__a"><span class="de">Exit nach 5–8 Jahren</span><span class="en">Exit after 5–8 years</span></span>
+            <span class="compare__b"><span class="de">Kein Exit-Datum</span><span class="en">No exit date</span></span>
+          </div>
+        </div>
+        <div class="compare__row">
+          <div class="compare__rule">
+            <span class="compare__label"><span class="de">Maßstab</span><span class="en">Yardstick</span></span>
+          </div>
+          <div class="compare__cells">
+            <span class="compare__a"><span class="de">Rendite zum Zeitpunkt des Verkaufs</span><span class="en">Return at the time of sale</span></span>
+            <span class="compare__b"><span class="de">Marke, Team und Tiere</span><span class="en">Brand, team and animals</span></span>
+          </div>
+        </div>
+        <div class="compare__row">
+          <div class="compare__rule">
+            <span class="compare__label"><span class="de">Nach dem Kauf</span><span class="en">After the deal</span></span>
+          </div>
+          <div class="compare__cells">
+            <span class="compare__a"><span class="de">Effizienz und Optimierung der Kosten</span><span class="en">Efficiency and optimisation of costs</span></span>
+            <span class="compare__b"><span class="de">Aufbau: Vertrieb, Marketing, Operations</span><span class="en">Building: sales, marketing, operations</span></span>
+          </div>
+        </div>
+        <div class="compare__row">
+          <div class="compare__rule">
+            <span class="compare__label"><span class="de">Deine Rolle</span><span class="en">Your role</span></span>
+          </div>
+          <div class="compare__cells">
+            <span class="compare__a"><span class="de">vom Investor definiert</span><span class="en">defined by the investor</span></span>
+            <span class="compare__b"><span class="de">gemeinsam definiert</span><span class="en">defined together</span></span>
+          </div>
+        </div>
+      </div>
+      <p class="compare__closing">
+        <span class="de">Dein Lebenswerk verdient eine Zukunft. Nicht bei einem Finanzinvestor. Sondern bei Unternehmern, die weiterbauen statt weiterverkaufen.</span>
+        <span class="en">Your life’s work deserves a future. Not with a financial investor. But with entrepreneurs who keep building instead of selling on.</span>
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- UNTERNEHMER -->
+<section class="stance" id="unternehmer">
+  <div class="container">
+    <div class="section-head section-head--reveal reveal">
+      <div>
+        <h2>
+          <span class="de">Unternehmer kaufen Unternehmer.</span>
+          <span class="en">Entrepreneurs buying from entrepreneurs.</span>
+        </h2>
+      </div>
+    </div>
+    <ul class="fit__list">
+      <li class="fit__item reveal">
+        <div class="fit__cue" aria-hidden="true">
+          <span class="fit__index">01</span>
+          <span class="fit__rule"></span>
+        </div>
+        <p class="fit__text">
+          <span class="de">Du hast gegründet.</span>
+          <span class="en">You founded it.</span>
+        </p>
+      </li>
+      <li class="fit__item reveal">
+        <div class="fit__cue" aria-hidden="true">
+          <span class="fit__index">02</span>
+          <span class="fit__rule"></span>
+        </div>
+        <p class="fit__text">
+          <span class="de">Du trägst jeden Tag Verantwortung.</span>
+          <span class="en">You carry the responsibility every day.</span>
+        </p>
+      </li>
+      <li class="fit__item reveal">
+        <div class="fit__cue" aria-hidden="true">
+          <span class="fit__index">03</span>
+          <span class="fit__rule"></span>
+        </div>
+        <p class="fit__text">
+          <span class="de">Du gehst Risiken ein.</span>
+          <span class="en">You take the risks.</span>
+        </p>
+      </li>
+      <li class="fit__item reveal">
+        <div class="fit__cue" aria-hidden="true">
+          <span class="fit__index">04</span>
+          <span class="fit__rule"></span>
+        </div>
+        <p class="fit__text">
+          <span class="de">Du hast Rückschläge weggesteckt und Erfolge gefeiert.</span>
+          <span class="en">You’ve absorbed setbacks and celebrated wins.</span>
+        </p>
+      </li>
+    </ul>
+    <p class="stance-lines__close reveal">
+      <span class="de">Niemand versteht diesen Weg besser als Unternehmer. Wir sind selbst welche.</span>
+      <span class="en">Nobody understands that path better than entrepreneurs. We are ones ourselves.</span>
+    </p>
+  </div>
+</section>
+
+<!-- Zitat + Mission + Wege — Blau schon unter dem Foto, sichtbar erst ab Mission -->
+<div data-band-blue>
+<section class="quote-type" id="grundsatz-zitat" data-quote-type>
+  <div class="quote-type__bg" aria-hidden="true">
+    <img src="assets/images/149---Inuvet-Sommerfest-2026_Tag-01_149.jpg" alt="">
+    <div class="quote-type__bg-veil"></div>
+  </div>
+  <div class="quote-type__content reveal">
+    <blockquote class="quote-type__quote">
+      <p class="quote-type__text">
+        <span class="de">»Wir mögen Menschen. Wir lieben Tiere.«</span>
+        <span class="en">»We like people. We love animals.«</span>
+      </p>
+    </blockquote>
+    <footer class="quote-type__who">
+      <a class="fit__mark" href="#grundsaetze">
+        <span class="de">aus unseren Unternehmensgrundsätzen</span>
+        <span class="en">from our company principles</span>
+      </a>
+    </footer>
+  </div>
+  <p class="photo-credit">
+    <span class="de">Bild: Planet Sommerparty 2026</span>
+    <span class="en">Image: Planet Summer Party 2026</span>
+  </p>
+</section>
+
+<section class="mission" id="mission">
+  <div class="container">
+    <div class="section-head section-head--reveal reveal">
+      <div>
+        <h2>
+          <span class="de">Du wirst Teil einer Mission.</span>
+          <span class="en">You become part of a mission.</span>
+        </h2>
+      </div>
+    </div>
+    <div class="stance__grid">
+      <div class="mission__body flow reveal-slide-left">
+        <p>
+          <span class="de">Gemeinsam verbessern wir das Leben von Tieren — mit starken Marken, innovativen Produkten und echtem Engagement. Wir bauen Unternehmen nicht nur für den Erfolg, sondern für eine Mission.</span>
+          <span class="en">Together we improve the lives of animals — with strong brands, innovative products and real commitment. We don’t build companies for success alone, but for a mission.</span>
+        </p>
+        <p>
+          <span class="de">Unser Unternehmensziel heißt Glück. Wir glauben, dass erfolgreiche Unternehmen bei glücklichen Menschen beginnen. Deshalb fördern wir nicht nur Unternehmenswachstum, sondern auch persönliches Wachstum — Unternehmer lernen bei uns voneinander.</span>
+          <span class="en">Our corporate goal is happiness. We believe successful companies start with happy people. That’s why we foster not only business growth but personal growth — entrepreneurs learn from each other here.</span>
+        </p>
+      </div>
+      <div class="stance__media reveal-scale">
+        <div class="pillar-orbit">
+          <div class="pillar-orbit__media">
+            <div class="pillar-circle-img" style="background-image: url('assets/images/Inuvet_Team-Event-2023_206.jpg');" role="img" aria-label=""></div>
+          </div>
+          <svg class="pillar-orbit__caption" viewBox="0 0 100 100" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+            <defs>
+              <path id="orbit-mission" fill="none" d="M50,50 m-47,0 a47,47 0 1,1 94,0 a47,47 0 1,1 -94,0"/>
+            </defs>
+            <text>
+              <textPath href="#orbit-mission" xlink:href="#orbit-mission" startOffset="8%">Bild: Inuvet Team Event</textPath>
+            </text>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="paths paths-scroll" id="wege">
+  <div class="container">
+    <div class="section-head section-head--reveal reveal">
+      <div>
+        <h2>
+          <span class="de">Zwei Wege. Welcher ist deiner?</span>
+          <span class="en">Two paths. Which one is yours?</span>
+        </h2>
+      </div>
+    </div>
+    <div class="paths__grid reveal">
+      <article class="paths__way paths__way--a flow reveal">
+        <div class="paths__head">
+          <span class="paths__index" aria-hidden="true">01</span>
+          <span class="paths__rule" aria-hidden="true"></span>
+          <h2><span class="de">Wachstum</span><span class="en">Growth</span></h2>
+        </div>
+        <div class="paths__body flow">
+          <p>
+            <span class="de">Du hast ein Unternehmen aufgebaut, das läuft. Aber du machst noch alles selbst: Logistik, Finanzen, IT, Personal. Zeit, die dir fehlt — für Marke, Produkt und Wachstum. Als Teil der Planet Group gibst du genau das ab. Du bleibst Unternehmer in deinem Unternehmen, mit einer Gruppe die dir den Rücken freihält.</span>
+            <span class="en">You’ve built a company that works. But you’re still doing everything yourself: logistics, finances, IT, HR. Time you don’t have — for brand, product, and growth. As part of Planet Group, you hand exactly that over. You stay the entrepreneur in your company, with a group that has your back.</span>
+          </p>
+        </div>
+      </article>
+      <article class="paths__way paths__way--b flow reveal">
+        <div class="paths__head">
+          <span class="paths__index" aria-hidden="true">02</span>
+          <span class="paths__rule" aria-hidden="true"></span>
+          <h2><span class="de">Nachfolge</span><span class="en">Succession</span></h2>
+        </div>
+        <div class="paths__body flow">
+          <p>
+            <span class="de">Du denkst über Unternehmensnachfolge nach — aber nicht um jeden Preis. Dein Unternehmen soll weiterleben: der Name, das Team, die Idee dahinter. Bei uns bleibt es in der Tiergesundheit, geführt von Menschen, die verstehen, warum du es gegründet hast. Ob du übergibst und gehst, übergibst und bleibst, oder erstmal nur reden willst: Du bestimmst das Tempo.</span>
+            <span class="en">You’re thinking about succession — but not at any price. Your company should live on: the name, the team, the idea behind it. With us it stays in animal health, led by people who understand why you founded it. Whether you hand over and leave, hand over and stay, or just want to talk first: you set the pace.</span>
+          </p>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+</div>
+
+<!-- INFRASTRUKTUR -->
+<section class="stack" id="infrastruktur">
+  <div class="container">
+    <div class="section-head section-head--reveal reveal">
+      <div>
+        <h2>
+          <span class="de">Mach was du willst. Wir machen den Rest.</span>
+          <span class="en">Do what you want. We’ll handle the rest.</span>
+        </h2>
+      </div>
+    </div>
+    <p class="stack__intro reveal">
+      <span class="de">Supply Chain, IT, Logistik, Controlling, HR — als Alleinunternehmer frisst dich das auf. Als Teil der Planet Group dockst du an eine Infrastruktur an, die all das schon kann. Modular: Du nutzt, was dir fehlt. Was du gut kannst, bleibt bei dir.</span>
+      <span class="en">Supply chain, IT, logistics, controlling, HR — as a solo founder, that eats you alive. As part of Planet Group you plug into infrastructure that already does all of it. Modular: you use what you lack. What you’re good at stays with you.</span>
+    </p>
+    <div class="stack__grid">
+      <article class="stack__item flow reveal">
+        <span class="material-symbols-outlined icon--lg stack__icon" aria-hidden="true">brush</span>
+        <h3><span class="de">Branding</span><span class="en">Branding</span></h3>
+        <p>
+          <span class="de">Positionierung, Kampagnen, Assets — wir machen die Marke scharf, ohne dich zum Agentur-Kunden zu machen. Von Naming bis Launch, mit Leuten die Tiergesundheit verstehen.</span>
+          <span class="en">Positioning, campaigns, assets — we sharpen the brand without turning you into an agency client. From naming to launch, with people who understand animal health.</span>
+        </p>
+      </article>
+      <article class="stack__item flow reveal">
+        <span class="material-symbols-outlined icon--lg stack__icon" aria-hidden="true">handshake</span>
+        <h3><span class="de">Vertrieb</span><span class="en">Sales</span></h3>
+        <p>
+          <span class="de">Tierarzt-Außendienst und D2C — zwei Kanäle, ein System. Wir bringen Produkte in Praxen und direkt zu Tierhaltern, mit Strukturen die skalieren.</span>
+          <span class="en">Vet field force and D2C — two channels, one system. We get products into practices and directly to pet owners, with structures that scale.</span>
+        </p>
+      </article>
+      <article class="stack__item flow reveal">
+        <span class="material-symbols-outlined icon--lg stack__icon" aria-hidden="true">trending_up</span>
+        <h3><span class="de">Marketing</span><span class="en">Marketing</span></h3>
+        <p>
+          <span class="de">Reichweite, die messbar ist. Campaigns, Content, Community — wir testen, lernen und skalieren, was wirkt. Weniger Bauchgefühl, mehr Loop.</span>
+          <span class="en">Reach you can measure. Campaigns, content, community — we test, learn, and scale what works. Less gut feel, more loop.</span>
+        </p>
+      </article>
+      <article class="stack__item flow reveal">
+        <span class="material-symbols-outlined icon--lg stack__icon" aria-hidden="true">inventory_2</span>
+        <h3><span class="de">Logistik</span><span class="en">Logistics</span></h3>
+        <p>
+          <span class="de">Vom Wareneingang bis zur Praxis-Tür. Lager, Kommissionierung, Versand — damit dein Produkt ankommt, bevor jemand nachfragt.</span>
+          <span class="en">From goods receipt to the practice door. Warehousing, picking, shipping — so your product arrives before anyone has to chase it.</span>
+        </p>
+      </article>
+      <article class="stack__item flow reveal">
+        <span class="material-symbols-outlined icon--lg stack__icon" aria-hidden="true">factory</span>
+        <h3><span class="de">Supply Chain</span><span class="en">Supply Chain</span></h3>
+        <p>
+          <span class="de">Lieferanten, Rohstoffe, Verfügbarkeit. Wir sichern deine Kette ab und verhandeln Konditionen, die du allein nicht bekommst — damit nie ein Produkt fehlt, wenn die Nachfrage da ist.</span>
+          <span class="en">Suppliers, raw materials, availability. We secure your chain and negotiate terms you wouldn’t get alone — so a product is never missing when demand is there.</span>
+        </p>
+      </article>
+      <article class="stack__item flow reveal">
+        <span class="material-symbols-outlined icon--lg stack__icon" aria-hidden="true">calculate</span>
+        <h3><span class="de">Controlling</span><span class="en">Controlling</span></h3>
+        <p>
+          <span class="de">Zahlen, die du steuern kannst. Reporting, Forecasts, Kennzahlen — damit du entscheidest, statt nachzurechnen.</span>
+          <span class="en">Numbers you can steer by. Reporting, forecasts, KPIs — so you decide instead of reconciling.</span>
+        </p>
+      </article>
+      <article class="stack__item flow reveal">
+        <span class="material-symbols-outlined icon--lg stack__icon" aria-hidden="true">account_balance</span>
+        <h3><span class="de">Finance</span><span class="en">Finance</span></h3>
+        <p>
+          <span class="de">Kapital, Bewertung, Deals. Wenn Wachstum Finanzierung braucht oder eine Übernahme ansteht — wir kennen beides von innen.</span>
+          <span class="en">Capital, valuation, deals. When growth needs financing or an acquisition is on the table — we know both from the inside.</span>
+        </p>
+      </article>
+      <article class="stack__item flow reveal">
+        <span class="material-symbols-outlined icon--lg stack__icon" aria-hidden="true">dns</span>
+        <h3><span class="de">IT Systeme</span><span class="en">IT Systems</span></h3>
+        <p>
+          <span class="de">Tools, die zusammenarbeiten. ERP, CRM, Shops, Integrationen — weniger Flickwerk, mehr Betriebssystem für dein Unternehmen.</span>
+          <span class="en">Tools that work together. ERP, CRM, shops, integrations — less patchwork, more of an operating system for your company.</span>
+        </p>
+      </article>
+      <article class="stack__item flow reveal">
+        <span class="material-symbols-outlined icon--lg stack__icon" aria-hidden="true">groups</span>
+        <h3><span class="de">Recruiting</span><span class="en">Recruiting</span></h3>
+        <p>
+          <span class="de">Die richtigen Leute finden und halten. Recruiting, Onboarding, Prozesse — damit dein Team wächst, ohne dass HR dein Fulltime-Job wird.</span>
+          <span class="en">Find and keep the right people. Recruiting, onboarding, processes — so your team grows without HR becoming your full-time job.</span>
+        </p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- MARKEN -->
+<section class="brands" id="marken">
+  <div class="container">
+    <div class="section-head section-head--reveal reveal">
+      <div>
+        <h2>
+          <span class="de">Das haben wir schon mal gemacht.</span>
+          <span class="en">We’ve done this before.</span>
+        </h2>
+      </div>
+    </div>
+
+    <ul class="brands__logos" data-brands-logos aria-label="Marken">
+      <li>
+        <div class="brands__logo-wrap">
+          <span class="brands__logo-index" aria-hidden="true">01</span>
+          <a class="brands__logo brands__logo--inuvet" href="#marke-inuvet" aria-label="Inuvet">
+            <svg viewBox="0 0 113.4 113.4" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" fill="none">
+              <g fill="#000">
+                <path d="M19.4 74.3c0 1.4-1.1 2.6-2.6 2.6s-2.6-1.2-2.6-2.6 1.1-2.5 2.6-2.5 2.5 1.2 2.5 2.5ZM14.7 78.9h4.3v15.4h-4.3z"/>
+                <path d="M23.1 78.9h3.8l.2 2.1c1.5-1.8 3.1-2.5 5.1-2.5s3.5.7 4.2 2.1c.5.9.7 2 .7 4.1v9.7h-4.3v-8.9c0-1.3 0-1.8-.3-2.3-.3-.6-.8-.9-1.6-.9-1.2 0-2.6 1.1-3.5 2.8v9.3h-4.3z"/>
+                <path d="M50.5 92.6c-1.4 1.5-2.8 2.1-4.7 2.1s-3.4-.8-4.2-2.2c-.5-.9-.7-2.1-.7-4.2v-9.5h4.3v8.7c0 2.6.5 3.4 1.9 3.4s2.3-.6 3.1-1.9v-10.2h4.3v15.4h-3.8l-.3-1.7z"/>
+                <path d="M56.8 78.9h4.8l3.6 10.3 3.6-10.3h4.3l-6.3 15.4h-3.9l-6.1-15.4z"/>
+                <path d="M78.1 87.9c.2 2.6 1.5 3.7 4.4 3.7s2.7-.3 4.4-1.2l1 2.8c-1.8 1.1-3.8 1.6-6.4 1.6-5.2 0-7.8-2.5-7.8-7.7s2.8-8.6 7.5-8.6 6.8 2.6 6.8 7.6v1.8h-9.9zm6.1-2.8c-.2-2.4-1.1-3.5-2.9-3.5s-2.9 1.1-3.2 3.5h6.1z"/>
+                <path d="M89.7 82.4l.3-3.4h2.5l.2-3.7 4-1.4v5.1h3.8l-.3 3.4h-3.5v5.6c0 2.8.2 3.3 1.6 3.3s1.3-.2 2.1-.5l.8 2.7c-1.5.9-3 1.3-4.5 1.3s-3-.6-3.7-1.8c-.4-.8-.6-2-.6-4.2v-6.5h-2.7z"/>
+                <path d="M81.4 32h-.3v1h.2c.5 0 .7-.3.7-.6s-.1-.5-.6-.5m.6 3.1-.8-1.5v1.5h-.8v-3.7h1.3c.9 0 1.2.4 1.2 1s-.3 1-.8 1c0 0 .2.3.3.5l.7 1.2h-1zM78.9 33.3c0 1.4 1.1 2.6 2.6 2.6s2.6-1.2 2.6-2.6-1.1-2.6-2.6-2.6-2.6 1.2-2.6 2.6m6.1 0c0 1.9-1.6 3.5-3.5 3.5s-3.6-1.5-3.6-3.5 1.6-3.5 3.6-3.5 3.5 1.5 3.5 3.5"/>
+              </g>
+              <g fill="#78b41b">
+                <path d="M28.7 54.5c1.3 5.2 5.6 9 11.1 10.7 4.1-4.1 6.1-9.5 4.8-14.7-1.3-5.2-5.6-9-11.1-10.7-4.1 4.1-6.1 9.5-4.8 14.7z"/>
+                <path d="M38.6 32.3c.7 5.3 4.4 9.7 9.7 12 4.6-3.6 7.2-8.6 6.6-14-.6-5.3-4.4-9.7-9.7-12-4.6 3.6-7.2 8.7-6.5 14z"/>
+                <path d="M84.6 54.5c-1.3 5.2-5.6 9-11.1 10.7-4.1-4.1-6.1-9.5-4.8-14.7 1.3-5.2 5.6-9 11.1-10.7 4.1 4.1 6.1 9.5 4.8 14.7z"/>
+                <path d="M74.8 32.3c-.7 5.3-4.4 9.7-9.7 12-4.6-3.6-7.2-8.6-6.6-14 .6-5.3 4.4-9.7 9.7-12 4.6 3.6 7.2 8.7 6.6 14z"/>
+              </g>
+            </svg>
+          </a>
+        </div>
+      </li>
+      <li>
+        <div class="brands__logo-wrap">
+          <span class="brands__logo-index" aria-hidden="true">02</span>
+          <a class="brands__logo brands__logo--eqx" href="#marke-eqx" aria-label="EQX">
+            <svg viewBox="0 0 212.6 85.04" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <polygon fill="#0f4" points="212.67 -.11 195.3 -.11 178.89 23.06 162.47 -.11 145.1 -.11 170.2 35.32 145.1 70.75 162.47 70.75 178.89 47.58 195.3 70.75 212.67 70.75 187.57 35.32 212.67 -.11"/>
+              <polygon fill="#006838" points="49.68 14.06 49.68 -.11 14.24 -.11 .07 -.11 .07 70.75 14.24 70.75 49.68 70.75 49.68 56.58 14.24 56.58 14.24 42.41 35.5 42.41 35.5 28.23 14.24 28.23 14.24 14.06 49.68 14.06"/>
+              <path fill="#006838" d="M134.72 35.32C134.72 15.78 118.82-.11 99.28-.11s-35.43 15.89-35.43 35.43c0 17.11 12.19 31.43 28.35 34.72v14.89h14.17v-14.89c16.15-3.29 28.35-17.61 28.35-34.72ZM99.28 56.58c-11.72 0-21.26-9.54-21.26-21.26s9.54-21.26 21.26-21.26 21.26 9.54 21.26 21.26-9.54 21.26-21.26 21.26Z"/>
+            </svg>
+          </a>
+        </div>
+      </li>
+      <li>
+        <div class="brands__cluster">
+          <div class="brands__logo-wrap">
+            <span class="brands__logo-index" aria-hidden="true">03</span>
+            <a class="brands__logo brands__logo--byox" href="#marke-byox" aria-label="Byox">
+              <svg viewBox="0 0 85.1 36.4" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <g fill="#009fe3">
+                  <path d="M5 18.3c0 3.8 2.5 6.2 5.7 6.2s5.6-2.6 5.6-6.2-2.2-6.1-5.6-6.1-5.7 2.5-5.7 6.1M5.2 28.8H0V0h5.2v10.3c1.9-1.9 4-2.8 6.5-2.8 5.4 0 9.8 4.5 9.8 10.9s-4.7 10.9-9.9 10.9-4.5-.9-6.4-2.7v2.2z"/>
+                  <polygon points="37.7 8 31.8 21 26.4 8 21 8 28.9 27.2 24.7 36.4 30 36.4 43.1 8 37.7 8"/>
+                  <path d="M47.5 18.4c0 3.5 2.2 6 5.6 6s5.7-2.3 5.7-6-2.3-6-5.7-6-5.6 2.5-5.6 6M64 18.4c0 6-4.7 10.9-11 10.9s-10.8-4.8-10.8-10.9 5.1-10.9 10.8-10.9 11 4.8 11 10.9"/>
+                  <polygon points="78.2 8 74.1 13.7 70 8 63.9 8 71.1 17.8 63.2 28.8 69.2 28.8 74.1 22 79 28.8 85.1 28.8 77.1 17.8 84.2 8 78.2 8"/>
+                </g>
+              </svg>
+            </a>
+          </div>
+          <span class="brands__cluster-line" aria-hidden="true"></span>
+          <div class="brands__logo-wrap">
+            <span class="brands__logo-index" aria-hidden="true">03A</span>
+            <a class="brands__logo brands__logo--manukalind" href="#marke-byox" aria-label="ManukaLind">
+              <svg viewBox="0 0 59 88.9" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <g fill="#00a76d">
+                  <polygon points="28.9 12.2 26.1 13.9 26.1 20.3 28.9 22 31.7 23.6 34.6 22 37.4 20.3 37.4 13.9 31.7 10.6 28.9 12.2"/>
+                  <polygon points="19.9 3.2 19.9 9.7 25.5 12.9 28.4 11.3 31.2 9.7 31.2 3.2 25.5 0 19.9 3.2"/>
+                  <polygon points="25.5 21.3 19.9 24.5 19.9 31 25.5 34.2 28.4 32.6 31.2 31 31.2 24.5 28.4 22.9 25.5 21.3"/>
+                  <polygon points="35.1 22.9 32.3 24.5 32.3 31 35.1 32.6 37.9 34.2 40.8 32.6 43.6 31 43.6 24.5 40.8 22.9 37.9 21.3 35.1 22.9"/>
+                  <polygon points="44.1 23.6 49.8 20.3 49.8 13.9 44.1 10.6 38.5 13.9 38.5 20.3 41.3 22 44.1 23.6"/>
+                  <polygon points="43.6 52.2 43.6 45.8 40.8 44.1 37.9 42.5 35.1 44.1 32.3 45.8 32.3 52.2 37.9 55.5 43.6 52.2"/>
+                  <polygon points="7.5 24.5 7.5 31 13.1 34.2 18.8 31 18.8 24.5 13.1 21.3 7.5 24.5"/>
+                  <polygon points="49.8 41.6 49.8 35.1 44.1 31.9 41.3 33.5 38.5 35.1 38.5 41.6 41.3 43.2 44.1 44.8 49.8 41.6"/>
+                  <polygon points="34.6 43.2 37.4 41.6 37.4 35.1 34.6 33.5 31.7 31.9 28.9 33.5 26.1 35.1 26.1 41.6 28.9 43.2 31.7 44.8 34.6 43.2"/>
+                  <polygon points="31.2 52.2 31.2 45.8 28.4 44.1 25.5 42.5 19.9 45.8 19.9 52.2 25.5 55.5 31.2 52.2"/>
+                </g>
+                <g fill="#231f20">
+                  <path d="M13.3 74.7h-2.3l-.8-6.8-2.7 5.6h-1.7l-2.7-5.6-.8 6.8H0l1.4-11h1.9l3.4 7.2 3.4-7.2h1.9l1.3 11z"/>
+                  <path d="M20.8 67.2h2.1v7.5h-2.1v-1.1c-.5.8-1.5 1.3-2.5 1.3-2.1 0-3.6-1.6-3.6-3.9s1.5-3.9 3.6-3.9 1.9.4 2.4 1.2v-1zm-.1 3.8c0-1.1-.9-2-2-2s-1.9.9-1.9 2 .8 2 1.9 2 1.9-.9 1.9-2z"/>
+                  <path d="M32.2 70.6v4.1h-2.1v-4c0-1.2-.7-1.7-1.4-1.7s-1.7.4-1.7 1.8v3.9h-2.1v-7.5h2.1v1.2c.4-1 1.5-1.4 2.2-1.4 2 0 3 1.3 3 3.6z"/>
+                  <path d="M39.2 67.2h2.1v7.5h-2.1v-1.2c-.3 1-1.5 1.4-2.2 1.4-2 0-3-1.3-3-3.6v-4.1h2.1v4c0 1.2.7 1.7 1.4 1.7s1.7-.4 1.7-1.8v-4z"/>
+                  <path d="M50.7 74.7h-2.6l-2.6-3.2v3.2h-2.1v-11.5h2.1v6.4l1.9-2.3h2.7l-2.9 3.3 3.6 4.2z"/>
+                  <path d="M56.9 67.2h2.1v7.5h-2.1v-1.1c-.5.8-1.5 1.3-2.5 1.3-2.1 0-3.6-1.6-3.6-3.9s1.5-3.9 3.6-3.9 1.9.4 2.4 1.2v-1zm-.1 3.8c0-1.1-.9-2-2-2s-1.9.9-1.9 2 .8 2 1.9 2 1.9-.9 1.9-2z"/>
+                  <path d="M17.6 86.9h4.2v2h-6.4v-11h2.2v9.1z"/>
+                  <path d="M22.8 78.8c0-.7.6-1.2 1.3-1.2s1.3.5 1.3 1.2-.6 1.3-1.3 1.3-1.3-.6-1.3-1.3zm.3 10.1v-7.5h2.1v7.5h-2.1z"/>
+                  <path d="M34.5 84.8v4.1h-2.1v-4c0-1.2-.7-1.7-1.4-1.7s-1.7.4-1.7 1.8v3.9h-2.1v-7.5h2.1v1.2c.4-1 1.5-1.4 2.2-1.4 2 0 3 1.3 3 3.6z"/>
+                  <path d="M42.1 77.3h2.1v11.5h-2.1v-.9c-.5.8-1.6 1.1-2.4 1.1-1.9 0-3.7-1.5-3.7-3.9s1.7-3.9 3.7-3.9 1.9.3 2.4 1.1v-5zm-.1 7.8c0-1.2-1-2-1.9-2s-1.9.9-1.9 2 .9 2 1.9 2 1.9-.8 1.9-2z"/>
+                </g>
+              </svg>
+            </a>
+          </div>
+        </div>
+      </li>
+      <li>
+        <div class="brands__logo-wrap">
+          <span class="brands__logo-index" aria-hidden="true">04</span>
+          <a class="brands__logo brands__logo--planimol" href="#marke-planimol" aria-label="Planimol">
+            <svg viewBox="0 0 148.82 35.43" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <g fill="#44303f">
+                <path d="M47.06 9.83c-.94-.44-2.01-.66-3.23-.66h-6.67v17.88h3.26v-6.6h3.41c1.22 0 2.29-.22 3.22-.67.93-.45 1.66-1.09 2.2-1.93.54-.84.8-1.85.8-3.04s-.26-2.22-.79-3.06c-.53-.84-1.26-1.48-2.2-1.92zm-.63 6.42c-.24.42-.58.74-1.01.97-.43.23-.94.35-1.54.35h-3.46v-5.52h3.46c.59 0 1.1.12 1.54.35.43.23.77.55 1.01.96.24.41.36.89.36 1.45s-.12 1.02-.36 1.44z"/>
+                <rect x="52.21" y="8.89" width="3.14" height="18.17"/>
+                <path d="M66.73 14.3c-.82-.39-1.76-.59-2.83-.59-.88 0-1.7.14-2.45.43s-1.4.68-1.96 1.19c-.55.5-.96 1.1-1.21 1.79l2.57 1.25c.24-.59.62-1.07 1.14-1.43.52-.36 1.12-.54 1.79-.54.72 0 1.3.19 1.74.56s.66.84.66 1.4v.42l-3.89.63c-1.02.16-1.87.43-2.54.82-.67.38-1.17.86-1.49 1.43-.32.57-.48 1.21-.48 1.93s.18 1.41.55 1.98c.37.57.89 1 1.56 1.31.67.3 1.46.46 2.38.46.72 0 1.38-.1 1.97-.3.59-.2 1.12-.49 1.58-.86.19-.15.36-.33.53-.52v1.39h2.98v-8.69c0-.93-.23-1.74-.68-2.44s-1.09-1.24-1.91-1.63zm-.97 9.06c-.28.5-.67.88-1.18 1.16-.5.28-1.08.42-1.74.42-.51 0-.94-.13-1.28-.4-.34-.26-.52-.62-.52-1.07s.15-.84.46-1.13c.3-.29.77-.49 1.39-.6l3.29-.56v.53c0 .59-.14 1.14-.42 1.63z"/>
+                <path d="M81.55 14.33c-.74-.42-1.6-.62-2.56-.62s-1.74.2-2.44.61c-.54.32-.96.75-1.26 1.29v-1.61h-2.95v13.06h3.14v-7.66c0-.58.11-1.07.34-1.49s.54-.74.94-.97c.4-.23.86-.35 1.37-.35s.99.12 1.38.35c.39.23.7.56.92.97s.34.91.34 1.49v7.66h3.14v-8.4c0-.98-.21-1.84-.62-2.58-.42-.74-1-1.32-1.74-1.74z"/>
+                <rect x="86.82" y="9.17" width="3.14" height="3.36"/>
+                <rect x="86.82" y="14" width="3.14" height="13.06"/>
+                <path d="M110.16 14.33c-.73-.42-1.56-.62-2.48-.62-1.04 0-1.96.26-2.76.78-.52.34-.95.8-1.3 1.36-.29-.5-.68-.94-1.2-1.3-.82-.56-1.76-.84-2.83-.84-.98 0-1.82.23-2.54.7-.48.31-.84.73-1.1 1.25v-1.65h-2.95v13.06h3.14v-7.66c0-.58.1-1.07.31-1.49s.5-.74.89-.97c.38-.23.82-.35 1.32-.35s.96.12 1.33.35c.38.23.67.56.88.97s.31.91.31 1.49v7.66h3.14v-7.66c0-.58.1-1.07.31-1.49.21-.42.5-.74.89-.97.38-.23.82-.35 1.32-.35.53 0 .98.12 1.34.35.37.23.66.56.86.97.21.42.31.91.31 1.49v7.66h3.14v-8.4c0-.98-.21-1.84-.62-2.58-.42-.74-.99-1.32-1.72-1.74z"/>
+                <path d="M125.1 14.6c-1.04-.59-2.2-.89-3.48-.89s-2.46.3-3.5.89c-1.04.59-1.87 1.4-2.48 2.42-.62 1.02-.92 2.19-.92 3.5s.31 2.48.92 3.5c.62 1.02 1.45 1.83 2.5 2.42s2.21.89 3.49.89 2.42-.3 3.46-.89c1.04-.59 1.87-1.4 2.5-2.42.62-1.02.94-2.19.94-3.5s-.31-2.5-.92-3.52c-.62-1.02-1.44-1.82-2.48-2.41zm-.35 7.95c-.31.6-.74 1.07-1.27 1.4-.54.34-1.16.5-1.86.5s-1.35-.17-1.9-.5c-.54-.34-.97-.8-1.28-1.4s-.47-1.28-.47-2.03.16-1.44.47-2.03.74-1.05 1.28-1.39c.54-.34 1.18-.52 1.9-.52s1.32.17 1.86.52c.54.34.96.81 1.27 1.39s.47 1.26.47 2.03-.16 1.43-.47 2.03z"/>
+                <rect x="130.93" y="8.89" width="3.14" height="18.17"/>
+                <path d="M143.61 10.28c-.19-.43-.44-.81-.77-1.14-.33-.33-.71-.58-1.14-.77s-.9-.28-1.39-.28c-.66 0-1.27.16-1.81.48-.55.32-.98.75-1.3 1.29s-.48 1.14-.48 1.8.16 1.25.48 1.8.76.98 1.3 1.3c.55.32 1.15.48 1.81.48s1.26-.16 1.8-.48c.54-.32.97-.76 1.29-1.3s.48-1.14.48-1.8c0-.49-.09-.96-.28-1.39zm-.82 2.85c-.26.44-.6.78-1.04 1.04-.43.25-.92.38-1.45.38s-1.03-.13-1.46-.38c-.43-.26-.78-.6-1.04-1.04-.26-.43-.38-.92-.38-1.45s.13-1.01.38-1.45c.26-.43.6-.78 1.04-1.04.43-.26.92-.38 1.46-.38s1.01.13 1.45.38c.43.26.78.6 1.04 1.04s.38.92.38 1.45-.13 1.02-.38 1.46z"/>
+                <path d="M141.61 11.61c.11-.19.16-.4.16-.64 0-.38-.12-.68-.37-.89s-.56-.32-.94-.32h-1.46v3.78h.71v-1.37h.69l.77 1.37h.81l-.88-1.5c.23-.1.4-.25.51-.44zm-.71-.23c-.11.11-.25.17-.44.17h-.74v-1.13h.74c.19 0 .33.05.44.15.11.1.16.24.16.41 0 .16-.05.29-.16.41z"/>
+              </g>
+              <g fill="#39b54a">
+                <path d="M7.97 12.4c1.96 0 3.54-1.59 3.54-3.54s-1.59-3.54-3.54-3.54-3.54 1.59-3.54 3.54 1.59 3.54 3.54 3.54z"/>
+                <path d="M16.83 5.32c-1.96 0-3.54 1.59-3.54 3.54s1.59 3.54 3.54 3.54 3.54-1.59 3.54-3.54-1.59-3.54-3.54-3.54z"/>
+                <path d="M23.03 18.6c1.96 0 3.54-1.59 3.54-3.54s-1.59-3.54-3.54-3.54-3.54 1.59-3.54 3.54 1.59 3.54 3.54 3.54z"/>
+                <path d="M23.03 20.37c-1.96 0-3.54 1.59-3.54 3.54s1.59 3.54 3.54 3.54 3.54-1.59 3.54-3.54-1.59-3.54-3.54-3.54z"/>
+                <path d="M15.06 14.17h-7.97c-2.94 0-5.32 2.38-5.32 5.32s2.38 5.32 5.32 5.32c0 2.93 2.38 5.31 5.31 5.31s5.31-2.38 5.32-5.31v-7.97c0-1.47-1.19-2.66-2.66-2.66z"/>
+              </g>
+            </svg>
+          </a>
+        </div>
+      </li>
+    </ul>
+
+    <div class="brands__list">
+      <article class="brands__brand brands__brand--solid brands__brand--solid-before reveal" id="marke-inuvet">
+        <div class="brands__top">
+          <div>
+            <h3 class="brands__name">Inuvet</h3>
+            <span class="brands__since"><span class="de">seit 2011</span><span class="en">since 2011</span></span>
+          </div>
+          <div>
+            <p class="brands__copy">
+              <span class="de">der Ursprung: heute ein global agierendes Tiergesundheitsunternehmen, seit 2011, aus eigener Kraft, ohne Fremdkapital von Investoren.</span>
+              <span class="en">the origin: today a globally operating animal-health company, since 2011, built under its own steam, without outside investor capital.</span>
+            </p>
+          </div>
+        </div>
+        <div class="brands__metrics">
+          <div class="brands__metric">
+            <span class="brands__metric-label"><span class="de">Umsatzanstieg</span><span class="en">Revenue growth</span></span>
+            <span class="brands__metric-value"><span class="counter" data-target="840" data-prefix="+" data-suffix="&nbsp;%" data-start="0">+0&nbsp;%</span></span>
+            <div class="brands__spark-wrap">
+              <svg class="brands__spark" viewBox="0 0 160 40" preserveAspectRatio="none" aria-hidden="true">
+                <path class="brands__spark-area" d="M0 30.2 Q10.0 29.9 20 28.5 Q30.0 25.1 40 22.4 Q50.0 21.7 60 21.0 Q70.0 18.9 80 18.6 Q90.0 17.7 100 15.8 Q110.0 14.7 120 15.2 Q130.0 10.8 140 6.7 Q150.0 5.0 160 6.0 V40 H0 Z"/>
+                <path class="brands__spark-line" pathLength="1" d="M0 30.2 Q10.0 29.9 20 28.5 Q30.0 25.1 40 22.4 Q50.0 21.7 60 21.0 Q70.0 18.9 80 18.6 Q90.0 17.7 100 15.8 Q110.0 14.7 120 15.2 Q130.0 10.8 140 6.7 Q150.0 5.0 160 6.0"/>
+              </svg>
+              <span class="brands__spark-dot" style="--dot-y: 15.0%" aria-hidden="true"></span>
+            </div>
+            <div class="brands__metric-years"><span>2011</span><span>2026</span></div>
+          </div>
+          <div class="brands__metric">
+            <span class="brands__metric-label"><span class="de">Produkte</span><span class="en">Products</span></span>
+            <span class="brands__metric-value"><span class="counter" data-target="64" data-start="0">0</span></span>
+            <div class="brands__spark-wrap">
+              <svg class="brands__spark" viewBox="0 0 160 40" preserveAspectRatio="none" aria-hidden="true">
+                <path class="brands__spark-area" d="M0 26.9 Q10.0 24.3 20 24.7 Q30.0 21.5 40 19.6 Q50.0 17.9 60 16.3 Q70.0 16.9 80 15.3 Q90.0 15.6 100 15.0 Q110.0 14.5 120 13.2 Q130.0 12.3 140 11.0 Q150.0 7.3 160 5.0 V40 H0 Z"/>
+                <path class="brands__spark-line" pathLength="1" d="M0 26.9 Q10.0 24.3 20 24.7 Q30.0 21.5 40 19.6 Q50.0 17.9 60 16.3 Q70.0 16.9 80 15.3 Q90.0 15.6 100 15.0 Q110.0 14.5 120 13.2 Q130.0 12.3 140 11.0 Q150.0 7.3 160 5.0"/>
+              </svg>
+              <span class="brands__spark-dot" style="--dot-y: 12.5%" aria-hidden="true"></span>
+            </div>
+            <div class="brands__metric-range"><span>12</span><span>64</span></div>
+          </div>
+          <div class="brands__metric">
+            <span class="brands__metric-label"><span class="de">Mitarbeitende</span><span class="en">Employees</span></span>
+            <span class="brands__metric-value"><span class="counter" data-target="110" data-start="0">0</span></span>
+            <div class="brands__spark-wrap">
+              <svg class="brands__spark" viewBox="0 0 160 40" preserveAspectRatio="none" aria-hidden="true">
+                <path class="brands__spark-area" d="M0 31.6 Q10.0 31.1 20 31.6 Q30.0 27.0 40 24.4 Q50.0 24.1 60 25.0 Q70.0 21.7 80 18.6 Q90.0 17.9 100 18.9 Q110.0 16.3 120 13.9 Q130.0 12.0 140 12.3 Q150.0 8.5 160 7.0 V40 H0 Z"/>
+                <path class="brands__spark-line" pathLength="1" d="M0 31.6 Q10.0 31.1 20 31.6 Q30.0 27.0 40 24.4 Q50.0 24.1 60 25.0 Q70.0 21.7 80 18.6 Q90.0 17.9 100 18.9 Q110.0 16.3 120 13.9 Q130.0 12.0 140 12.3 Q150.0 8.5 160 7.0"/>
+              </svg>
+              <span class="brands__spark-dot" style="--dot-y: 17.5%" aria-hidden="true"></span>
+            </div>
+            <div class="brands__metric-range"><span>18</span><span>110</span></div>
+          </div>
+        </div>
+      </article>
+    </div>
+  </div>
+
+  <!-- Zitat Variante B — nach Inuvet, vor EQX -->
+  <section class="quote-scroll" id="zitat" data-quote-scroll>
+    <div class="quote-scroll__media" aria-hidden="true">
+      <img src="assets/images/41---Inuvet-Sommerfest-2026_Tag-01_041.jpg" alt="">
+      <div class="quote-scroll__veil"></div>
+    </div>
+    <div class="quote-scroll__content reveal">
+      <blockquote class="quote-scroll__quote">
+        <p class="quote-scroll__text">
+          <span class="de">… plötzlich ging es ganz schnell.</span>
+          <span class="en">…and suddenly everything moved very fast.</span>
+        </p>
+      </blockquote>
+      <footer class="quote-scroll__who">
+        <strong>Johanna</strong>
+        <span><span class="de">Geschäftsführerin von Inuvet</span><span class="en">Managing Director of Inuvet</span></span>
+      </footer>
+    </div>
+    <p class="photo-credit">
+      <span class="de">Bild: Planet Sommerparty 2026</span>
+      <span class="en">Image: Planet Summer Party 2026</span>
+    </p>
+  </section>
+
+  <div class="container">
+    <div class="brands__list">
+      <article class="brands__brand brands__brand--solid brands__brand--solid-after reveal" id="marke-eqx">
+        <div class="brands__top">
+          <div>
+            <h3 class="brands__name">EQX</h3>
+            <span class="brands__since"><span class="de">seit 2016</span><span class="en">since 2016</span></span>
+          </div>
+          <div>
+            <p class="brands__copy">
+              <span class="de">natürliche Ergänzungsfuttermittel für Pferde, in Tierarztqualität: entwickelt mit Tierärzten, Biologen und Pharmazeuten, empfohlen von Tierärzten und Weltklasse-Reitern.</span>
+              <span class="en">natural complementary feed for horses, in veterinary quality: developed with veterinarians, biologists and pharmacists, recommended by veterinarians and world-class riders.</span>
+            </p>
+          </div>
+        </div>
+        <div class="brands__metrics">
+          <div class="brands__metric">
+            <span class="brands__metric-label"><span class="de">Umsatzanstieg</span><span class="en">Revenue growth</span></span>
+            <span class="brands__metric-value"><span class="counter" data-target="320" data-prefix="+" data-suffix="&nbsp;%" data-start="0">+0&nbsp;%</span></span>
+            <div class="brands__spark-wrap">
+              <svg class="brands__spark" viewBox="0 0 160 40" preserveAspectRatio="none" aria-hidden="true">
+                <path class="brands__spark-area" d="M0 23.4 Q10.0 22.3 20 20.2 Q30.0 18.9 40 19.5 Q50.0 21.5 60 23.7 Q70.0 21.6 80 20.1 Q90.0 17.3 100 13.7 Q110.0 12.7 120 11.8 Q130.0 10.7 140 7.4 Q150.0 6.0 160 5.0 V40 H0 Z"/>
+                <path class="brands__spark-line" pathLength="1" d="M0 23.4 Q10.0 22.3 20 20.2 Q30.0 18.9 40 19.5 Q50.0 21.5 60 23.7 Q70.0 21.6 80 20.1 Q90.0 17.3 100 13.7 Q110.0 12.7 120 11.8 Q130.0 10.7 140 7.4 Q150.0 6.0 160 5.0"/>
+              </svg>
+              <span class="brands__spark-dot" style="--dot-y: 12.5%" aria-hidden="true"></span>
+            </div>
+            <div class="brands__metric-years"><span>2016</span><span>2026</span></div>
+          </div>
+          <div class="brands__metric">
+            <span class="brands__metric-label"><span class="de">Produkte</span><span class="en">Products</span></span>
+            <span class="brands__metric-value"><span class="counter" data-target="28" data-start="0">0</span></span>
+            <div class="brands__spark-wrap">
+              <svg class="brands__spark" viewBox="0 0 160 40" preserveAspectRatio="none" aria-hidden="true">
+                <path class="brands__spark-area" d="M0 27.4 Q10.0 25.0 20 23.2 Q30.0 24.2 40 22.6 Q50.0 20.3 60 19.2 Q70.0 19.7 80 18.6 Q90.0 16.4 100 17.1 Q110.0 12.5 120 9.8 Q130.0 12.1 140 11.4 Q150.0 9.8 160 6.0 V40 H0 Z"/>
+                <path class="brands__spark-line" pathLength="1" d="M0 27.4 Q10.0 25.0 20 23.2 Q30.0 24.2 40 22.6 Q50.0 20.3 60 19.2 Q70.0 19.7 80 18.6 Q90.0 16.4 100 17.1 Q110.0 12.5 120 9.8 Q130.0 12.1 140 11.4 Q150.0 9.8 160 6.0"/>
+              </svg>
+              <span class="brands__spark-dot" style="--dot-y: 15.0%" aria-hidden="true"></span>
+            </div>
+            <div class="brands__metric-range"><span>6</span><span>28</span></div>
+          </div>
+        </div>
+      </article>
+      <article class="brands__brand reveal" id="marke-byox">
+        <div class="brands__top">
+          <div>
+            <h3 class="brands__name">Byox</h3>
+            <span class="brands__since"><span class="de">seit 2019</span><span class="en">since 2019</span></span>
+          </div>
+          <div>
+            <p class="brands__copy">
+              <span class="de">Wundversorgung für Menschen, mit dem Bestseller ManukaLind: in Apotheken erhältlich, von Arztpraxen empfohlen. Der Beweis, dass unsere Kompetenz aus der Tiergesundheit auch im Humanbereich trägt.</span>
+              <span class="en">Wound care for people, with the bestseller ManukaLind: available in pharmacies, recommended by medical practices. Proof that our animal-health expertise also holds in the human space.</span>
+            </p>
+          </div>
+        </div>
+        <div class="brands__metrics">
+          <div class="brands__metric">
+            <span class="brands__metric-label"><span class="de">Umsatzanstieg</span><span class="en">Revenue growth</span></span>
+            <span class="brands__metric-value"><span class="counter" data-target="190" data-prefix="+" data-suffix="&nbsp;%" data-start="0">+0&nbsp;%</span></span>
+            <div class="brands__spark-wrap">
+              <svg class="brands__spark" viewBox="0 0 160 40" preserveAspectRatio="none" aria-hidden="true">
+                <path class="brands__spark-area" d="M0 28.8 Q10.0 26.3 20 25.2 Q30.0 25.3 40 24.8 Q50.0 27.3 60 30.0 Q70.0 26.0 80 23.2 Q90.0 19.7 100 16.1 Q110.0 14.7 120 10.9 Q130.0 10.9 140 9.1 Q150.0 8.1 160 5.0 V40 H0 Z"/>
+                <path class="brands__spark-line" pathLength="1" d="M0 28.8 Q10.0 26.3 20 25.2 Q30.0 25.3 40 24.8 Q50.0 27.3 60 30.0 Q70.0 26.0 80 23.2 Q90.0 19.7 100 16.1 Q110.0 14.7 120 10.9 Q130.0 10.9 140 9.1 Q150.0 8.1 160 5.0"/>
+              </svg>
+              <span class="brands__spark-dot" style="--dot-y: 12.5%" aria-hidden="true"></span>
+            </div>
+            <div class="brands__metric-years"><span>2019</span><span>2026</span></div>
+          </div>
+          <div class="brands__metric">
+            <span class="brands__metric-label"><span class="de">Produkte</span><span class="en">Products</span></span>
+            <span class="brands__metric-value"><span class="counter" data-target="16" data-start="0">0</span></span>
+            <div class="brands__spark-wrap">
+              <svg class="brands__spark" viewBox="0 0 160 40" preserveAspectRatio="none" aria-hidden="true">
+                <path class="brands__spark-area" d="M0 22.5 Q10.0 22.9 20 22.5 Q30.0 21.6 40 18.4 Q50.0 19.2 60 18.2 Q70.0 14.4 80 12.1 Q90.0 11.7 100 13.0 Q110.0 11.9 120 8.1 Q130.0 9.0 140 7.5 Q150.0 5.2 160 4.0 V40 H0 Z"/>
+                <path class="brands__spark-line" pathLength="1" d="M0 22.5 Q10.0 22.9 20 22.5 Q30.0 21.6 40 18.4 Q50.0 19.2 60 18.2 Q70.0 14.4 80 12.1 Q90.0 11.7 100 13.0 Q110.0 11.9 120 8.1 Q130.0 9.0 140 7.5 Q150.0 5.2 160 4.0"/>
+              </svg>
+              <span class="brands__spark-dot" style="--dot-y: 10.0%" aria-hidden="true"></span>
+            </div>
+            <div class="brands__metric-range"><span>3</span><span>16</span></div>
+          </div>
+        </div>
+      </article>
+
+      <article class="brands__brand reveal" id="marke-planimol">
+        <div class="brands__top">
+          <div>
+            <h3 class="brands__name">Planimol</h3>
+            <span class="brands__since"><span class="de">seit 2021</span><span class="en">since 2021</span></span>
+          </div>
+          <div>
+            <p class="brands__copy">
+              <span class="de">die natürliche Tierapotheke für Hunde, von Tierärzten entwickelt: pflanzlich, hochdosiert, ohne unnötige Zusätze — für Magen, Darm, Gelenke, Haut und Wohlbefinden.</span>
+              <span class="en">the natural animal pharmacy for dogs, developed by veterinarians: plant-based, highly dosed, without unnecessary additives — for stomach, gut, joints, skin and wellbeing.</span>
+            </p>
+          </div>
+        </div>
+        <div class="brands__metrics">
+          <div class="brands__metric">
+            <span class="brands__metric-label"><span class="de">Umsatzanstieg</span><span class="en">Revenue growth</span></span>
+            <span class="brands__metric-value"><span class="counter" data-target="140" data-prefix="+" data-suffix="&nbsp;%" data-start="0">+0&nbsp;%</span></span>
+            <div class="brands__spark-wrap">
+              <svg class="brands__spark" viewBox="0 0 160 40" preserveAspectRatio="none" aria-hidden="true">
+                <path class="brands__spark-area" d="M0 21.5 Q10.0 21.6 20 20.0 Q30.0 20.2 40 19.0 Q50.0 16.6 60 16.6 Q70.0 15.2 80 14.7 Q90.0 13.6 100 13.6 Q110.0 12.3 120 8.1 Q130.0 6.9 140 6.8 Q150.0 4.0 160 3.0 V40 H0 Z"/>
+                <path class="brands__spark-line" pathLength="1" d="M0 21.5 Q10.0 21.6 20 20.0 Q30.0 20.2 40 19.0 Q50.0 16.6 60 16.6 Q70.0 15.2 80 14.7 Q90.0 13.6 100 13.6 Q110.0 12.3 120 8.1 Q130.0 6.9 140 6.8 Q150.0 4.0 160 3.0"/>
+              </svg>
+              <span class="brands__spark-dot" style="--dot-y: 7.5%" aria-hidden="true"></span>
+            </div>
+            <div class="brands__metric-years"><span>2021</span><span>2026</span></div>
+          </div>
+          <div class="brands__metric">
+            <span class="brands__metric-label"><span class="de">Produkte</span><span class="en">Products</span></span>
+            <span class="brands__metric-value"><span class="counter" data-target="11" data-start="0">0</span></span>
+            <div class="brands__spark-wrap">
+              <svg class="brands__spark" viewBox="0 0 160 40" preserveAspectRatio="none" aria-hidden="true">
+                <path class="brands__spark-area" d="M0 23.4 Q10.0 22.5 20 22.4 Q30.0 20.1 40 18.4 Q50.0 18.1 60 18.3 Q70.0 16.1 80 14.3 Q90.0 14.7 100 14.9 Q110.0 12.7 120 8.8 Q130.0 9.2 140 9.6 Q150.0 7.8 160 5.0 V40 H0 Z"/>
+                <path class="brands__spark-line" pathLength="1" d="M0 23.4 Q10.0 22.5 20 22.4 Q30.0 20.1 40 18.4 Q50.0 18.1 60 18.3 Q70.0 16.1 80 14.3 Q90.0 14.7 100 14.9 Q110.0 12.7 120 8.8 Q130.0 9.2 140 9.6 Q150.0 7.8 160 5.0"/>
+              </svg>
+              <span class="brands__spark-dot" style="--dot-y: 12.5%" aria-hidden="true"></span>
+            </div>
+            <div class="brands__metric-range"><span>2</span><span>11</span></div>
+          </div>
+        </div>
+      </article>
+    </div>
+
+    <p class="brands__scope reveal">
+      <span class="de">Wir suchen Unternehmen aus der Tiergesundheit im weitesten Sinne — von Nutraceuticals über Technologie bis Services. Du hast eine spannende Story? Meld dich.</span>
+      <span class="en">We’re looking for companies in animal health in the broadest sense — from nutraceuticals to technology to services. Got an interesting story? Reach out.</span>
+    </p>
+  </div>
+</section>
+
+<!-- TEAM -->
+<div class="team-section" id="team">
+  <div class="container">
+    <div class="section-head section-head--reveal reveal">
+      <div>
+        <h2><span class="de">Die Macher dahinter.</span><span class="en">The makers behind it.</span></h2>
+      </div>
+    </div>
+    <div class="team-strip" data-team-strip>
+      <article class="team-strip__person reveal">
+        <div class="team-strip__shift">
+          <div class="team-strip__photo" style="background-image: url('assets/images/Inuvet_Team-Event-2023_224.jpg');" role="img" aria-label="Philipp"></div>
+          <h3>Philipp</h3>
+          <p class="team-strip__role">CEO</p>
+          <p class="team-strip__bio">
+            <span class="de">Mitgründer von Inuvet und der Planet Group. Tiernarr durch und durch: teilt sein Leben mit Hunden, Katzen und mehreren Pferden. Tiergesundheit ist für ihn kein Geschäftsmodell, sondern Alltag.</span>
+            <span class="en">Co-founder of Inuvet and Planet Group. An animal lover through and through, sharing his life with dogs, cats and several horses. Animal health isn't a business model for him — it's daily life.</span>
+          </p>
+        </div>
+      </article>
+      <article class="team-strip__person reveal">
+        <div class="team-strip__shift">
+          <div class="team-strip__photo" style="background-image: url('assets/images/Inuvet_Team-Event-2023_137.jpg');" role="img" aria-label="Christoph"></div>
+          <h3>Christoph</h3>
+          <p class="team-strip__role">CEO</p>
+          <p class="team-strip__bio">
+            <span class="de">Mitgründer von Inuvet und der Planet Group. Sohn einer Tierarztfamilie — Eltern und Schwester sind Tierärzte. Bei ihm steht am Ende immer das Tier im Mittelpunkt.</span>
+            <span class="en">Co-founder of Inuvet and Planet Group. Son of a family of vets — his parents and sister included. For him, the animal always comes first.</span>
+          </p>
+        </div>
+      </article>
+      <article class="team-strip__person reveal">
+        <div class="team-strip__shift">
+          <div class="team-strip__photo" style="background-image: url('assets/images/187---Inuvet-Sommerfest-2026_Tag-01_187.jpg');" role="img" aria-label="Torsten"></div>
+          <h3>Torsten</h3>
+          <p class="team-strip__role">CFO</p>
+          <p class="team-strip__bio">
+            <span class="de">15 Jahre Beteiligungen bei einem der erfolgreichsten Private-Equity-Fonds im DACH-Raum. Heute nutzt er diese Erfahrung fürs Gegenteil: eine Gruppe, die kauft, um zu behalten.</span>
+            <span class="en">15 years of investments at one of the DACH region's most successful private-equity funds. Today he uses that experience for the opposite: a group that buys to keep.</span>
+          </p>
+        </div>
+      </article>
+      <article class="team-strip__person reveal">
+        <div class="team-strip__shift">
+          <div class="team-strip__photo" style="background-image: url('assets/images/107---Inuvet-Sommerfest-2026_Tag-01_107.jpg');" role="img" aria-label="Felix"></div>
+          <h3>Felix</h3>
+          <p class="team-strip__role">COO</p>
+          <p class="team-strip__bio">
+            <span class="de">Head of Operations. Sorgt dafür, dass alle Zahnräder ineinandergreifen — Logistik, Supply Chain, Controlling. Wenn hinter den Kulissen etwas hakt, bringt er es zum Laufen.</span>
+            <span class="en">Head of Operations. Keeps all the gears meshing — logistics, supply chain, controlling. When something jams behind the scenes, he gets it running.</span>
+          </p>
+        </div>
+      </article>
+      <article class="team-strip__person reveal">
+        <div class="team-strip__shift">
+          <div class="team-strip__photo" style="background-image: url('assets/images/22---Inuvet-Sommerfest-2026_Tag-01_022.jpg');" role="img" aria-label="Micha"></div>
+          <h3>Micha</h3>
+          <p class="team-strip__role">CBO</p>
+          <p class="team-strip__bio">
+            <span class="de">Verantwortet Branding und Markenarchitektur. Sorgt dafür, dass jede Marke ihren eigenen Charakter behält — damit dein Unternehmen keine beliebige Nummer im Portfolio wird.</span>
+            <span class="en">Leads branding and brand architecture. Makes sure every brand keeps its own character — so your company never becomes just another number in the portfolio.</span>
+          </p>
+        </div>
+      </article>
+      <article class="team-strip__person reveal">
+        <div class="team-strip__shift">
+          <div class="team-strip__photo" style="background-image: url('assets/images/298---Inuvet-Sommerfest-2026_Tag-01_298.jpg');" role="img" aria-label="Siggi"></div>
+          <h3>Siggi</h3>
+          <p class="team-strip__role">DOG</p>
+          <p class="team-strip__bio">
+            <span class="de">Steht für die vielen Hunde im Team — fast jeder Zweite hat einen, alle dürfen mit ins Büro. Der beste Beweis, dass wir die Tierliebe ernst meinen.</span>
+            <span class="en">Stands for the many dogs on the team — nearly every second one of us has one, all welcome at the office. The best proof our love of animals is real.</span>
+          </p>
+        </div>
+      </article>
+    </div>
+  </div>
+</div>
+
+<!-- PARTNERSCHAFT -->
+<section class="fit fit--deal" id="partnerschaft">
+  <div class="container">
+    <div class="section-head section-head--reveal reveal">
+      <div>
+        <h2>
+          <span class="de">Du verkaufst nicht dein Unternehmen. Du schließt dich an.</span>
+          <span class="en">You’re not selling your company. You’re joining.</span>
+        </h2>
+      </div>
+    </div>
+    <p class="fit__intro reveal">
+      <span class="de">Wie eine Partnerschaft mit uns aussieht, entscheiden wir gemeinsam.</span>
+      <span class="en">How a partnership with us looks is something we decide together.</span>
+    </p>
+    <ul class="fit__list">
+      <li class="fit__item reveal">
+        <div class="fit__cue" aria-hidden="true">
+          <span class="fit__index">01</span>
+          <span class="fit__rule"></span>
+        </div>
+        <p class="fit__text">
+          <span class="de">100%-Verkauf. Du übergibst komplett — sofort oder mit Übergangsphase.</span>
+          <span class="en">100% sale. You hand over completely — immediately or with a transition phase.</span>
+        </p>
+      </li>
+      <li class="fit__item reveal">
+        <div class="fit__cue" aria-hidden="true">
+          <span class="fit__index">02</span>
+          <span class="fit__rule"></span>
+        </div>
+        <p class="fit__text">
+          <span class="de">Teilverkauf. Du gibst einen Teil ab und führst dein Unternehmen als Teil der Gruppe weiter.</span>
+          <span class="en">Partial sale. You sell a share and continue to lead your company as part of the group.</span>
+        </p>
+      </li>
+      <li class="fit__item reveal">
+        <div class="fit__cue" aria-hidden="true">
+          <span class="fit__index">03</span>
+          <span class="fit__rule"></span>
+        </div>
+        <p class="fit__text">
+          <span class="de">Rückbeteiligung. Auf Wunsch bleibst du beteiligt — die Details gehören ins Gespräch, nicht auf eine Webseite.</span>
+          <span class="en">Retained equity. If you want, you stay invested — the details belong in a conversation, not on a website.</span>
+        </p>
+      </li>
+    </ul>
+    <div class="section-head section-head--reveal reveal fit__subhead">
+      <div>
+        <h2>
+          <span class="de">Und deine Rolle? Was davon passt zu dir?</span>
+          <span class="en">And your role? Which of these fits you?</span>
+        </h2>
+      </div>
+    </div>
+    <ul class="fit__list">
+      <li class="fit__item reveal">
+        <div class="fit__cue" aria-hidden="true">
+          <span class="fit__index">01</span>
+          <span class="fit__rule"></span>
+        </div>
+        <p class="fit__text">
+          <span class="de">Weiter Verantwortung übernehmen?</span>
+          <span class="en">Keep taking responsibility?</span>
+        </p>
+      </li>
+      <li class="fit__item reveal">
+        <div class="fit__cue" aria-hidden="true">
+          <span class="fit__index">02</span>
+          <span class="fit__rule"></span>
+        </div>
+        <p class="fit__text">
+          <span class="de">Als Berater begleiten?</span>
+          <span class="en">Come along as an advisor?</span>
+        </p>
+      </li>
+      <li class="fit__item reveal">
+        <div class="fit__cue" aria-hidden="true">
+          <span class="fit__index">03</span>
+          <span class="fit__rule"></span>
+        </div>
+        <p class="fit__text">
+          <span class="de">Gesellschafter bleiben?</span>
+          <span class="en">Stay a shareholder?</span>
+        </p>
+      </li>
+      <li class="fit__item reveal">
+        <div class="fit__cue" aria-hidden="true">
+          <span class="fit__index">04</span>
+          <span class="fit__rule"></span>
+        </div>
+        <p class="fit__text">
+          <span class="de">Den Ruhestand genießen?</span>
+          <span class="en">Enjoy retirement?</span>
+        </p>
+      </li>
+    </ul>
+    <p class="fit__payoff reveal">
+      <span class="de">Dein Einsatz soll sich auszahlen. Natürlich bekommst du einen fairen Preis — und die Gewissheit, dass dein Unternehmen, deine Mitarbeiter und deine Idee in guten Händen sind.</span>
+      <span class="en">Your commitment should pay off. Of course you get a fair price — and the certainty that your company, your employees and your idea are in good hands.</span>
+    </p>
+  </div>
+</section>
+
+<!-- KRITERIEN -->
+<section class="fit" id="kriterien">
+  <div class="container">
+    <div class="section-head section-head--reveal reveal">
+      <div>
+        <h2>
+          <span class="de">Wir nehmen nicht jeden. Vielleicht aber dich.</span>
+          <span class="en">We don’t take everyone. Maybe you, though.</span>
+        </h2>
+      </div>
+    </div>
+    <ul class="fit__list">
+      <li class="fit__item reveal">
+        <div class="fit__cue" aria-hidden="true">
+          <span class="fit__index">01</span>
+          <span class="fit__rule"></span>
+        </div>
+        <p class="fit__text">
+          <span class="de">Wenn es profitabel ist — oder klar auf dem Weg dahin.</span>
+          <span class="en">If it’s profitable — or clearly on the way there.</span>
+        </p>
+      </li>
+      <li class="fit__item reveal">
+        <div class="fit__cue" aria-hidden="true">
+          <span class="fit__index">02</span>
+          <span class="fit__rule"></span>
+        </div>
+        <p class="fit__text">
+          <span class="de">Wenn es zur Tiergesundheit im weitesten Sinne gehört.</span>
+          <span class="en">If it belongs to animal health in the broadest sense.</span>
+        </p>
+      </li>
+      <li class="fit__item reveal">
+        <div class="fit__cue" aria-hidden="true">
+          <span class="fit__index">03</span>
+          <span class="fit__rule"></span>
+        </div>
+        <p class="fit__text">
+          <span class="de">Wenn du dich in unseren <a class="fit__mark" href="#grundsaetze">Grundsätzen</a> wiederfindest.</span>
+          <span class="en">If you recognize yourself in our <a class="fit__mark" href="#grundsaetze">principles</a>.</span>
+        </p>
+      </li>
+    </ul>
+  </div>
+</section>
+
+<!-- WIE GEHT'S WEITER + KONTAKT — ein Blau-Band (kein Weiß-Blitz dazwischen) -->
+<div data-band-blue>
+<section class="fit fit--next" id="weiter">
+  <div class="container">
+    <div class="section-head section-head--reveal reveal">
+      <div>
+        <h2>
+          <span class="de">Und wie geht's weiter?</span>
+          <span class="en">So what’s next?</span>
+        </h2>
+      </div>
+    </div>
+    <p class="fit__intro reveal">
+      <span class="de">Wir haben Transaktionserfahrung im Team — vom Erstgespräch bis zur Unterschrift führen wir dich schnell und sauber durch den Prozess. Aber der Prozess ist nicht der Punkt. Der Punkt ist, was danach kommt.</span>
+      <span class="en">We have transaction experience on the team — from the first conversation to the signature, we take you through the process quickly and cleanly. But the process isn’t the point. The point is what comes after.</span>
+    </p>
+    <ul class="fit__list">
+      <li class="fit__item reveal">
+        <div class="fit__cue" aria-hidden="true">
+          <span class="fit__index">01</span>
+          <span class="fit__rule"></span>
+        </div>
+        <p class="fit__text">
+          <span class="de"><a class="fit__mark" href="#kontakt">Melde dich</a>. Anruf, WhatsApp, Mail — was dir am liebsten ist. Kein Formular-Marathon.</span>
+          <span class="en"><a class="fit__mark" href="#kontakt">Get in touch</a>. Call, WhatsApp, email — whichever you prefer. No form marathon.</span>
+        </p>
+      </li>
+      <li class="fit__item reveal">
+        <div class="fit__cue" aria-hidden="true">
+          <span class="fit__index">02</span>
+          <span class="fit__rule"></span>
+        </div>
+        <p class="fit__text">
+          <span class="de">Wir entwickeln ein gemeinsames Zielbild. Wo steht dein Unternehmen, wo willst du hin, wo sind deine Blind Spots — Logistik, Marketing, Operations?</span>
+          <span class="en">We build a shared target picture. Where does your company stand, where do you want to go, where are your blind spots — logistics, marketing, operations?</span>
+        </p>
+      </li>
+      <li class="fit__item reveal">
+        <div class="fit__cue" aria-hidden="true">
+          <span class="fit__index">03</span>
+          <span class="fit__rule"></span>
+        </div>
+        <p class="fit__text">
+          <span class="de">Du bekommst einen konkreten Vorschlag. Wie eine Partnerschaft aussehen kann — offen und nachvollziehbar. Und dann entscheidest du.</span>
+          <span class="en">You get a concrete proposal. What a partnership can look like — open and transparent. And then you decide.</span>
+        </p>
+      </li>
+    </ul>
+  </div>
+</section>
+
+<!-- KONTAKT -->
+<div class="contact-band" id="kontakt">
+  <div class="container">
+    <div class="section-head section-head--reveal reveal">
+      <div>
+        <h2><span class="de">Schreib uns.</span><span class="en">Write to us.</span></h2>
+      </div>
+    </div>
+    <div class="contact-layout">
+      <div class="contact-intro reveal">
+        <p>
+          <span class="de">Idee, Beteiligung, Zielunternehmen — oder einfach Interesse. Hinterlass eine Nachricht. Wir melden uns.</span>
+          <span class="en">An idea, equity, a target company — or just interest. Leave a message. We’ll get back to you.</span>
+        </p>
+        <div class="contact-intro__channels">
+          <a class="contact-intro__mail" href="mailto:hello@plnt.group">hello@plnt.group</a>
+          <!-- Platzhalter — echte Nummer einsetzen -->
+          <a class="contact-intro__mail" href="tel:+498310000000">+49 831 0000000</a>
+          <a class="contact-intro__mail" href="https://wa.me/498310000000" target="_blank" rel="noopener noreferrer">WhatsApp</a>
+        </div>
+      </div>
+
+      <div>
+        <form class="contact-form reveal" data-contact-form data-contact-to="hello@plnt.group" novalidate>
+          <div class="contact-form__row">
+            <div class="contact-field">
+              <label for="c-name"><span class="de">Name</span><span class="en">Name</span></label>
+              <input id="c-name" name="name" type="text" autocomplete="name" required placeholder="Alex Mertens">
+            </div>
+            <div class="contact-field">
+              <label for="c-mail"><span class="de">E-Mail</span><span class="en">Email</span></label>
+              <input id="c-mail" name="email" type="email" autocomplete="email" required placeholder="alex@company.com">
+            </div>
+          </div>
+          <div class="contact-field">
+            <label for="c-msg"><span class="de">Nachricht</span><span class="en">Message</span></label>
+            <textarea
+              id="c-msg"
+              name="message"
+              rows="5"
+              required
+              data-ph-de="Was möchtest du mit uns bauen?"
+              data-ph-en="What do you want to build with us?"
+              placeholder="Was möchtest du mit uns bauen?"
+            ></textarea>
+          </div>
+          <!-- Honeypot (FormSubmit: _honey) -->
+          <input type="text" name="_honey" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;opacity:0;height:0;width:0;">
+          <div class="contact-form__foot">
+            <p class="contact-form__note">
+              <span class="de">Keine Newsletter. Nur eine Antwort von uns.</span>
+              <span class="en">No newsletters. Just a reply from us.</span>
+            </p>
+            <button type="submit" class="btn contact-form__submit">
+              <span class="de">Nachricht senden</span>
+              <span class="en">Send message</span>
+              <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span>
+            </button>
+          </div>
+          <p class="contact-form__error" data-contact-error role="alert">
+            <span class="de">Senden fehlgeschlagen. Bitte nochmal versuchen oder direkt an hello@plnt.group schreiben.</span>
+            <span class="en">Sending failed. Please try again or email hello@plnt.group directly.</span>
+          </p>
+        </form>
+
+        <div class="contact-success" data-contact-success aria-live="polite" tabindex="-1" hidden>
+          <span class="contact-success__icon" aria-hidden="true">
+            <span class="material-symbols-outlined">check</span>
+          </span>
+          <h3><span class="de">Nachricht gesendet.</span><span class="en">Message sent.</span></h3>
+          <p>
+            <span class="de">Danke — wir haben deine Nachricht erhalten und melden uns in Kürze.</span>
+            <span class="en">Thank you — we’ve received your message and will get back to you shortly.</span>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- PLANET OUTRO -->
+<section id="plattform" class="plattform-scroll">
+  <div class="pillar-band pillar-band--planet" id="planet">
+    <div class="planet-outro__inner">
+      <div class="planet-outro__sphere" aria-hidden="true"></div>
+      <a class="planet-outro__logo" href="#top">Planet</a>
+    </div>
+    <footer class="planet-legal">
+      <nav class="container planet-legal__grid" aria-label="Legal">
+        <span class="planet-legal__item planet-legal__item--copy">© 2026 PLNT Group</span>
+        <a class="planet-legal__item planet-legal__item--impressum" href="#impressum"><span class="de">Impressum</span><span class="en">Imprint</span></a>
+        <a class="planet-legal__item planet-legal__item--privacy" href="#datenschutz"><span class="de">Datenschutz</span><span class="en">Privacy</span></a>
+        <a class="planet-legal__item planet-legal__item--mail" href="mailto:hello@plnt.group">hello@plnt.group</a>
+      </nav>
+    </footer>
+  </div>
+</section>
+
+<script>
+function toggleLang() {
+  document.body.classList.toggle('lang-en');
+  document.dispatchEvent(new CustomEvent('langchange'));
+}
+
+(function() {
+  const nav = document.querySelector('.nav');
+  const hero = document.querySelector('.hero-full');
+  const planet = document.getElementById('planet');
+
+  function updateNav() {
+    const vh = window.innerHeight;
+    let onPlanet = false;
+    if (planet) {
+      const rect = planet.getBoundingClientRect();
+      onPlanet = rect.top < vh * 0.75 && rect.bottom > vh * 0.2;
+    }
+    const onHero = hero && window.scrollY < hero.offsetHeight * 0.6 && !onPlanet;
+    nav.classList.toggle('nav--on-hero', onHero);
+    nav.classList.toggle('nav--on-planet', onPlanet);
+  }
+  updateNav();
+  window.addEventListener('scroll', updateNav, { passive: true });
+  window.addEventListener('resize', updateNav);
+})();
+
+(function() {
+  const toggle = document.querySelector('.nav-toggle');
+  const menuOverlay = document.querySelector('.nav-overlay');
+  const principlesOverlay = document.getElementById('grundsaetze');
+  const nav = document.querySelector('.nav');
+  const openers = document.querySelectorAll('a[href="#grundsaetze"]');
+  let lastFocus = null;
+
+  function setToggleOpen(open) {
+    toggle.classList.toggle('is-open', open);
+    nav.classList.toggle('overlay-open', open);
+    toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+  }
+  function openMenu() {
+    if (principlesOverlay?.classList.contains('is-open')) closePrinciples();
+    menuOverlay.classList.add('is-open');
+    setToggleOpen(true);
+  }
+  function closeMenu() {
+    menuOverlay.classList.remove('is-open');
+    if (!principlesOverlay?.classList.contains('is-open')) setToggleOpen(false);
+  }
+  function openPrinciples(e) {
+    if (e) e.preventDefault();
+    if (menuOverlay.classList.contains('is-open')) closeMenu();
+    lastFocus = document.activeElement;
+    principlesOverlay.classList.add('is-open');
+    principlesOverlay.setAttribute('aria-hidden', 'false');
+    document.body.classList.add('is-principles-open');
+    setToggleOpen(true);
+    toggle.focus({ preventScroll: true });
+  }
+  function closePrinciples() {
+    if (!principlesOverlay?.classList.contains('is-open')) return;
+    principlesOverlay.classList.remove('is-open');
+    principlesOverlay.setAttribute('aria-hidden', 'true');
+    document.body.classList.remove('is-principles-open');
+    if (!menuOverlay.classList.contains('is-open')) setToggleOpen(false);
+    if (lastFocus && typeof lastFocus.focus === 'function') {
+      lastFocus.focus({ preventScroll: true });
+    }
+  }
+
+  toggle.addEventListener('click', () => {
+    if (principlesOverlay?.classList.contains('is-open')) {
+      closePrinciples();
+      return;
+    }
+    menuOverlay.classList.contains('is-open') ? closeMenu() : openMenu();
+  });
+  menuOverlay.querySelectorAll('.nav-overlay-link').forEach(link => {
+    link.addEventListener('click', closeMenu);
+  });
+
+  if (principlesOverlay) {
+    openers.forEach((link) => {
+      link.addEventListener('click', openPrinciples);
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key !== 'Escape') return;
+      if (principlesOverlay.classList.contains('is-open')) closePrinciples();
+      else if (menuOverlay.classList.contains('is-open')) closeMenu();
+    });
+    if (window.location.hash === '#grundsaetze') {
+      openPrinciples();
+    }
+  }
+})();
+
+(function() {
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const counters = document.querySelectorAll('.counter');
+
+  function animateCounter(el) {
+    const target = parseInt(el.dataset.target, 10);
+    const start = parseInt(el.dataset.start || '0', 10);
+    const prefix = el.dataset.prefix || '';
+    const suffix = (el.dataset.suffix || '').replace(/&nbsp;/g, '\u00a0');
+    const pad = parseInt(el.dataset.pad || '0', 10);
+    function format(n) {
+      let s = String(n);
+      if (pad > 0) s = s.padStart(pad, '0');
+      return prefix + s + suffix;
+    }
+    if (reduced) {
+      el.textContent = format(target);
+      return;
+    }
+    const span = Math.abs(target - start);
+    const duration = el.dataset.duration
+      ? parseInt(el.dataset.duration, 10)
+      : (span <= 10 ? 900 + span * 150 : 2000);
+    const startTime = performance.now();
+    function easeOut(t) { return 1 - Math.pow(1 - t, 3); }
+    function tick(now) {
+      const progress = Math.min((now - startTime) / duration, 1);
+      const value = Math.round(start + (target - start) * easeOut(progress));
+      el.textContent = format(value);
+      if (progress < 1) requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  }
+
+  if (!('IntersectionObserver' in window)) {
+    counters.forEach(animateCounter);
+    return;
+  }
+  const counterObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        animateCounter(entry.target);
+        counterObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.5 });
+  counters.forEach(el => counterObserver.observe(el));
+})();
+
+(function() {
+  const paths = document.getElementById('wege');
+  const section = document.getElementById('plattform');
+  const nav = document.querySelector('.nav');
+  const blueBands = [...document.querySelectorAll('[data-band-blue]')];
+  const planetBand = section ? section.querySelector('.pillar-band--planet') : null;
+  const lastBlue = blueBands[blueBands.length - 1] || null;
+
+  function smoothstep(t) {
+    t = Math.max(0, Math.min(1, t));
+    return t * t * (3 - 2 * t);
+  }
+
+  function bandMix(rect, vh, fade) {
+    const center = vh * 0.5;
+    if (rect.top > center + fade) return 0;
+    if (rect.top > center - fade) return smoothstep((center + fade - rect.top) / (fade * 2));
+    if (rect.bottom > center + fade) return 1;
+    if (rect.bottom > center - fade) return smoothstep((rect.bottom - (center - fade)) / (fade * 2));
+    return 0;
+  }
+
+  function setMix(el, blue, dark) {
+    if (!el) return;
+    const invert = Math.max(blue, dark);
+    const textInvert = smoothstep(Math.min(1, invert / 0.42));
+    el.style.setProperty('--bg-mix', blue.toFixed(4));
+    el.style.setProperty('--bg-dark-mix', dark.toFixed(4));
+    el.style.setProperty('--text-invert', textInvert.toFixed(4));
+    el.style.setProperty('--nav-invert', invert.toFixed(4));
+  }
+
+  function updateBg() {
+    const vh = window.innerHeight;
+    const fade = vh * 0.28;
+
+    let blue = 0;
+    blueBands.forEach(band => {
+      blue = Math.max(blue, bandMix(band.getBoundingClientRect(), vh, fade));
+    });
+
+    let dark = 0;
+    if (planetBand) {
+      const rect = planetBand.getBoundingClientRect();
+      const start = vh;
+      const end = vh * 0.2;
+      dark = smoothstep((start - rect.top) / (start - end));
+    }
+
+    /* Erst nach dem letzten Blau-Peak: Blau→Schwarz statt Blau→Weiß */
+    if (lastBlue && planetBand) {
+      const lastRect = lastBlue.getBoundingClientRect();
+      const lastCenter = lastRect.top + lastRect.height * 0.5;
+      if (lastCenter < vh * 0.5) {
+        const lastBlueMix = bandMix(lastRect, vh, fade);
+        dark = Math.max(dark, 1 - lastBlueMix);
+      }
+    }
+
+    /* Ein Parent-Fade auf html — weiche Übergänge, keine Sektions-Kanten */
+    setMix(document.documentElement, blue, dark);
+    setMix(paths, blue, dark);
+    setMix(section, blue, dark);
+    setMix(nav, blue, dark);
+  }
+
+  let bgTick = false;
+  function onBgScroll() {
+    if (bgTick) return;
+    bgTick = true;
+    requestAnimationFrame(() => {
+      updateBg();
+      bgTick = false;
+    });
+  }
+  updateBg();
+  window.addEventListener('scroll', onBgScroll, { passive: true });
+  window.addEventListener('resize', onBgScroll);
+})();
+
+(function() {
+  const orbits = document.querySelectorAll('.pillar-orbit');
+  if (!orbits.length) return;
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduced) return;
+
+  let ticking = false;
+  function updateOrbits() {
+    const vh = window.innerHeight;
+    orbits.forEach(orbit => {
+      const rect = orbit.getBoundingClientRect();
+      // 0 wenn unterhalb Viewport, 1 wenn oberhalb — volle Umdrehung beim Durchscrollen
+      const progress = (vh - rect.top) / (vh + rect.height);
+      const angle = progress * 360;
+      const caption = orbit.querySelector('.pillar-orbit__caption');
+      const img = orbit.querySelector('.pillar-circle-img');
+      if (caption) caption.style.transform = `rotate(${angle}deg)`;
+      if (img) img.style.transform = `rotate(${-angle * 0.55}deg)`;
+    });
+    ticking = false;
+  }
+
+  function onScroll() {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(updateOrbits);
+  }
+
+  updateOrbits();
+  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', onScroll);
+})();
+
+/* Kontakt — FormSubmit → hello@plnt.group + Success-/Error-State */
+(function() {
+  const form = document.querySelector('[data-contact-form]');
+  const success = document.querySelector('[data-contact-success]');
+  const errorEl = document.querySelector('[data-contact-error]');
+  if (!form || !success) return;
+
+  const endpoint = `https://formsubmit.co/ajax/${encodeURIComponent(form.dataset.contactTo || 'hello@plnt.group')}`;
+
+  const msg = form.querySelector('#c-msg');
+  function syncPlaceholder() {
+    if (!msg) return;
+    const en = document.body.classList.contains('lang-en');
+    msg.placeholder = en
+      ? (msg.dataset.phEn || msg.placeholder)
+      : (msg.dataset.phDe || msg.placeholder);
+  }
+  syncPlaceholder();
+  document.addEventListener('langchange', syncPlaceholder);
+
+  function showError(on) {
+    if (!errorEl) return;
+    errorEl.classList.toggle('is-visible', !!on);
+  }
+
+  function showSuccess() {
+    form.classList.add('is-sent');
+    success.hidden = false;
+    success.classList.add('is-visible');
+    success.focus?.();
+    success.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const honey = form.querySelector('[name="_honey"]');
+    if (honey && honey.value) return;
+
+    const name = (form.name.value || '').trim();
+    const email = (form.email.value || '').trim();
+    const message = (form.message.value || '').trim();
+    if (!name || !email || !message) {
+      form.reportValidity();
+      return;
+    }
+
+    showError(false);
+    form.classList.add('is-sending');
+
+    try {
+      const res = await fetch(endpoint, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json'
+        },
+        body: JSON.stringify({
+          name,
+          email,
+          message,
+          _replyto: email,
+          _subject: `Planet Kontakt — ${name}`,
+          _template: 'table',
+          _captcha: false
+        })
+      });
+      const data = await res.json().catch(() => ({}));
+      const failed = !res.ok || data.success === false || data.success === 'false';
+      if (failed) throw new Error(data.message || 'send failed');
+      showSuccess();
+    } catch (err) {
+      showError(true);
+    } finally {
+      form.classList.remove('is-sending');
+    }
+  });
+})();
+
+/* Zitate — soft Fade (quote-type) + Parallax-Band (quote-scroll); Nav teilt --quote-bg */
+(function() {
+  const softRoots = [...document.querySelectorAll('[data-quote-type]')];
+  const scrollRoots = [...document.querySelectorAll('[data-quote-scroll]')];
+  if (!softRoots.length && !scrollRoots.length) return;
+  const nav = document.querySelector('.nav');
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function smoothstep(t) {
+    t = Math.max(0, Math.min(1, t));
+    return t * t * (3 - 2 * t);
+  }
+
+  function update() {
+    const vh = window.innerHeight;
+    let navQuote = 0;
+
+    softRoots.forEach(root => {
+      const rect = root.getBoundingClientRect();
+      let opacity = 0;
+      if (rect.bottom > 0 && rect.top < vh) {
+        if (reduced) {
+          opacity = 1;
+        } else {
+          const enter = smoothstep((vh - rect.top - vh * 0.58) / (vh * 0.32));
+          const leave = smoothstep((rect.bottom - vh * 0.22) / (vh * 0.4));
+          opacity = Math.min(enter, leave);
+        }
+      }
+      root.style.setProperty('--quote-bg', opacity.toFixed(4));
+      navQuote = Math.max(navQuote, opacity);
+    });
+
+    scrollRoots.forEach(root => {
+      const rect = root.getBoundingClientRect();
+      const inView = rect.bottom > 0 && rect.top < vh;
+      if (inView && rect.top < vh * 0.72 && rect.bottom > vh * 0.28) {
+        navQuote = Math.max(navQuote, 1);
+      }
+
+      if (reduced || !inView) {
+        root.style.setProperty('--quote-y', '0px');
+        return;
+      }
+
+      /* Bild hängt hinterher → wirkt langsamer als der normal scrollende Text */
+      const traveled = vh - rect.top;
+      const total = rect.height + vh;
+      const progress = Math.max(0, Math.min(1, traveled / total));
+      const shiftY = Math.round((progress - 0.5) * vh * 0.28);
+      root.style.setProperty('--quote-y', `${shiftY}px`);
+    });
+
+    if (nav) nav.style.setProperty('--quote-bg', navQuote.toFixed(4));
+  }
+
+  let tick = false;
+  function onScroll() {
+    if (tick) return;
+    tick = true;
+    requestAnimationFrame(() => {
+      update();
+      tick = false;
+    });
+  }
+
+  update();
+  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', onScroll);
+})();
+
+/* Team — Parallax auf .team-strip__shift (Zellen bleiben layout-stabil) */
+(function() {
+  const strip = document.querySelector('[data-team-strip]');
+  if (!strip) return;
+  const shifts = [...strip.querySelectorAll('.team-strip__shift')];
+  if (!shifts.length) return;
+
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const mobileMq = window.matchMedia('(max-width: 1024px)');
+  /* Desktop: jede Spalte eigene Speed · Mobile: linke vs. rechte Spalte (Zeilen gleich) */
+  const speedsDesktop = [0.08, -0.05, 0.09];
+  const speedsMobile = [0.07, -0.07];
+
+  let ticking = false;
+  function update() {
+    if (reduced) {
+      shifts.forEach(el => el.style.setProperty('--parallax-y', '0px'));
+      ticking = false;
+      return;
+    }
+
+    const vh = window.innerHeight;
+    const mid = vh * 0.5;
+    const section = document.getElementById('team') || strip;
+    const sectionRect = section.getBoundingClientRect();
+    const inRange = sectionRect.bottom > 0 && sectionRect.top < vh;
+    const shift = inRange ? mid - (sectionRect.top + sectionRect.height * 0.45) : 0;
+    const speeds = mobileMq.matches ? speedsMobile : speedsDesktop;
+
+    shifts.forEach((el, i) => {
+      const y = Math.round(shift * (speeds[i % speeds.length] || 0));
+      el.style.setProperty('--parallax-y', `${y}px`);
+    });
+
+    ticking = false;
+  }
+  function onScroll() {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(update);
+  }
+  update();
+  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', onScroll);
+})();
+
+
+(function() {
+  const logos = document.querySelector('[data-brands-logos]');
+  if (!logos) return;
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduced || !('IntersectionObserver' in window)) {
+    logos.classList.add('is-in');
+    return;
+  }
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      logos.classList.toggle('is-in', entry.isIntersecting);
+    });
+  }, { threshold: 0.35, rootMargin: '0px 0px -8% 0px' });
+  observer.observe(logos);
+})();
+
+(function() {
+  const revealSelectors = '.reveal, .reveal-slide-left, .reveal-slide-right, .reveal-scale';
+  if (!('IntersectionObserver' in window)) {
+    document.querySelectorAll(revealSelectors).forEach(el => el.classList.add('is-visible'));
+  } else {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15, rootMargin: '0px 0px -60px 0px' });
+    document.querySelectorAll(revealSelectors).forEach(el => observer.observe(el));
+  }
+})();
+
+/* Legal-Texte erst ganz am Seitenende einblenden */
+(function() {
+  const legal = document.querySelector('.planet-legal');
+  if (!legal) return;
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduced) {
+    legal.classList.add('is-visible');
+    return;
+  }
+
+  let done = false;
+  function updateLegal() {
+    if (done) return;
+    const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+    if (maxScroll <= 0 || window.scrollY >= maxScroll - 12) {
+      legal.classList.add('is-visible');
+      done = true;
+    }
+  }
+
+  updateLegal();
+  window.addEventListener('scroll', updateLegal, { passive: true });
+  window.addEventListener('resize', updateLegal);
+})();
+</script>
+</body>
+</html>

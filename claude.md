@@ -25,6 +25,11 @@ Patterns that live in the product (and as live examples in `UX-Styleguide.html`)
 - Type: headline = `--text-display`; on mobile often step down to `--text-h2`.
 - Text-hero (no image) is a secondary variant — not shown as a guide chapter; use the `.hero` pattern from `planet.css` when needed.
 
+## Website variants
+
+- `planet-website.html` — aktuelle Live-/Hauptversion.
+- `planet-website-v2.html` — experimentelle Kopie für unsichere Änderungen; Assets (`planet.css`, `assets/…`) werden geteilt.
+
 ## Open todos (`planet-website.html`)
 
 1. **Telefonnummer** unten ergänzen (Footer / Kontakt) — inkl. echte `tel:`- und WhatsApp-Links bei „Und wie geht's weiter?“ (Anruf / WhatsApp).
