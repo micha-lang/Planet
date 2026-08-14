@@ -2978,7 +2978,8 @@
         <span class="en">Is your company a fit for us?</span>
       </h2>
 
-      <form class="quiz__form" data-quiz-form data-quiz-to="hello@plnt.group" novalidate>
+      <!-- Empfänger: Torsten sichtet die Fragebögen und lädt persönlich ein -->
+      <form class="quiz__form" data-quiz-form data-quiz-to="torsten@plnt.group" novalidate>
 
         <!-- 1 — Umsatz. Platzhalter-Bänder: von der Geschäftsführung bestätigen lassen -->
         <fieldset class="quiz__step is-active" data-quiz-step data-quiz-key="Umsatz">
@@ -4584,7 +4585,7 @@ function toggleLang() {
   const scroller = root.closest('.principles-overlay__scroll');
   if (!form || !steps.length) return;
 
-  const endpoint = `https://formsubmit.co/ajax/${encodeURIComponent(form.dataset.quizTo || 'hello@plnt.group')}`;
+  const endpoint = `https://formsubmit.co/ajax/${encodeURIComponent(form.dataset.quizTo || 'torsten@plnt.group')}`;
   const total = steps.length;
   let index = 0;
   let advanceTimer = null;
