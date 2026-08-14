@@ -1977,7 +1977,7 @@
     .fit__intro { margin-bottom: var(--space-4); }
   }
 
-  /* Grundsätze — Fullscreen Glas-Popup */
+  /* Grundsätze — Fullscreen Gelb (hebt sich vom Blau-Glas-Menü ab) */
   .principles-overlay {
     position: fixed;
     inset: 0;
@@ -1987,17 +1987,8 @@
     opacity: 0;
     pointer-events: none;
     transition: opacity 320ms var(--ease-out);
-    /* Deckkraft: höherer %-Wert = kräftigeres Blau, weniger Durchschein */
-    --principles-glass: 72%;
-    background: color-mix(in srgb, var(--planet-primary) var(--principles-glass), transparent);
-    -webkit-backdrop-filter: blur(28px) saturate(1.35);
-    backdrop-filter: blur(28px) saturate(1.35);
-    color: var(--planet-white);
-  }
-  @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
-    .principles-overlay {
-      background: color-mix(in srgb, var(--planet-primary) 94%, transparent);
-    }
+    background: var(--planet-secondary);
+    color: var(--planet-black);
   }
   .principles-overlay.is-open {
     opacity: 1;
@@ -2006,20 +1997,47 @@
   body.is-principles-open {
     overflow: hidden;
   }
+  /*
+    Nav auf Gelb: schwarz (overlay-open wäre sonst weiß).
+    Hintergrund deckend = Scroll-Text läuft nicht unter Logo/X durch.
+  */
+  body.is-principles-open .nav.overlay-open {
+    background: var(--planet-secondary);
+    border-bottom-color: transparent;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+  body.is-principles-open .nav.overlay-open .logo {
+    color: var(--planet-black);
+  }
+  body.is-principles-open .nav.overlay-open .nav-toggle span {
+    background: var(--planet-black);
+  }
+  body.is-principles-open .nav.overlay-open .lang-toggle {
+    border-color: var(--planet-black);
+    color: var(--planet-black);
+  }
+  body.is-principles-open .nav.overlay-open .lang-toggle:hover {
+    background: var(--planet-black);
+    color: var(--planet-secondary);
+  }
   .principles-overlay__scroll {
     flex: 1;
     overflow-x: hidden;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
+    /* Nur vertikal — horizontaler Satzspiegel wie .nav-inner / .container */
     padding:
       calc(var(--nav-height, 4rem) + var(--space-4))
-      var(--space-4)
+      0
       var(--space-8);
   }
   .principles-overlay__inner {
     max-width: 1280px;
     margin: 0 auto;
     width: 100%;
+    padding: 0 var(--space-4);
+    box-sizing: border-box;
   }
   .principles-overlay__title {
     margin: 0 0 var(--space-5);
@@ -2028,7 +2046,7 @@
     font-size: var(--text-h2);
     line-height: 1;
     letter-spacing: -0.02em;
-    color: var(--planet-white);
+    color: var(--planet-black);
   }
   .principles-overlay__grid {
     display: grid;
@@ -2047,20 +2065,53 @@
     font-size: clamp(1.75rem, 3.2vw, 2.75rem);
     line-height: 1;
     letter-spacing: -0.025em;
-    color: var(--planet-white);
+    color: var(--planet-black);
   }
   .principles-overlay__col ul {
-    list-style: disc;
+    list-style: none;
     margin: 0;
-    padding: 0 0 0 1.15em;
+    padding: 0;
   }
+  .principles-overlay__col:nth-child(1) { --col-delay: 80ms; }
+  .principles-overlay__col:nth-child(2) { --col-delay: 160ms; }
+  .principles-overlay__col:nth-child(3) { --col-delay: 240ms; }
+  .principles-overlay__col:nth-child(4) { --col-delay: 320ms; }
   .principles-overlay__col li {
-    margin: 0 0 0.55em;
+    --item-delay: 0ms;
+    --rule-w: clamp(1.25rem, 2.2vw, 2rem);
+    position: relative;
+    margin: 0 0 0.7em;
+    padding-left: calc(var(--rule-w) + 0.65em);
     font-size: var(--text-body);
     line-height: 1.35;
-    color: var(--planet-white);
+    color: var(--planet-black);
   }
+  .principles-overlay__col li:nth-child(1) { --item-delay: 0ms; }
+  .principles-overlay__col li:nth-child(2) { --item-delay: 55ms; }
+  .principles-overlay__col li:nth-child(3) { --item-delay: 110ms; }
+  .principles-overlay__col li:nth-child(4) { --item-delay: 165ms; }
+  .principles-overlay__col li:nth-child(5) { --item-delay: 220ms; }
+  .principles-overlay__col li:nth-child(6) { --item-delay: 275ms; }
+  .principles-overlay__col li:nth-child(7) { --item-delay: 330ms; }
+  .principles-overlay__col li:nth-child(8) { --item-delay: 385ms; }
+  .principles-overlay__col li:nth-child(9) { --item-delay: 440ms; }
   .principles-overlay__col li:last-child { margin-bottom: 0; }
+  /* Filigrane Linie links statt Bullet — wächst beim Öffnen */
+  .principles-overlay__col li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0.65em;
+    width: 0;
+    height: var(--line-width, 1px);
+    background: var(--planet-black);
+    transform-origin: left center;
+    transition: width 720ms var(--ease-out);
+  }
+  .principles-overlay.is-open .principles-overlay__col li::before {
+    width: var(--rule-w);
+    transition-delay: calc(var(--col-delay) + var(--item-delay));
+  }
   @media (max-width: 1024px) {
     .principles-overlay__grid {
       grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -2073,12 +2124,16 @@
       grid-template-columns: 1fr;
       gap: var(--space-5);
     }
-    .principles-overlay__scroll {
+    .principles-overlay__inner {
       padding-inline: var(--space-3);
     }
   }
   @media (prefers-reduced-motion: reduce) {
     .principles-overlay { transition: none; }
+    .principles-overlay__col li::before {
+      width: var(--rule-w);
+      transition: none;
+    }
   }
 </style>
 </head>
@@ -2123,7 +2178,7 @@
           <h3><span class="de">Fokus</span><span class="en">Focus</span></h3>
           <ul>
             <li><span class="de">Wir machen Kunden zu Fans.</span><span class="en">We turn customers into fans.</span></li>
-            <li><span class="de">Wir geben mehr als wir versprechen (Underpromise, overdeliver)</span><span class="en">We give more than we promise (underpromise, overdeliver).</span></li>
+            <li><span class="de">Wir geben mehr als wir versprechen.</span><span class="en">We give more than we promise.</span></li>
             <li><span class="de">Wir setzen uns Ziele.</span><span class="en">We set goals.</span></li>
             <li><span class="de">Wir halten uns an Termine und Verpflichtungen.</span><span class="en">We keep deadlines and commitments.</span></li>
           </ul>
@@ -2157,7 +2212,7 @@
             <li><span class="de">Ich bin immer ehrlich (besonders zu mir selbst).</span><span class="en">I’m always honest (especially with myself).</span></li>
             <li><span class="de">Ich darf so sein wie ich bin.</span><span class="en">I’m allowed to be who I am.</span></li>
             <li><span class="de">Ich bin neugierig wie ein kleines Kind.</span><span class="en">I’m curious like a little kid.</span></li>
-            <li><span class="de">Ich liebe Veränderung (Geiler neuer Scheiß).</span><span class="en">I love change (exciting new stuff).</span></li>
+            <li><span class="de">Ich liebe Veränderung.</span><span class="en">I love change.</span></li>
             <li><span class="de">Ich arbeite jeden Tag an mir (Zeit für Lesen und Nachdenken).</span><span class="en">I work on myself every day (time to read and think).</span></li>
             <li><span class="de">Ich mache mich nicht zum Opfer.</span><span class="en">I don’t cast myself as the victim.</span></li>
             <li><span class="de">Ich entscheide selbst und übernehme Verantwortung.</span><span class="en">I decide for myself and take responsibility.</span></li>
@@ -2553,8 +2608,8 @@
           </div>
           <div>
             <p class="brands__copy">
-              <span class="de">der Ursprung: heute ein global agierendes Tiergesundheitsunternehmen, seit über 15 Jahren, aus eigener Kraft, ohne Fremdkapital von Investoren.</span>
-              <span class="en">the origin: today a globally operating animal-health company, for over 15 years, built under its own steam, without outside investor capital.</span>
+              <span class="de">der Ursprung: heute ein global agierendes Tiergesundheitsunternehmen, seit 15 Jahren, aus eigener Kraft, ohne Fremdkapital von Investoren.</span>
+              <span class="en">the origin: today a globally operating animal-health company, for 15 years, built under its own steam, without outside investor capital.</span>
             </p>
           </div>
         </div>
@@ -2750,8 +2805,8 @@
     </div>
 
     <p class="brands__scope reveal">
-      <span class="de">Wir suchen Unternehmen aus der Tiergesundheit im weitesten Sinne — von Nutraceuticals über Technologie bis Services. Über unsere Marke Byox sind wir auch im Humanbereich unterwegs. Du hast dort eine spannende Story? Meld dich trotzdem.</span>
-      <span class="en">We’re looking for companies in animal health in the broadest sense — from nutraceuticals to technology to services. Through our Byox brand we’re also active in the human space. Got an interesting story there? Reach out anyway.</span>
+      <span class="de">Wir suchen Unternehmen aus der Tiergesundheit im weitesten Sinne — von Nutraceuticals über Technologie bis Services.</span>
+      <span class="en">We’re looking for companies in animal health in the broadest sense — from nutraceuticals to technology to services.</span>
     </p>
   </div>
 </section>
@@ -2767,7 +2822,7 @@
     <div class="team-strip" data-team-strip>
       <article class="team-strip__person reveal">
         <div class="team-strip__shift">
-          <div class="team-strip__photo" style="background-image: url('assets/images/Inuvet_Team-Event-2023_224.jpg');" role="img" aria-label="Philipp"></div>
+          <div class="team-strip__photo" style="background-image: url('assets/images/Inuvet_Team-Event-2023_2233.jpg');" role="img" aria-label="Philipp"></div>
           <h3>Philipp</h3>
           <p class="team-strip__role">CEO</p>
           <p class="team-strip__bio">

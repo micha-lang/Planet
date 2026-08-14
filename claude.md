@@ -30,9 +30,15 @@ Patterns that live in the product (and as live examples in `UX-Styleguide.html`)
 - `planet-website.html` — aktuelle Live-/Hauptversion.
 - `planet-website-v2.html` — experimentelle Kopie für unsichere Änderungen; Assets (`planet.css`, `assets/…`) werden geteilt.
 
+## Arbeitsweise
+
+- **Keine Screenshots und keine Browser-Durchläufe zur Routine-Kontrolle.** Änderungen, die am Code eindeutig ablesbar sind, direkt umsetzen und in Worten beschreiben.
+- Nur wenn eine Ursache am Code wirklich nicht erkennbar ist (z. B. Umbruch-/Layout-Verhalten, das erst beim Rendern entsteht), im Browser nachmessen — **vorher kurz fragen**.
+
 ## Open todos (`planet-website.html`)
 
 1. **Telefonnummer** unten ergänzen (Footer / Kontakt) — inkl. echte `tel:`- und WhatsApp-Links bei „Und wie geht's weiter?“ (Anruf / WhatsApp).
 2. **E-Mail freigeben** fürs Kontaktformular — FormSubmit-Aktivierung für `hello@plnt.group` (Aktivierungslink in der ersten Mail bestätigen).
 3. **Zahlen** für die einzelnen Unternehmen recherchieren und bestätigen lassen (Marken-Metriken / Stats-Strip).
 4. **Domain** `planet.group` verbinden (öffentliche Site statt GitHub-Pages-Vorschau).
+5. **Nachfolge-Variante** der Webseite bauen — eigene Version, die gezielt nur die Zielgruppe Unternehmensnachfolge anspricht (statt beider Wege „Wachstum" und „Nachfolge").

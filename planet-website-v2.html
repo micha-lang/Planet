@@ -44,6 +44,19 @@
     --line-width: 1px;
   }
 
+  /* Nur fuer Screenreader — z. B. Markenname hinter dem Logo */
+  .visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+    border: 0;
+  }
+
   /*
     Scroll-Farbe auf html — kein Sektions-Rand zum Content darüber
     (!important: planet.css setzt html/body auf Weiß)
@@ -126,7 +139,8 @@
     color: var(--planet-white);
     max-width: min(12ch, 100%);
     margin-bottom: 0;
-    animation: hero-rise 1200ms var(--ease-out) both;
+    opacity: 0;
+    animation: hero-rise 1400ms var(--ease-out) 700ms both;
   }
   .hero-full__content.flow > h1 + * { --flow-space: var(--space-2); }
   .hero-full__sub {
@@ -135,7 +149,8 @@
     font-weight: var(--weight-body);
     color: rgba(255,255,255,0.88);
     max-width: 36ch;
-    animation: hero-rise 1200ms var(--ease-out) 180ms both;
+    opacity: 0;
+    animation: hero-rise 1400ms var(--ease-out) 1200ms both;
   }
   .hero-full__scroll {
     position: absolute;
@@ -150,7 +165,8 @@
     color: rgba(255,255,255,0.55);
     font-size: var(--text-meta);
     font-weight: var(--weight-display);
-    animation: hero-rise 1200ms var(--ease-out) 360ms both;
+    opacity: 0;
+    animation: hero-rise 1200ms var(--ease-out) 1700ms both;
   }
   .hero-full__scroll .material-symbols-outlined {
     font-size: var(--icon);
@@ -453,6 +469,11 @@
   .stack__item:nth-child(7).reveal { transition-delay: 360ms; }
   .stack__item:nth-child(8).reveal { transition-delay: 420ms; }
   .stack__item:nth-child(9).reveal { transition-delay: 480ms; }
+  .stack__item:nth-child(10).reveal { transition-delay: 540ms; }
+  .stack__item:nth-child(11).reveal { transition-delay: 600ms; }
+  .stack__item:nth-child(12).reveal { transition-delay: 660ms; }
+  .stack__item:nth-child(13).reveal { transition-delay: 720ms; }
+  .stack__item:nth-child(14).reveal { transition-delay: 780ms; }
   @media (max-width: 1024px) {
     .stack__grid {
       grid-template-columns: 1fr 1fr;
@@ -810,7 +831,7 @@
     .hero-full__overlay { animation: none; }
     .hero-full h1,
     .hero-full__sub,
-    .hero-full__scroll { animation: none; }
+    .hero-full__scroll { animation: none; opacity: 1; transform: none; }
     .hero-full__scroll .material-symbols-outlined { animation: none; }
     .reveal-slide-left,
     .reveal-slide-right,
@@ -832,22 +853,6 @@
     .fit__rule,
     .fit__item.is-visible .fit__rule {
       width: clamp(2rem, 4vw, 3.5rem);
-      transition: none;
-    }
-    .brands__spark-line,
-    .brands__brand.is-visible .brands__spark-line {
-      stroke-dashoffset: 0;
-      transition: none;
-    }
-    .brands__spark-dot,
-    .brands__brand.is-visible .brands__spark-dot {
-      opacity: 1;
-      transition: none;
-    }
-    .brands__logos > li,
-    .brands__logos.is-in > li {
-      opacity: 1;
-      transform: none;
       transition: none;
     }
     .fit__mark::before,
@@ -877,13 +882,10 @@
       transform: translate(-50%, -50%);
       transition: none;
     }
-    .compare__rows::before,
-    .compare__layout.is-visible .compare__rows::before {
-      transform: translateX(-50%) scaleY(1);
-      transition: none;
-    }
     .compare__rule::before,
-    .compare__layout.is-visible .compare__rule::before {
+    .compare__rule::after,
+    .compare__layout.is-visible .compare__rule::before,
+    .compare__layout.is-visible .compare__rule::after {
       transform: scaleX(1);
       transition: none;
     }
@@ -901,6 +903,9 @@
     }
     #karten .pillar-orbit__caption text {
       fill: var(--planet-white);
+    }
+    #unterschied {
+      --text-invert: 1;
     }
     #weiter {
       --text-invert: 1;
@@ -1088,6 +1093,73 @@
   .nav.overlay-open .lang-toggle:hover { background: var(--planet-white); color: var(--planet-primary); }
 
   /*
+    Termin-CTA — schwebt unten rechts, blendet erst ab #kriterien ein.
+    Gelb gefüllt: trägt auf Weiß, Blau, Foto und Dunkel gleich gut,
+    braucht deshalb keine Scroll-Farblogik wie Logo und Menü-Icon.
+    z-index unter Nav (101) und Overlays (100) — die decken den Button zu.
+  */
+  .book-cta {
+    position: fixed;
+    z-index: 99;
+    right: max(var(--space-4), env(safe-area-inset-right, 0px));
+    bottom: max(var(--space-4), env(safe-area-inset-bottom, 0px));
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5em;
+    height: 52px;
+    padding: 0 var(--space-4);
+    border-radius: var(--radius-pill);
+    background: var(--planet-secondary);
+    color: var(--planet-black);
+    font-family: var(--planet-font);
+    font-weight: var(--weight-display);
+    font-size: var(--text-body);
+    line-height: 1;
+    white-space: nowrap;
+    text-decoration: none;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.22);
+    opacity: 0;
+    transform: translateY(20px);
+    pointer-events: none;
+    transition:
+      opacity 400ms var(--ease-out),
+      transform 400ms var(--ease-out),
+      background 200ms var(--ease-out),
+      color 200ms var(--ease-out);
+  }
+  .book-cta.is-visible {
+    opacity: 1;
+    transform: none;
+    pointer-events: auto;
+  }
+  .book-cta:hover,
+  .book-cta:focus-visible {
+    background: var(--planet-black);
+    color: var(--planet-secondary);
+    text-decoration: none;
+  }
+  .book-cta:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 3px;
+  }
+  .book-cta .material-symbols-outlined {
+    font-size: 1.15em;
+  }
+  @media (max-width: 640px) {
+    .book-cta {
+      right: max(var(--space-3), env(safe-area-inset-right, 0px));
+      bottom: max(var(--space-3), env(safe-area-inset-bottom, 0px));
+      height: 48px;
+      padding: 0 var(--space-3);
+      font-size: var(--text-meta);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .book-cta { transition: opacity 200ms linear; transform: none; }
+    .book-cta.is-visible { transform: none; }
+  }
+
+  /*
     Zitat Variante B (Landing-Test):
     Foto sofort sichtbar im Band, scrollt langsam (Parallax).
     Text scrollt normal mit. Styleguide behält quote-type (Fade).
@@ -1195,28 +1267,60 @@
     transform: scaleX(1);
     transition-delay: 0ms;
   }
-  /* Grundsätz-Zitat: weicher Fade; Quelle weiß auf Gelb-Fläche (kein ::before-Strich) */
+  /* Grundsätz-Zitat: Quelle voll deckend; Link mit Gelb + Follower wie fit__mark */
   #grundsatz-zitat.quote-type {
+    --quote-shift: 0px;
     color: var(--planet-white);
+  }
+  /*
+    Parallax: das Bild liegt fix im Viewport, stünde also still.
+    Die Übergröße (124 % bei top:-12 %) gibt oben und unten je 12 % Spielraum —
+    genug für den gegenläufigen Drift von ±10 vh-Prozent.
+  */
+  #grundsatz-zitat .quote-type__bg img {
+    position: absolute;
+    left: 0;
+    top: -12%;
+    width: 100%;
+    height: 124%;
+    transform: translate3d(0, var(--quote-shift), 0);
+    will-change: transform;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    #grundsatz-zitat .quote-type__bg img { transform: none; }
   }
   #grundsatz-zitat .quote-type__who {
     opacity: 1;
   }
-  #grundsatz-zitat .quote-type__who .fit__mark {
+  /* planet.css setzt .quote-type__who span auf display:block — sonst beide Sprachen sichtbar */
+  #grundsatz-zitat .quote-type__who > .en { display: none; }
+  body.lang-en #grundsatz-zitat .quote-type__who > .de { display: none; }
+  body.lang-en #grundsatz-zitat .quote-type__who > .en { display: inline; }
+  #grundsatz-zitat .quote-type__who > .de,
+  #grundsatz-zitat .quote-type__who > .en {
+    opacity: 1;
     color: var(--planet-white);
-    background: var(--planet-secondary);
-    padding: 0.12em 0.3em;
-    border-radius: 0.05em;
-    isolation: auto;
+  }
+  #grundsatz-zitat .quote-type__who .fit__mark {
+    display: inline;
+    color: var(--planet-black);
+    isolation: isolate;
   }
   #grundsatz-zitat .quote-type__who .fit__mark::before {
-    content: none;
+    transform: scaleX(1);
+    transition:
+      transform 180ms var(--ease-out),
+      top 180ms var(--ease-out),
+      bottom 180ms var(--ease-out),
+      left 180ms var(--ease-out),
+      right 180ms var(--ease-out);
   }
-  #grundsatz-zitat .quote-type__who .fit__mark .de,
-  #grundsatz-zitat .quote-type__who .fit__mark .en {
-    display: inline;
-    opacity: 1;
-    color: inherit;
+  #grundsatz-zitat .quote-type__who .fit__mark:hover::before,
+  #grundsatz-zitat .quote-type__who .fit__mark:focus-visible::before {
+    top: 0.02em;
+    bottom: 0;
+    left: -0.08em;
+    right: -0.08em;
   }
   #grundsatz-zitat .photo-credit {
     z-index: 2;
@@ -1463,135 +1567,41 @@
   .brands .section-head {
     margin-bottom: var(--space-4);
   }
-  .brands__scope {
-    margin: var(--space-5) 0 0;
-    max-width: 52ch;
-    font-size: var(--text-body);
-    line-height: 1.45;
-    color: color-mix(in srgb, var(--planet-black) 78%, transparent);
-  }
-  .brands__logos {
-    list-style: none;
-    margin: 0 0 var(--space-6);
-    padding: 0;
-    display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: var(--space-4) var(--space-5);
-    width: 100%;
-    max-width: none;
-  }
-  .brands__logos > li {
-    min-width: 0;
-    opacity: 0;
-    transform: translate3d(0, 2.5rem, 0);
-    transition:
-      opacity 700ms var(--ease-out),
-      transform 1000ms var(--ease-out);
-    will-change: transform, opacity;
-  }
-  .brands__logos.is-in > li {
-    opacity: 1;
-    transform: translate3d(0, 0, 0);
-  }
-  .brands__logos > li:nth-child(1) { transition-delay: 0ms; }
-  .brands__logos > li:nth-child(2) { transition-delay: 90ms; }
-  .brands__logos > li:nth-child(3) { transition-delay: 180ms; }
-  .brands__logos > li:nth-child(4) { transition-delay: 270ms; }
-  /* Beim Rausgleiten: Reihenfolge umkehren */
-  .brands__logos:not(.is-in) > li:nth-child(1) { transition-delay: 270ms; }
-  .brands__logos:not(.is-in) > li:nth-child(2) { transition-delay: 180ms; }
-  .brands__logos:not(.is-in) > li:nth-child(3) { transition-delay: 90ms; }
-  .brands__logos:not(.is-in) > li:nth-child(4) { transition-delay: 0ms; }
-  .brands__cluster {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
-  }
-  .brands__cluster > .brands__logo-wrap {
-    width: 100%;
-    flex-shrink: 0;
-  }
-  .brands__cluster-line {
+  /* Marken-Signet — steht jetzt im jeweiligen Markenabschnitt, nicht mehr in einer Reihe */
+  .brands__mark {
     display: block;
-    width: var(--line-width);
-    height: clamp(0.85rem, 2.2vw, 1.35rem);
-    background: var(--planet-primary);
-    flex-shrink: 0;
   }
-  .brands__logo-wrap {
-    position: relative;
-    width: 100%;
-  }
-  .brands__logo-index {
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: 1;
-    pointer-events: none;
-    font-family: var(--planet-font);
-    font-size: clamp(10px, 0.95vw, 12px);
-    font-weight: var(--weight-body);
-    font-variant-numeric: tabular-nums;
-    letter-spacing: 0.04em;
-    line-height: 1;
-    color: var(--planet-primary);
-    transform: translate(-0.15em, -0.55em);
-  }
-  .brands__logo {
-    --brand-accent: var(--planet-primary);
-    display: grid;
-    place-items: center;
-    width: 100%;
-    aspect-ratio: 1 / 1;
-    overflow: hidden;
-    padding: 22%;
-    box-sizing: border-box;
-    border-radius: var(--radius-circle);
-    border: none;
-    color: color-mix(in srgb, var(--planet-black) 38%, transparent);
-    background: color-mix(in srgb, var(--planet-black) 4%, transparent);
-    text-decoration: none;
-    transition:
-      color 220ms var(--ease-out),
-      background 220ms var(--ease-out);
-  }
-  .brands__logo:hover,
-  .brands__logo:focus-visible {
-    color: var(--brand-accent);
-    background: color-mix(in srgb, var(--brand-accent) 10%, transparent);
-    text-decoration: none;
-  }
-  .brands__logo:focus-visible {
-    outline: 2px solid var(--planet-primary);
-    outline-offset: 4px;
-  }
-  .brands__logo svg {
+  .brands__mark svg {
     display: block;
-    width: 100%;
-    height: 100%;
+    width: auto;
     max-width: 100%;
-    max-height: 100%;
   }
-  .brands__logo--inuvet {
-    --brand-accent: #78b41b;
-    padding: 20%;
+  /* Hoehen einzeln, damit die sehr unterschiedlichen Seitenverhaeltnisse optisch gleich wiegen */
+  /* Inuvet und ManukaLind sind gestapelte Lockups — brauchen mehr Hoehe, um gleich stark zu wirken */
+  .brands__mark--inuvet svg { height: clamp(88px, 9vw, 124px); }
+  .brands__mark--eqx svg { height: clamp(40px, 4.2vw, 54px); }
+  .brands__mark--manukalind svg { height: clamp(96px, 10vw, 136px); }
+  .brands__mark--planimol svg { height: clamp(32px, 3.4vw, 44px); }
+  .brands__link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3em;
+    margin-top: var(--space-3);
+    font-size: var(--text-body);
+    line-height: 1.2;
+    color: var(--planet-primary);
+    text-decoration: none;
+    border-bottom: var(--line-width) solid color-mix(in srgb, var(--planet-primary) 30%, transparent);
+    padding-bottom: 3px;
+    transition: border-color 220ms var(--ease-out);
   }
-  .brands__logo--eqx {
-    --brand-accent: #006838;
-    padding: 18% 22%;
+  .brands__link:hover,
+  .brands__link:focus-visible {
+    text-decoration: none;
+    border-bottom-color: var(--planet-primary);
   }
-  .brands__logo--byox {
-    --brand-accent: #009fe3;
-    padding: 18% 22%;
-  }
-  .brands__logo--manukalind {
-    --brand-accent: #00a76d;
-    padding: 14%;
-  }
-  .brands__logo--planimol {
-    --brand-accent: #39b54a;
-    padding: 0 7%;
+  .brands__link .material-symbols-outlined {
+    font-size: 1.05em;
   }
   .brands__list {
     display: flex;
@@ -1633,21 +1643,25 @@
   .brands__brand.brands__brand--solid-after:last-child {
     border-top: 0;
   }
+  /* Vierspaltiges Raster: 1 Signet | 2 Jahr | 3–4 Beschreibung */
   .brands__top {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: var(--space-5) var(--space-7);
     align-items: start;
     margin-bottom: var(--space-5);
   }
+  /* Wrapper loest sich auf, damit Signet und Jahr echte Spalten des Rasters sind */
+  .brands__head { display: contents; }
+  .brands__body { grid-column: 3 / span 2; }
   .brands__name {
-    font-size: var(--text-h2);
-    line-height: 0.95;
+    /* traegt nur noch das Signet, der Name steckt visuell versteckt darin */
+    font-size: 0;
+    line-height: 0;
     margin: 0;
   }
   .brands__since {
     display: block;
-    margin-top: var(--space-2);
     font-size: var(--text-meta);
     opacity: 0.55;
   }
@@ -1660,121 +1674,101 @@
   .brands__copy + .brands__copy {
     margin-top: var(--space-3);
   }
-  .brands__metrics {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: var(--space-4) var(--space-5);
-  }
-  .brands__metrics:has(.brands__metric:nth-child(2):last-child) {
-    grid-template-columns: repeat(2, 1fr);
-    max-width: 66.666%;
-  }
-  .brands__metric {
-    min-width: 0;
-  }
-  .brands__metric-label {
-    display: block;
-    font-size: var(--text-meta);
-    opacity: 0.55;
-    margin-bottom: 2px;
-    line-height: 1.2;
-  }
-  .brands__metric-value {
-    display: block;
-    font-family: var(--planet-font);
-    font-weight: var(--weight-display);
-    font-size: var(--text-h2);
-    line-height: 0.95;
-    letter-spacing: -0.02em;
-    color: var(--planet-primary);
-    margin-bottom: 2px;
-    font-variant-numeric: tabular-nums;
-  }
-  .brands__spark-wrap {
-    position: relative;
-    height: 48px;
-  }
-  .brands__spark {
-    display: block;
-    width: 100%;
-    height: 100%;
-    overflow: visible;
-  }
-  .brands__spark-area {
-    fill: var(--planet-primary);
-    opacity: 0.12;
-  }
-  .brands__spark-line {
-    fill: none;
-    stroke: var(--planet-primary);
-    stroke-width: 1;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-    stroke-dasharray: 1;
-    stroke-dashoffset: 1;
-    transition: stroke-dashoffset 1.1s var(--ease-out);
-  }
-  .brands__spark-dot {
-    position: absolute;
-    right: 0;
-    top: var(--dot-y, 12%);
-    width: 7px;
-    height: 7px;
-    border-radius: var(--radius-circle);
-    background: var(--planet-primary);
-    transform: translate(40%, -50%);
-    opacity: 0;
-    transition: opacity 400ms var(--ease-out);
-  }
-  .brands__brand.is-visible .brands__spark-line {
-    stroke-dashoffset: 0;
-  }
-  .brands__brand.is-visible .brands__spark-dot {
-    opacity: 1;
-    transition-delay: 900ms;
-  }
-  .brands__metric:nth-child(1) .brands__spark-line { transition-delay: 80ms; }
-  .brands__metric:nth-child(2) .brands__spark-line { transition-delay: 180ms; }
-  .brands__metric:nth-child(3) .brands__spark-line { transition-delay: 280ms; }
-  .brands__metric:nth-child(1) .brands__spark-dot { transition-delay: 980ms; }
-  .brands__metric:nth-child(2) .brands__spark-dot { transition-delay: 1080ms; }
-  .brands__metric:nth-child(3) .brands__spark-dot { transition-delay: 1180ms; }
-  .brands__metric-years,
-  .brands__metric-range {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 2px;
-    font-size: clamp(11px, 1vw, 13px);
-    font-variant-numeric: tabular-nums;
-    letter-spacing: 0.02em;
-    opacity: 0.55;
-  }
   @media (max-width: 1024px) {
     .brands__top {
       grid-template-columns: 1fr;
       gap: var(--space-3);
       margin-bottom: var(--space-4);
     }
-    .brands__metrics,
-    .brands__metrics:has(.brands__metric:nth-child(2):last-child) {
-      grid-template-columns: 1fr;
-      max-width: none;
-      gap: var(--space-4);
+    /* gestapeltes Layout: Signet links, »seit …« oben rechts */
+    .brands__head {
+      display: grid;
+      grid-template-columns: auto auto;
+      justify-content: space-between;
+      align-items: start;
+      gap: var(--space-3);
     }
-    .brands__logos {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      max-width: none;
-      gap: var(--space-3) var(--space-4);
-    }
+    .brands__body { grid-column: auto; }
+    .brands__since { text-align: right; }
   }
   @media (max-width: 640px) {
     .brands { padding: var(--space-8) 0; }
     .brands__brand { padding: var(--space-5) 0; }
-    .brands__name,
-    .brands__metric-value { font-size: var(--text-h3); }
-    .brands__logos {
-      margin-bottom: var(--space-5);
-      gap: var(--space-3);
+  }
+
+  /* Gruppen-Kennzahlen — drei Zeilen im Blau-Band, Zahl links, Aussage rechts */
+  .figures {
+    /* großzügig, damit das Blau-Band den Screen voll erreicht, bevor es wieder geht */
+    padding: var(--space-16) 0;
+    background: transparent;
+    /* Farben folgen dem Blau-Band (--text-invert) */
+    --figures-ink: color-mix(
+      in srgb,
+      var(--planet-primary) calc((1 - var(--text-invert, 0)) * 100%),
+      var(--planet-white)
+    );
+    --figures-label-ink: color-mix(
+      in srgb,
+      var(--planet-black) calc((1 - var(--text-invert, 0)) * 100%),
+      var(--planet-white)
+    );
+    --figures-line: color-mix(in srgb, var(--figures-ink) 40%, transparent);
+  }
+  .figures__row {
+    display: grid;
+    grid-template-columns: minmax(0, 38%) minmax(0, 1fr);
+    gap: var(--space-3) var(--space-5);
+    align-items: center;
+    padding: var(--space-6) 0;
+    border-top: var(--line-width) solid var(--figures-line);
+  }
+  .figures__value {
+    margin: 0;
+    font-family: var(--planet-font);
+    font-weight: var(--weight-display);
+    font-size: var(--text-stat-xl);
+    line-height: 0.85;
+    letter-spacing: -0.03em;
+    color: var(--figures-ink);
+    font-variant-numeric: tabular-nums;
+  }
+  .figures__label {
+    margin: 0;
+    max-width: 28ch;
+    font-size: var(--text-h3);
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    color: var(--figures-label-ink);
+  }
+  /* Einleitung ueber den drei Zeilen — die erste Haarlinie gehoert schon zur ersten Zahl */
+  .figures__note {
+    margin: 0;
+    padding-bottom: var(--space-6);
+    max-width: 34ch;
+    /* gleiche Typo wie .figures__label */
+    font-size: var(--text-h3);
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    /* leicht zurueckgenommen — ueber color-mix statt opacity, sonst kollidiert es mit .reveal */
+    color: color-mix(in srgb, var(--figures-label-ink) 78%, transparent);
+  }
+  /* Geschwister-Selektoren statt nth-child: unabhaengig von Elementen vor den Zeilen */
+  .figures__note.reveal { transition-delay: 0ms; }
+  .figures__row.reveal { transition-delay: 100ms; }
+  .figures__row ~ .figures__row.reveal { transition-delay: 200ms; }
+  .figures__row ~ .figures__row ~ .figures__row.reveal { transition-delay: 300ms; }
+  @media (max-width: 640px) {
+    .figures { padding: var(--space-8) 0; }
+    .figures__row {
+      grid-template-columns: 1fr;
+      gap: var(--space-2);
+      padding: var(--space-4) 0;
+    }
+    .figures__label { font-size: var(--text-h4); max-width: none; }
+    .figures__note {
+      font-size: var(--text-h4);
+      max-width: none;
+      padding-bottom: var(--space-4);
     }
   }
 
@@ -1784,6 +1778,14 @@
     background: transparent;
   }
   .team-section .section-head { margin-bottom: var(--space-6); }
+  /* Headline kann vom Blau der Zahlen-Sektion erwischt werden — mitfaden statt schwarz bleiben */
+  #team .section-head h2 {
+    color: color-mix(
+      in srgb,
+      var(--planet-black) calc((1 - var(--text-invert, 0)) * 100%),
+      var(--planet-white)
+    );
+  }
 
   .team-strip {
     display: grid;
@@ -1970,24 +1972,41 @@
     max-width: 42ch;
     font-size: var(--text-body);
     line-height: 1.35;
-    font-weight: var(--weight-display);
+    font-weight: var(--weight-body);
   }
-  /* Vergleich — 2-Spalten-Raster + Desktop-Abbinder als 3. Spalte */
+  /* Vergleich — Investor (rot / −) vs Planet (blau / +), Abbinder rechts */
   .compare {
     --compare-main: minmax(0, 1.75fr);
     --compare-aside: minmax(14rem, 0.7fr);
     --compare-gap: clamp(var(--space-5), 4vw, var(--space-8));
+    --compare-pe-ink: color-mix(
+      in srgb,
+      color-mix(in srgb, var(--planet-black) 42%, var(--planet-white)) calc((1 - var(--text-invert, 0)) * 100%),
+      rgb(255 255 255 / 0.55)
+    );
+    --compare-planet: var(--planet-primary);
+    --compare-planet-ink: color-mix(
+      in srgb,
+      var(--compare-planet) calc((1 - var(--text-invert, 0)) * 100%),
+      var(--planet-white)
+    );
     padding: var(--space-10) 0;
     background: transparent;
   }
+  #unterschied .section-head h2 {
+    color: color-mix(
+      in srgb,
+      var(--planet-black) calc((1 - var(--text-invert, 0)) * 100%),
+      var(--planet-white)
+    );
+  }
   .compare .section-head--reveal::after {
-    background: var(--planet-primary);
+    background: var(--line-color);
   }
   .compare__layout {
     display: grid;
     gap: 0;
   }
-  /* Parent nur als Trigger — kein eigener Fade (Kinder animieren) */
   .compare__layout.reveal {
     opacity: 1;
     transform: none;
@@ -1995,11 +2014,14 @@
   .compare__head {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    /* gleicher Abstand zur Linie wie Zellen darunter (padding-bottom der Zellen) */
     padding-bottom: var(--space-5);
     margin-bottom: 0;
+    align-items: end;
   }
   .compare__side {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
     font-size: var(--text-h3);
     line-height: 1.1;
     letter-spacing: -0.015em;
@@ -2007,14 +2029,62 @@
     opacity: 0;
     transition: opacity 700ms var(--ease-out), transform 700ms var(--ease-out);
   }
+  .compare__icon {
+    position: relative;
+    display: block;
+    width: clamp(2.75rem, 4.6vw, 3.75rem);
+    height: clamp(2.75rem, 4.6vw, 3.75rem);
+    margin-bottom: 0.55em;
+    border-radius: 50%;
+  }
+  .compare__icon::before,
+  .compare__icon::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    background: var(--planet-white);
+    border-radius: 1px;
+    transform: translate(-50%, -50%);
+  }
+  .compare__icon::before {
+    width: 42%;
+    height: 3px;
+  }
   .compare__side--pe {
+    color: var(--compare-pe-ink);
     padding-right: clamp(1.25rem, 3vw, 2.5rem);
     transform: translate3d(-28px, 0, 0);
   }
+  .compare__side--pe .compare__icon {
+    background: var(--compare-pe-ink);
+  }
+  .compare__side--pe .compare__icon::before {
+    background: color-mix(
+      in srgb,
+      var(--planet-white) calc((1 - var(--text-invert, 0)) * 100%),
+      var(--planet-primary)
+    );
+  }
   .compare__side--planet {
-    color: var(--planet-primary);
+    color: var(--compare-planet-ink);
     padding-left: clamp(1.25rem, 3vw, 2.5rem);
     transform: translate3d(28px, 0, 0);
+  }
+  .compare__side--planet .compare__icon {
+    background: var(--compare-planet-ink);
+  }
+  .compare__side--planet .compare__icon::before,
+  .compare__side--planet .compare__icon::after {
+    background: color-mix(
+      in srgb,
+      var(--planet-white) calc((1 - var(--text-invert, 0)) * 100%),
+      var(--compare-planet)
+    );
+  }
+  .compare__side--planet .compare__icon::after {
+    width: 3px;
+    height: 42%;
   }
   .compare__layout.is-visible .compare__side {
     opacity: 1;
@@ -2026,40 +2096,34 @@
     position: relative;
     min-width: 0;
   }
-  .compare__rows::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 50%;
-    border-left: 1px dashed var(--planet-primary);
-    transform: translateX(-50%) scaleY(0);
-    transform-origin: top center;
-    transition: transform 1100ms var(--ease-out);
-    pointer-events: none;
-  }
-  .compare__layout.is-visible .compare__rows::before {
-    transform: translateX(-50%) scaleY(1);
-    transition-delay: 60ms;
-  }
   .compare__row { overflow: visible; }
   .compare__rule {
     position: relative;
   }
-  /* Horizontale Linie: aus der Mitte heraus zeichnen */
-  .compare__rule::before {
+  /* Gestrichelte Linie: links Investor, rechts Planet — wächst aus der Mitte */
+  .compare__rule::before,
+  .compare__rule::after {
     content: "";
     position: absolute;
-    left: 0;
-    right: 0;
     top: 0;
-    border-top: 1px dashed var(--planet-primary);
+    width: 50%;
+    border-top: 1px dashed;
     transform: scaleX(0);
-    transform-origin: center;
     transition: transform 850ms var(--ease-out);
     pointer-events: none;
   }
-  .compare__layout.is-visible .compare__rule::before {
+  .compare__rule::before {
+    left: 0;
+    border-color: var(--compare-pe-ink);
+    transform-origin: right center;
+  }
+  .compare__rule::after {
+    right: 0;
+    border-color: var(--compare-planet-ink);
+    transform-origin: left center;
+  }
+  .compare__layout.is-visible .compare__rule::before,
+  .compare__layout.is-visible .compare__rule::after {
     transform: scaleX(1);
   }
   .compare__rule-slot {
@@ -2074,7 +2138,6 @@
     z-index: 1;
     transform: translate(-50%, -50%);
     padding: 0.35em 0.75em;
-    /* Gleicher Fade wie html — kein fester Weiß-Fleck beim Scroll-Farbwechsel */
     background: color-mix(
       in srgb,
       color-mix(
@@ -2112,11 +2175,12 @@
     transition: opacity 700ms var(--ease-out), transform 700ms var(--ease-out);
   }
   .compare__a {
+    color: var(--compare-pe-ink);
     padding-right: clamp(1.25rem, 3vw, 2.5rem);
     transform: translate3d(-28px, 0, 0);
   }
   .compare__b {
-    color: var(--planet-primary);
+    color: var(--compare-planet-ink);
     padding-left: clamp(1.25rem, 3vw, 2.5rem);
     transform: translate3d(28px, 0, 0);
   }
@@ -2125,20 +2189,23 @@
     opacity: 1;
     transform: translate3d(0, 0, 0);
   }
-  /* Stagger: Linie → Label → Investor → Planet, Zeile für Zeile */
-  .compare__layout.is-visible .compare__rule--span::before { transition-delay: 100ms; }
+  .compare__layout.is-visible .compare__rule--span::before,
+  .compare__layout.is-visible .compare__rule--span::after { transition-delay: 100ms; }
   .compare__layout.is-visible .compare__rule--span .compare__label { transition-delay: 260ms; }
   .compare__layout.is-visible .compare__row:nth-child(1) .compare__a { transition-delay: 300ms; }
   .compare__layout.is-visible .compare__row:nth-child(1) .compare__b { transition-delay: 380ms; }
-  .compare__layout.is-visible .compare__row:nth-child(2) .compare__rule::before { transition-delay: 460ms; }
+  .compare__layout.is-visible .compare__row:nth-child(2) .compare__rule::before,
+  .compare__layout.is-visible .compare__row:nth-child(2) .compare__rule::after { transition-delay: 460ms; }
   .compare__layout.is-visible .compare__row:nth-child(2) .compare__label { transition-delay: 600ms; }
   .compare__layout.is-visible .compare__row:nth-child(2) .compare__a { transition-delay: 640ms; }
   .compare__layout.is-visible .compare__row:nth-child(2) .compare__b { transition-delay: 720ms; }
-  .compare__layout.is-visible .compare__row:nth-child(3) .compare__rule::before { transition-delay: 800ms; }
+  .compare__layout.is-visible .compare__row:nth-child(3) .compare__rule::before,
+  .compare__layout.is-visible .compare__row:nth-child(3) .compare__rule::after { transition-delay: 800ms; }
   .compare__layout.is-visible .compare__row:nth-child(3) .compare__label { transition-delay: 940ms; }
   .compare__layout.is-visible .compare__row:nth-child(3) .compare__a { transition-delay: 980ms; }
   .compare__layout.is-visible .compare__row:nth-child(3) .compare__b { transition-delay: 1060ms; }
-  .compare__layout.is-visible .compare__row:nth-child(4) .compare__rule::before { transition-delay: 1140ms; }
+  .compare__layout.is-visible .compare__row:nth-child(4) .compare__rule::before,
+  .compare__layout.is-visible .compare__row:nth-child(4) .compare__rule::after { transition-delay: 1140ms; }
   .compare__layout.is-visible .compare__row:nth-child(4) .compare__label { transition-delay: 1280ms; }
   .compare__layout.is-visible .compare__row:nth-child(4) .compare__a { transition-delay: 1320ms; }
   .compare__layout.is-visible .compare__row:nth-child(4) .compare__b { transition-delay: 1400ms; }
@@ -2149,7 +2216,7 @@
     line-height: 1.4;
     font-weight: var(--weight-body);
     font-style: normal;
-    color: inherit;
+    color: var(--compare-planet-ink);
     opacity: 0;
     transform: translate3d(0, 14px, 0);
     transition: opacity 700ms var(--ease-out), transform 700ms var(--ease-out);
@@ -2170,13 +2237,9 @@
       grid-column: 1;
       grid-row: 1;
     }
-    /* Haltedauer-Linie über alle drei Spalten; Label bleibt über Investor|Planet */
     .compare__rule--span {
-      grid-column: 1 / -1;
+      grid-column: 1;
       grid-row: 2;
-      display: grid;
-      grid-template-columns: var(--compare-main) var(--compare-aside);
-      column-gap: var(--compare-gap);
     }
     .compare__rows {
       grid-column: 1;
@@ -2184,15 +2247,15 @@
     }
     .compare__closing {
       grid-column: 2;
-      grid-row: 3;
+      grid-row: 2 / 4;
       margin-top: 0;
       max-width: 18ch;
-      padding-top: var(--space-4);
+      padding-top: 0.65em;
       font-size: var(--text-h3);
       line-height: 1.15;
       letter-spacing: -0.015em;
       font-style: italic;
-      color: var(--planet-primary);
+      color: var(--compare-planet-ink);
     }
   }
   @media (max-width: 720px) {
@@ -2202,6 +2265,11 @@
     .compare__b {
       font-size: var(--text-body);
       line-height: 1.25;
+    }
+    .compare__icon {
+      width: 2.25rem;
+      height: 2.25rem;
+      margin-bottom: 0.4em;
     }
     .compare__side--pe,
     .compare__a { padding-right: var(--space-3); }
@@ -2372,6 +2440,8 @@
     padding: 0 0.08em;
     margin: 0 -0.02em;
     border-radius: 0.05em;
+    /* der gelbe Marker ist ein absolut positioniertes ::before — über zwei Zeilenboxen zerfällt er */
+    white-space: nowrap;
   }
   .fit__mark:hover,
   .fit__mark:focus {
@@ -2415,6 +2485,23 @@
   .fit__mark:focus-visible {
     outline: 2px solid var(--planet-black);
     outline-offset: 3px;
+  }
+  /*
+    Pfeil im Gelb-Mark — sonst ist ein Link nicht von einer reinen Hervorhebung zu unterscheiden.
+    Selektor bewusst zweistufig: planet.css setzt .quote-type__who span auf block/0.65.
+  */
+  .fit__mark .fit__mark-arrow {
+    /*
+      inline, nicht inline-block: ein inline-block ist ein atomarer Kasten und erzeugt
+      davor eine Umbruchstelle — der Pfeil rutschte dadurch allein in die nächste Zeile
+      und der gelbe Marker zerfiel (absolut positioniertes ::before über zwei Zeilenboxen).
+    */
+    display: inline;
+    opacity: 1;
+    font-size: 0.62em;
+    line-height: 1;
+    margin-left: 0.16em;
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
   }
   @media (max-width: 640px) {
     .fit { padding: var(--space-8) 0; }
@@ -2587,6 +2674,52 @@
       transition: none;
     }
   }
+  /* Mission-Overlay: eine Spalte, gleiche Aufzählungs-Linien wie Grundsätze */
+  .principles-overlay__grid--mission {
+    grid-template-columns: 1fr;
+    max-width: 62ch;
+  }
+  .principles-overlay__grid--mission .principles-overlay__col {
+    margin-top: 0;
+  }
+  .principles-overlay__grid--mission .principles-overlay__col li {
+    margin-bottom: 1.15em;
+    line-height: 1.45;
+  }
+  .principles-overlay__tagline {
+    margin: var(--space-6) 0 0;
+    max-width: 62ch;
+    font-family: var(--planet-font);
+    font-weight: var(--weight-display);
+    font-size: var(--text-h3);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: var(--planet-black);
+  }
+  /* Mission-Sektion: Gelb-Mark auf Blau */
+  #mission .fit__mark {
+    color: var(--planet-black);
+    isolation: isolate;
+  }
+  #mission .fit__mark::before {
+    transform: scaleX(1);
+    transition:
+      transform 180ms var(--ease-out),
+      top 180ms var(--ease-out),
+      bottom 180ms var(--ease-out),
+      left 180ms var(--ease-out),
+      right 180ms var(--ease-out);
+  }
+  #mission .fit__mark:hover::before,
+  #mission .fit__mark:focus-visible::before {
+    top: 0.02em;
+    bottom: 0;
+    left: -0.08em;
+    right: -0.08em;
+  }
+  #mission .fit__mark:focus-visible {
+    outline-color: var(--planet-white);
+  }
 </style>
 </head>
 <body>
@@ -2605,9 +2738,9 @@
 
 <div class="nav-overlay" role="dialog" aria-label="Navigation">
   <nav class="nav-overlay-links">
+    <a class="nav-overlay-link" href="#unternehmer"><span class="de">Unternehmer</span><span class="en">Entrepreneurs</span></a>
     <a class="nav-overlay-link" href="#haltung"><span class="de">Haltung</span><span class="en">Stance</span></a>
     <a class="nav-overlay-link" href="#unterschied"><span class="de">Unterschied</span><span class="en">Difference</span></a>
-    <a class="nav-overlay-link" href="#unternehmer"><span class="de">Unternehmer</span><span class="en">Entrepreneurs</span></a>
     <a class="nav-overlay-link" href="#mission"><span class="de">Mission</span><span class="en">Mission</span></a>
     <a class="nav-overlay-link" href="#wege"><span class="de">Zwei Wege</span><span class="en">Two paths</span></a>
     <a class="nav-overlay-link" href="#infrastruktur"><span class="de">Infrastruktur</span><span class="en">Infrastructure</span></a>
@@ -2679,6 +2812,43 @@
   </div>
 </div>
 
+<div class="principles-overlay" id="unternehmensziel" role="dialog" aria-modal="true" aria-labelledby="mission-overlay-title" aria-hidden="true">
+  <div class="principles-overlay__scroll">
+    <div class="principles-overlay__inner">
+      <h2 class="principles-overlay__title" id="mission-overlay-title">
+        <span class="de">Unternehmensziel: Glück</span>
+        <span class="en">Corporate goal: Happiness</span>
+      </h2>
+      <div class="principles-overlay__grid principles-overlay__grid--mission">
+        <article class="principles-overlay__col">
+          <ul>
+            <li>
+              <span class="de">Unsere Mission ist dein Glück und unser Glück. Wir sind überzeugt, dass erfolgreiche und glückliche Unternehmen nur von glücklichen Menschen geschaffen werden können. Unternehmensziel: Glück ist das Fundament unseres Erfolgs, und Erfolg ist die Basis unseres Glücks.</span>
+              <span class="en">Our mission is your happiness and ours. We are convinced that successful and happy companies can only be created by happy people. Corporate goal: Happiness is the foundation of our success, and success is the basis of our happiness.</span>
+            </li>
+            <li>
+              <span class="de">Doch eines ist klar: Glück jagt man nicht hinterher – man kultiviert es jeden Tag. Wie alles im Leben wächst auch das Glück, wenn man daran arbeitet. Und machen wir uns nichts vor – es ist nicht immer einfach. Aber einfach ist auch nicht das, wonach wir suchen. Was zählt, ist die Mühe, die wir hineinstecken, und der Fortschritt, den wir Schritt für Schritt machen.</span>
+              <span class="en">But one thing is clear: you don’t chase happiness — you cultivate it every day. Like everything in life, happiness grows when you work at it. And let’s be honest — it’s not always easy. But easy isn’t what we’re after. What counts is the effort we put in, and the progress we make step by step.</span>
+            </li>
+            <li>
+              <span class="de">Mit Bescheidenheit, den Füßen fest auf dem Boden und den Augen auf massive 10x-Ziele gerichtet, wollen wir die Welt um uns herum jeden Tag ein kleines bisschen besser und schöner machen. Mit unseren Produkten, unserem Service und unserer Kreativität möchten wir Freude verbreiten – immer mit Begeisterung und einem Lächeln. Wir streben danach, gute Menschen zu sein – mutig, gerecht, diszipliniert und weise. Wir suchen nach einem Selbstwertgefühl, das unabhängig von äußeren Einflüssen und Meinungen ist. Wir wollen bedeutsame Beziehungen zu unseren Mitmenschen aufbauen. Und vor allem streben wir nach Glück und Zufriedenheit.</span>
+              <span class="en">With humility, feet firmly on the ground and eyes on massive 10x goals, we want to make the world around us a little better and more beautiful every day. With our products, our service and our creativity we want to spread joy — always with enthusiasm and a smile. We strive to be good people — courageous, just, disciplined and wise. We seek a sense of self-worth independent of outside influences and opinions. We want to build meaningful relationships with the people around us. And above all we strive for happiness and contentment.</span>
+            </li>
+            <li>
+              <span class="de">Unternehmensziel: Glück ist für alle, die sich voller Begeisterung auf diese Reise einlassen. Es ist für alle, die bereit sind, jeden Tag ihr Bestes zu geben, um zu wachsen und sich weiterzuentwickeln. Unternehmensziel: Glück ist für Menschen, die mit ganzem Herzen lieben – die Menschen, Tiere und das Leben selbst wertschätzen. Es ist für die Rechtschaffenen, die den Mut haben, das Richtige zu tun. Für die Fröhlichen, die das Leben mit Leichtigkeit sehen. Für die Frechen, die den Mut haben, anders zu denken. Für die Dankbaren, die in jedem Moment etwas Gutes finden. Und für die Pippi Langstrumpfs dieser Welt, die mit Fantasie und Abenteuerlust Neues erschaffen. Unternehmensziel: Glück ist für Dich. Und für mich. Und für jeden, der daran glaubt, dass Glück wächst, wenn wir daran arbeiten.</span>
+              <span class="en">Corporate goal: Happiness is for everyone who throws themselves into this journey with enthusiasm. It is for everyone ready to give their best every day to grow and keep developing. Corporate goal: Happiness is for people who love with their whole heart — who value people, animals and life itself. It is for the upright who have the courage to do the right thing. For the cheerful who see life with lightness. For the bold who dare to think differently. For the grateful who find something good in every moment. And for the Pippi Longstockings of this world who create something new with imagination and a thirst for adventure. Corporate goal: Happiness is for you. And for me. And for everyone who believes that happiness grows when we work at it.</span>
+            </li>
+          </ul>
+        </article>
+      </div>
+      <p class="principles-overlay__tagline">
+        <span class="de">Jeden Tag ein bisschen geiler.</span>
+        <span class="en">A little more awesome every day.</span>
+      </p>
+    </div>
+  </div>
+</div>
+
 <!-- IMPRESSUM / DATENSCHUTZ — :target-Overlays, Platzhalter bis juristische Texte liegen -->
 <div class="legal-overlay" id="impressum" role="dialog" aria-modal="true" aria-labelledby="impressum-title">
   <div class="legal-overlay__scroll">
@@ -2725,7 +2895,7 @@
 <!-- HERO -->
 <section class="hero-full" id="top">
   <div class="hero-full__media" aria-hidden="true">
-    <img src="assets/images/283---Inuvet-Sommerfest-2026_Tag-01_283.jpg" alt="">
+    <img src="assets/images/279---Inuvet-Sommerfest-2026_Tag-01_279.jpg" alt="">
     <div class="hero-full__overlay"></div>
   </div>
   <div class="hero-full__content flow">
@@ -2761,10 +2931,66 @@
         <p class="stat-strip__label"><span class="de">Marken unter einem Dach</span><span class="en">Brands under one roof</span></p>
       </div>
       <div class="stat-strip__item reveal">
-        <div class="stat-strip__num"><span class="counter" data-target="33" data-suffix="&nbsp;%" data-start="0">0&nbsp;%</span></div>
+        <div class="stat-strip__num"><span class="counter" data-target="18" data-suffix="&nbsp;%" data-start="0">0&nbsp;%</span></div>
         <p class="stat-strip__label"><span class="de">Ø jährliches Umsatzwachstum der Gruppe</span><span class="en">Avg. annual revenue growth of the group</span></p>
       </div>
     </div>
+  </div>
+</section>
+
+<!-- UNTERNEHMER -->
+<section class="stance" id="unternehmer">
+  <div class="container">
+    <div class="section-head section-head--reveal reveal">
+      <div>
+        <h2>
+          <span class="de">Du bist Unternehmer</span>
+          <span class="en">You’re an entrepreneur</span>
+        </h2>
+      </div>
+    </div>
+    <ul class="fit__list">
+      <li class="fit__item reveal">
+        <div class="fit__cue" aria-hidden="true">
+          <span class="fit__rule"></span>
+        </div>
+        <p class="fit__text">
+          <span class="de">Du hast gegründet.</span>
+          <span class="en">You founded it.</span>
+        </p>
+      </li>
+      <li class="fit__item reveal">
+        <div class="fit__cue" aria-hidden="true">
+          <span class="fit__rule"></span>
+        </div>
+        <p class="fit__text">
+          <span class="de">Du trägst jeden Tag Verantwortung.</span>
+          <span class="en">You carry the responsibility every day.</span>
+        </p>
+      </li>
+      <li class="fit__item reveal">
+        <div class="fit__cue" aria-hidden="true">
+          <span class="fit__rule"></span>
+        </div>
+        <p class="fit__text">
+          <span class="de">Du gehst Risiken ein.</span>
+          <span class="en">You take the risks.</span>
+        </p>
+      </li>
+      <li class="fit__item reveal">
+        <div class="fit__cue" aria-hidden="true">
+          <span class="fit__rule"></span>
+        </div>
+        <p class="fit__text">
+          <span class="de">Du hast Rückschläge weggesteckt und Erfolge gefeiert.</span>
+          <span class="en">You’ve absorbed setbacks and celebrated wins.</span>
+        </p>
+      </li>
+    </ul>
+    <p class="stance-lines__close reveal">
+      <span class="de">Wir kennen jeden dieser Sätze. Aus eigener Erfahrung.</span>
+      <span class="en">We know every one of those lines. First-hand.</span>
+    </p>
   </div>
 </section>
 
@@ -2783,7 +3009,7 @@
       <div class="stance__media reveal-scale">
         <div class="pillar-orbit">
           <div class="pillar-orbit__media">
-            <div class="pillar-circle-img" style="background-image: url('assets/images/3---Inuvet-Sommerfest-2026_Tag-01_001.jpg');" role="img" aria-label=""></div>
+            <div class="pillar-circle-img" style="background-image: url('assets/images/326---Inuvet-Sommerfest-2026_Tag-01_326.jpg');" role="img" aria-label=""></div>
           </div>
           <svg class="pillar-orbit__caption" viewBox="0 0 100 100" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
             <defs>
@@ -2809,8 +3035,9 @@
   </div>
 </section>
 
-<!-- OFFENE KARTEN — Bildtext, Text links / Bild rechts -->
-<section class="stance stance--flip" id="karten" data-band-blue>
+<!-- KARTEN → UNTERSCHIED → ZITAT → MISSION → WEGE — ein Blau-Band, kein Weißblitz dazwischen -->
+<div data-band-blue>
+<section class="stance stance--flip" id="karten">
   <div class="container">
     <div class="stance__grid">
       <div class="stance__body flow reveal-slide-left">
@@ -2826,7 +3053,7 @@
       <div class="stance__media reveal-scale">
         <div class="pillar-orbit">
           <div class="pillar-orbit__media">
-            <div class="pillar-circle-img" style="background-image: url('assets/images/279---Inuvet-Sommerfest-2026_Tag-01_279.jpg');" role="img" aria-label=""></div>
+            <div class="pillar-circle-img" style="background-image: url('assets/images/273---Inuvet-Sommerfest-2026_Tag-01_273.jpg');" role="img" aria-label=""></div>
           </div>
           <svg class="pillar-orbit__caption" viewBox="0 0 100 100" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
             <defs>
@@ -2856,10 +3083,14 @@
     <div class="compare__layout reveal">
       <div class="compare__head">
         <span class="compare__side compare__side--pe">
+          <span class="compare__icon" aria-hidden="true"></span>
           <span class="de">Investor</span>
           <span class="en">Investor</span>
         </span>
-        <span class="compare__side compare__side--planet">Planet</span>
+        <span class="compare__side compare__side--planet">
+          <span class="compare__icon" aria-hidden="true"></span>
+          Planet
+        </span>
       </div>
       <div class="compare__rule compare__rule--span">
         <span class="compare__rule-slot">
@@ -2875,7 +3106,7 @@
         </div>
         <div class="compare__row">
           <div class="compare__rule">
-            <span class="compare__label"><span class="de">Maßstab</span><span class="en">Yardstick</span></span>
+            <span class="compare__label"><span class="de">Maßstab & Werte</span><span class="en">Yardstick & values</span></span>
           </div>
           <div class="compare__cells">
             <span class="compare__a"><span class="de">Rendite zum Zeitpunkt des Verkaufs</span><span class="en">Return at the time of sale</span></span>
@@ -2902,75 +3133,14 @@
         </div>
       </div>
       <p class="compare__closing">
-        <span class="de">Dein Lebenswerk verdient eine Zukunft. Nicht bei einem Finanzinvestor. Sondern bei Unternehmern, die weiterbauen statt weiterverkaufen.</span>
+        <span class="de">Dein Lebenswerk verdient eine Zukunft. Nicht bei einem Finanzinvestor. Sondern mit Unternehmern, die weiterbauen statt weiterverkaufen.</span>
         <span class="en">Your life’s work deserves a future. Not with a financial investor. But with entrepreneurs who keep building instead of selling on.</span>
       </p>
     </div>
   </div>
 </section>
 
-<!-- UNTERNEHMER -->
-<section class="stance" id="unternehmer">
-  <div class="container">
-    <div class="section-head section-head--reveal reveal">
-      <div>
-        <h2>
-          <span class="de">Unternehmer kaufen Unternehmer.</span>
-          <span class="en">Entrepreneurs buying from entrepreneurs.</span>
-        </h2>
-      </div>
-    </div>
-    <ul class="fit__list">
-      <li class="fit__item reveal">
-        <div class="fit__cue" aria-hidden="true">
-          <span class="fit__index">01</span>
-          <span class="fit__rule"></span>
-        </div>
-        <p class="fit__text">
-          <span class="de">Du hast gegründet.</span>
-          <span class="en">You founded it.</span>
-        </p>
-      </li>
-      <li class="fit__item reveal">
-        <div class="fit__cue" aria-hidden="true">
-          <span class="fit__index">02</span>
-          <span class="fit__rule"></span>
-        </div>
-        <p class="fit__text">
-          <span class="de">Du trägst jeden Tag Verantwortung.</span>
-          <span class="en">You carry the responsibility every day.</span>
-        </p>
-      </li>
-      <li class="fit__item reveal">
-        <div class="fit__cue" aria-hidden="true">
-          <span class="fit__index">03</span>
-          <span class="fit__rule"></span>
-        </div>
-        <p class="fit__text">
-          <span class="de">Du gehst Risiken ein.</span>
-          <span class="en">You take the risks.</span>
-        </p>
-      </li>
-      <li class="fit__item reveal">
-        <div class="fit__cue" aria-hidden="true">
-          <span class="fit__index">04</span>
-          <span class="fit__rule"></span>
-        </div>
-        <p class="fit__text">
-          <span class="de">Du hast Rückschläge weggesteckt und Erfolge gefeiert.</span>
-          <span class="en">You’ve absorbed setbacks and celebrated wins.</span>
-        </p>
-      </li>
-    </ul>
-    <p class="stance-lines__close reveal">
-      <span class="de">Niemand versteht diesen Weg besser als Unternehmer. Wir sind selbst welche.</span>
-      <span class="en">Nobody understands that path better than entrepreneurs. We are ones ourselves.</span>
-    </p>
-  </div>
-</section>
-
-<!-- Zitat + Mission + Wege — Blau schon unter dem Foto, sichtbar erst ab Mission -->
-<div data-band-blue>
+<!-- Zitat + Mission + Wege — im selben Blau-Band, sonst blitzt es dazwischen weiss auf -->
 <section class="quote-type" id="grundsatz-zitat" data-quote-type>
   <div class="quote-type__bg" aria-hidden="true">
     <img src="assets/images/149---Inuvet-Sommerfest-2026_Tag-01_149.jpg" alt="">
@@ -2984,10 +3154,8 @@
       </p>
     </blockquote>
     <footer class="quote-type__who">
-      <a class="fit__mark" href="#grundsaetze">
-        <span class="de">aus unseren Unternehmensgrundsätzen</span>
-        <span class="en">from our company principles</span>
-      </a>
+      <span class="de">aus unseren <a class="fit__mark" href="#grundsaetze">Unternehmensgrundsätzen<span class="material-symbols-outlined fit__mark-arrow" aria-hidden="true">arrow_outward</span></a></span>
+      <span class="en">from our <a class="fit__mark" href="#grundsaetze">company principles<span class="material-symbols-outlined fit__mark-arrow" aria-hidden="true">arrow_outward</span></a></span>
     </footer>
   </div>
   <p class="photo-credit">
@@ -3001,16 +3169,16 @@
     <div class="section-head section-head--reveal reveal">
       <div>
         <h2>
-          <span class="de">Du wirst Teil einer Mission.</span>
-          <span class="en">You become part of a mission.</span>
+          <span class="de">Du wirst Teil einer <a class="fit__mark" href="#unternehmensziel">Mission<span class="material-symbols-outlined fit__mark-arrow" aria-hidden="true">arrow_outward</span></a></span>
+          <span class="en">You become part of a <a class="fit__mark" href="#unternehmensziel">mission<span class="material-symbols-outlined fit__mark-arrow" aria-hidden="true">arrow_outward</span></a></span>
         </h2>
       </div>
     </div>
     <div class="stance__grid">
       <div class="mission__body flow reveal-slide-left">
         <p>
-          <span class="de">Gemeinsam verbessern wir das Leben von Tieren — mit starken Marken, innovativen Produkten und echtem Engagement. Wir bauen Unternehmen nicht nur für den Erfolg, sondern für eine Mission.</span>
-          <span class="en">Together we improve the lives of animals — with strong brands, innovative products and real commitment. We don’t build companies for success alone, but for a mission.</span>
+          <span class="de">Gemeinsam verbessern wir das Leben von Tieren — mit starken Marken, innovativen Produkten und echtem Engagement. Wir bauen Unternehmen nicht nur für den Erfolg, sondern für eine <a class="fit__mark" href="#unternehmensziel">Mission<span class="material-symbols-outlined fit__mark-arrow" aria-hidden="true">arrow_outward</span></a>.</span>
+          <span class="en">Together we improve the lives of animals — with strong brands, innovative products and real commitment. We don’t build companies for success alone, but for a <a class="fit__mark" href="#unternehmensziel">mission<span class="material-symbols-outlined fit__mark-arrow" aria-hidden="true">arrow_outward</span></a>.</span>
         </p>
         <p>
           <span class="de">Unser Unternehmensziel heißt Glück. Wir glauben, dass erfolgreiche Unternehmen bei glücklichen Menschen beginnen. Deshalb fördern wir nicht nur Unternehmenswachstum, sondern auch persönliches Wachstum — Unternehmer lernen bei uns voneinander.</span>
@@ -3020,14 +3188,14 @@
       <div class="stance__media reveal-scale">
         <div class="pillar-orbit">
           <div class="pillar-orbit__media">
-            <div class="pillar-circle-img" style="background-image: url('assets/images/Inuvet_Team-Event-2023_206.jpg');" role="img" aria-label=""></div>
+            <div class="pillar-circle-img" style="background-image: url('assets/images/160---Inuvet-Sommerfest-2026_Tag-01_160.jpg');" role="img" aria-label=""></div>
           </div>
           <svg class="pillar-orbit__caption" viewBox="0 0 100 100" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
             <defs>
               <path id="orbit-mission" fill="none" d="M50,50 m-47,0 a47,47 0 1,1 94,0 a47,47 0 1,1 -94,0"/>
             </defs>
             <text>
-              <textPath href="#orbit-mission" xlink:href="#orbit-mission" startOffset="8%">Bild: Inuvet Team Event</textPath>
+              <textPath href="#orbit-mission" xlink:href="#orbit-mission" startOffset="8%">Bild: Planet Sommerparty 2026</textPath>
             </text>
           </svg>
         </div>
@@ -3166,6 +3334,46 @@
           <span class="en">Find and keep the right people. Recruiting, onboarding, processes — so your team grows without HR becoming your full-time job.</span>
         </p>
       </article>
+      <article class="stack__item flow reveal">
+        <span class="material-symbols-outlined icon--lg stack__icon" aria-hidden="true">verified</span>
+        <h3><span class="de">QM</span><span class="en">Quality</span></h3>
+        <p>
+          <span class="de">Prozesse, die halten. Audits, Chargendoku, Reklamationen — damit Qualität nicht vom Zufall abhängt, wenn die Stückzahl steigt.</span>
+          <span class="en">Processes that hold. Audits, batch records, complaints — so quality doesn’t depend on luck when volume grows.</span>
+        </p>
+      </article>
+      <article class="stack__item flow reveal">
+        <span class="material-symbols-outlined icon--lg stack__icon" aria-hidden="true">auto_awesome</span>
+        <h3><span class="de">K.I.</span><span class="en">AI</span></h3>
+        <p>
+          <span class="de">Automatisieren, wo es Sinn ergibt. Text, Daten, interne Abläufe — KI als Werkzeug, nicht als Show. Damit dein Team an dem arbeitet, was nur Menschen können.</span>
+          <span class="en">Automate where it makes sense. Copy, data, internal workflows — AI as a tool, not a show. So your team works on what only people can do.</span>
+        </p>
+      </article>
+      <article class="stack__item flow reveal">
+        <span class="material-symbols-outlined icon--lg stack__icon" aria-hidden="true">precision_manufacturing</span>
+        <h3><span class="de">Produktion und Verpackung</span><span class="en">Production &amp; packaging</span></h3>
+        <p>
+          <span class="de">Abfüllung, Konfektionierung, Packmittel. Wir bringen dein Produkt in eine Form, die Praxen und Lager verstehen — ohne dass du eine eigene Linie bauen musst.</span>
+          <span class="en">Filling, co-packing, packaging. We get your product into a form practices and warehouses understand — without you having to build a line of your own.</span>
+        </p>
+      </article>
+      <article class="stack__item flow reveal">
+        <span class="material-symbols-outlined icon--lg stack__icon" aria-hidden="true">policy</span>
+        <h3><span class="de">Regulatory Affairs</span><span class="en">Regulatory Affairs</span></h3>
+        <p>
+          <span class="de">Zulassung, Kennzeichnung, Vigilanz. Wir kennen die Regeln in der Tiergesundheit — damit dein Produkt darf, was es verspricht.</span>
+          <span class="en">Registration, labelling, vigilance. We know the rules in animal health — so your product is allowed to do what it claims.</span>
+        </p>
+      </article>
+      <article class="stack__item flow reveal">
+        <span class="material-symbols-outlined icon--lg stack__icon" aria-hidden="true">account_tree</span>
+        <h3><span class="de">Project Management</span><span class="en">Project Management</span></h3>
+        <p>
+          <span class="de">Viele Baustellen, ein Takt. Launch, Integration, Umbau — wir halten Termine und Abhängigkeiten, damit nichts zwischen den Stühlen liegt.</span>
+          <span class="en">Many workstreams, one beat. Launch, integration, rebuild — we keep dates and dependencies, so nothing falls between the cracks.</span>
+        </p>
+      </article>
     </div>
   </div>
 </section>
@@ -3182,173 +3390,43 @@
       </div>
     </div>
 
-    <ul class="brands__logos" data-brands-logos aria-label="Marken">
-      <li>
-        <div class="brands__logo-wrap">
-          <span class="brands__logo-index" aria-hidden="true">01</span>
-          <a class="brands__logo brands__logo--inuvet" href="#marke-inuvet" aria-label="Inuvet">
-            <svg viewBox="0 0 113.4 113.4" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" fill="none">
-              <g fill="#000">
-                <path d="M19.4 74.3c0 1.4-1.1 2.6-2.6 2.6s-2.6-1.2-2.6-2.6 1.1-2.5 2.6-2.5 2.5 1.2 2.5 2.5ZM14.7 78.9h4.3v15.4h-4.3z"/>
-                <path d="M23.1 78.9h3.8l.2 2.1c1.5-1.8 3.1-2.5 5.1-2.5s3.5.7 4.2 2.1c.5.9.7 2 .7 4.1v9.7h-4.3v-8.9c0-1.3 0-1.8-.3-2.3-.3-.6-.8-.9-1.6-.9-1.2 0-2.6 1.1-3.5 2.8v9.3h-4.3z"/>
-                <path d="M50.5 92.6c-1.4 1.5-2.8 2.1-4.7 2.1s-3.4-.8-4.2-2.2c-.5-.9-.7-2.1-.7-4.2v-9.5h4.3v8.7c0 2.6.5 3.4 1.9 3.4s2.3-.6 3.1-1.9v-10.2h4.3v15.4h-3.8l-.3-1.7z"/>
-                <path d="M56.8 78.9h4.8l3.6 10.3 3.6-10.3h4.3l-6.3 15.4h-3.9l-6.1-15.4z"/>
-                <path d="M78.1 87.9c.2 2.6 1.5 3.7 4.4 3.7s2.7-.3 4.4-1.2l1 2.8c-1.8 1.1-3.8 1.6-6.4 1.6-5.2 0-7.8-2.5-7.8-7.7s2.8-8.6 7.5-8.6 6.8 2.6 6.8 7.6v1.8h-9.9zm6.1-2.8c-.2-2.4-1.1-3.5-2.9-3.5s-2.9 1.1-3.2 3.5h6.1z"/>
-                <path d="M89.7 82.4l.3-3.4h2.5l.2-3.7 4-1.4v5.1h3.8l-.3 3.4h-3.5v5.6c0 2.8.2 3.3 1.6 3.3s1.3-.2 2.1-.5l.8 2.7c-1.5.9-3 1.3-4.5 1.3s-3-.6-3.7-1.8c-.4-.8-.6-2-.6-4.2v-6.5h-2.7z"/>
-                <path d="M81.4 32h-.3v1h.2c.5 0 .7-.3.7-.6s-.1-.5-.6-.5m.6 3.1-.8-1.5v1.5h-.8v-3.7h1.3c.9 0 1.2.4 1.2 1s-.3 1-.8 1c0 0 .2.3.3.5l.7 1.2h-1zM78.9 33.3c0 1.4 1.1 2.6 2.6 2.6s2.6-1.2 2.6-2.6-1.1-2.6-2.6-2.6-2.6 1.2-2.6 2.6m6.1 0c0 1.9-1.6 3.5-3.5 3.5s-3.6-1.5-3.6-3.5 1.6-3.5 3.6-3.5 3.5 1.5 3.5 3.5"/>
-              </g>
-              <g fill="#78b41b">
-                <path d="M28.7 54.5c1.3 5.2 5.6 9 11.1 10.7 4.1-4.1 6.1-9.5 4.8-14.7-1.3-5.2-5.6-9-11.1-10.7-4.1 4.1-6.1 9.5-4.8 14.7z"/>
-                <path d="M38.6 32.3c.7 5.3 4.4 9.7 9.7 12 4.6-3.6 7.2-8.6 6.6-14-.6-5.3-4.4-9.7-9.7-12-4.6 3.6-7.2 8.7-6.5 14z"/>
-                <path d="M84.6 54.5c-1.3 5.2-5.6 9-11.1 10.7-4.1-4.1-6.1-9.5-4.8-14.7 1.3-5.2 5.6-9 11.1-10.7 4.1 4.1 6.1 9.5 4.8 14.7z"/>
-                <path d="M74.8 32.3c-.7 5.3-4.4 9.7-9.7 12-4.6-3.6-7.2-8.6-6.6-14 .6-5.3 4.4-9.7 9.7-12 4.6 3.6 7.2 8.7 6.6 14z"/>
-              </g>
-            </svg>
-          </a>
-        </div>
-      </li>
-      <li>
-        <div class="brands__logo-wrap">
-          <span class="brands__logo-index" aria-hidden="true">02</span>
-          <a class="brands__logo brands__logo--eqx" href="#marke-eqx" aria-label="EQX">
-            <svg viewBox="0 0 212.6 85.04" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-              <polygon fill="#0f4" points="212.67 -.11 195.3 -.11 178.89 23.06 162.47 -.11 145.1 -.11 170.2 35.32 145.1 70.75 162.47 70.75 178.89 47.58 195.3 70.75 212.67 70.75 187.57 35.32 212.67 -.11"/>
-              <polygon fill="#006838" points="49.68 14.06 49.68 -.11 14.24 -.11 .07 -.11 .07 70.75 14.24 70.75 49.68 70.75 49.68 56.58 14.24 56.58 14.24 42.41 35.5 42.41 35.5 28.23 14.24 28.23 14.24 14.06 49.68 14.06"/>
-              <path fill="#006838" d="M134.72 35.32C134.72 15.78 118.82-.11 99.28-.11s-35.43 15.89-35.43 35.43c0 17.11 12.19 31.43 28.35 34.72v14.89h14.17v-14.89c16.15-3.29 28.35-17.61 28.35-34.72ZM99.28 56.58c-11.72 0-21.26-9.54-21.26-21.26s9.54-21.26 21.26-21.26 21.26 9.54 21.26 21.26-9.54 21.26-21.26 21.26Z"/>
-            </svg>
-          </a>
-        </div>
-      </li>
-      <li>
-        <div class="brands__cluster">
-          <div class="brands__logo-wrap">
-            <span class="brands__logo-index" aria-hidden="true">03</span>
-            <a class="brands__logo brands__logo--byox" href="#marke-byox" aria-label="Byox">
-              <svg viewBox="0 0 85.1 36.4" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                <g fill="#009fe3">
-                  <path d="M5 18.3c0 3.8 2.5 6.2 5.7 6.2s5.6-2.6 5.6-6.2-2.2-6.1-5.6-6.1-5.7 2.5-5.7 6.1M5.2 28.8H0V0h5.2v10.3c1.9-1.9 4-2.8 6.5-2.8 5.4 0 9.8 4.5 9.8 10.9s-4.7 10.9-9.9 10.9-4.5-.9-6.4-2.7v2.2z"/>
-                  <polygon points="37.7 8 31.8 21 26.4 8 21 8 28.9 27.2 24.7 36.4 30 36.4 43.1 8 37.7 8"/>
-                  <path d="M47.5 18.4c0 3.5 2.2 6 5.6 6s5.7-2.3 5.7-6-2.3-6-5.7-6-5.6 2.5-5.6 6M64 18.4c0 6-4.7 10.9-11 10.9s-10.8-4.8-10.8-10.9 5.1-10.9 10.8-10.9 11 4.8 11 10.9"/>
-                  <polygon points="78.2 8 74.1 13.7 70 8 63.9 8 71.1 17.8 63.2 28.8 69.2 28.8 74.1 22 79 28.8 85.1 28.8 77.1 17.8 84.2 8 78.2 8"/>
-                </g>
-              </svg>
-            </a>
-          </div>
-          <span class="brands__cluster-line" aria-hidden="true"></span>
-          <div class="brands__logo-wrap">
-            <span class="brands__logo-index" aria-hidden="true">03A</span>
-            <a class="brands__logo brands__logo--manukalind" href="#marke-byox" aria-label="ManukaLind">
-              <svg viewBox="0 0 59 88.9" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                <g fill="#00a76d">
-                  <polygon points="28.9 12.2 26.1 13.9 26.1 20.3 28.9 22 31.7 23.6 34.6 22 37.4 20.3 37.4 13.9 31.7 10.6 28.9 12.2"/>
-                  <polygon points="19.9 3.2 19.9 9.7 25.5 12.9 28.4 11.3 31.2 9.7 31.2 3.2 25.5 0 19.9 3.2"/>
-                  <polygon points="25.5 21.3 19.9 24.5 19.9 31 25.5 34.2 28.4 32.6 31.2 31 31.2 24.5 28.4 22.9 25.5 21.3"/>
-                  <polygon points="35.1 22.9 32.3 24.5 32.3 31 35.1 32.6 37.9 34.2 40.8 32.6 43.6 31 43.6 24.5 40.8 22.9 37.9 21.3 35.1 22.9"/>
-                  <polygon points="44.1 23.6 49.8 20.3 49.8 13.9 44.1 10.6 38.5 13.9 38.5 20.3 41.3 22 44.1 23.6"/>
-                  <polygon points="43.6 52.2 43.6 45.8 40.8 44.1 37.9 42.5 35.1 44.1 32.3 45.8 32.3 52.2 37.9 55.5 43.6 52.2"/>
-                  <polygon points="7.5 24.5 7.5 31 13.1 34.2 18.8 31 18.8 24.5 13.1 21.3 7.5 24.5"/>
-                  <polygon points="49.8 41.6 49.8 35.1 44.1 31.9 41.3 33.5 38.5 35.1 38.5 41.6 41.3 43.2 44.1 44.8 49.8 41.6"/>
-                  <polygon points="34.6 43.2 37.4 41.6 37.4 35.1 34.6 33.5 31.7 31.9 28.9 33.5 26.1 35.1 26.1 41.6 28.9 43.2 31.7 44.8 34.6 43.2"/>
-                  <polygon points="31.2 52.2 31.2 45.8 28.4 44.1 25.5 42.5 19.9 45.8 19.9 52.2 25.5 55.5 31.2 52.2"/>
-                </g>
-                <g fill="#231f20">
-                  <path d="M13.3 74.7h-2.3l-.8-6.8-2.7 5.6h-1.7l-2.7-5.6-.8 6.8H0l1.4-11h1.9l3.4 7.2 3.4-7.2h1.9l1.3 11z"/>
-                  <path d="M20.8 67.2h2.1v7.5h-2.1v-1.1c-.5.8-1.5 1.3-2.5 1.3-2.1 0-3.6-1.6-3.6-3.9s1.5-3.9 3.6-3.9 1.9.4 2.4 1.2v-1zm-.1 3.8c0-1.1-.9-2-2-2s-1.9.9-1.9 2 .8 2 1.9 2 1.9-.9 1.9-2z"/>
-                  <path d="M32.2 70.6v4.1h-2.1v-4c0-1.2-.7-1.7-1.4-1.7s-1.7.4-1.7 1.8v3.9h-2.1v-7.5h2.1v1.2c.4-1 1.5-1.4 2.2-1.4 2 0 3 1.3 3 3.6z"/>
-                  <path d="M39.2 67.2h2.1v7.5h-2.1v-1.2c-.3 1-1.5 1.4-2.2 1.4-2 0-3-1.3-3-3.6v-4.1h2.1v4c0 1.2.7 1.7 1.4 1.7s1.7-.4 1.7-1.8v-4z"/>
-                  <path d="M50.7 74.7h-2.6l-2.6-3.2v3.2h-2.1v-11.5h2.1v6.4l1.9-2.3h2.7l-2.9 3.3 3.6 4.2z"/>
-                  <path d="M56.9 67.2h2.1v7.5h-2.1v-1.1c-.5.8-1.5 1.3-2.5 1.3-2.1 0-3.6-1.6-3.6-3.9s1.5-3.9 3.6-3.9 1.9.4 2.4 1.2v-1zm-.1 3.8c0-1.1-.9-2-2-2s-1.9.9-1.9 2 .8 2 1.9 2 1.9-.9 1.9-2z"/>
-                  <path d="M17.6 86.9h4.2v2h-6.4v-11h2.2v9.1z"/>
-                  <path d="M22.8 78.8c0-.7.6-1.2 1.3-1.2s1.3.5 1.3 1.2-.6 1.3-1.3 1.3-1.3-.6-1.3-1.3zm.3 10.1v-7.5h2.1v7.5h-2.1z"/>
-                  <path d="M34.5 84.8v4.1h-2.1v-4c0-1.2-.7-1.7-1.4-1.7s-1.7.4-1.7 1.8v3.9h-2.1v-7.5h2.1v1.2c.4-1 1.5-1.4 2.2-1.4 2 0 3 1.3 3 3.6z"/>
-                  <path d="M42.1 77.3h2.1v11.5h-2.1v-.9c-.5.8-1.6 1.1-2.4 1.1-1.9 0-3.7-1.5-3.7-3.9s1.7-3.9 3.7-3.9 1.9.3 2.4 1.1v-5zm-.1 7.8c0-1.2-1-2-1.9-2s-1.9.9-1.9 2 .9 2 1.9 2 1.9-.8 1.9-2z"/>
-                </g>
-              </svg>
-            </a>
-          </div>
-        </div>
-      </li>
-      <li>
-        <div class="brands__logo-wrap">
-          <span class="brands__logo-index" aria-hidden="true">04</span>
-          <a class="brands__logo brands__logo--planimol" href="#marke-planimol" aria-label="Planimol">
-            <svg viewBox="0 0 148.82 35.43" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-              <g fill="#44303f">
-                <path d="M47.06 9.83c-.94-.44-2.01-.66-3.23-.66h-6.67v17.88h3.26v-6.6h3.41c1.22 0 2.29-.22 3.22-.67.93-.45 1.66-1.09 2.2-1.93.54-.84.8-1.85.8-3.04s-.26-2.22-.79-3.06c-.53-.84-1.26-1.48-2.2-1.92zm-.63 6.42c-.24.42-.58.74-1.01.97-.43.23-.94.35-1.54.35h-3.46v-5.52h3.46c.59 0 1.1.12 1.54.35.43.23.77.55 1.01.96.24.41.36.89.36 1.45s-.12 1.02-.36 1.44z"/>
-                <rect x="52.21" y="8.89" width="3.14" height="18.17"/>
-                <path d="M66.73 14.3c-.82-.39-1.76-.59-2.83-.59-.88 0-1.7.14-2.45.43s-1.4.68-1.96 1.19c-.55.5-.96 1.1-1.21 1.79l2.57 1.25c.24-.59.62-1.07 1.14-1.43.52-.36 1.12-.54 1.79-.54.72 0 1.3.19 1.74.56s.66.84.66 1.4v.42l-3.89.63c-1.02.16-1.87.43-2.54.82-.67.38-1.17.86-1.49 1.43-.32.57-.48 1.21-.48 1.93s.18 1.41.55 1.98c.37.57.89 1 1.56 1.31.67.3 1.46.46 2.38.46.72 0 1.38-.1 1.97-.3.59-.2 1.12-.49 1.58-.86.19-.15.36-.33.53-.52v1.39h2.98v-8.69c0-.93-.23-1.74-.68-2.44s-1.09-1.24-1.91-1.63zm-.97 9.06c-.28.5-.67.88-1.18 1.16-.5.28-1.08.42-1.74.42-.51 0-.94-.13-1.28-.4-.34-.26-.52-.62-.52-1.07s.15-.84.46-1.13c.3-.29.77-.49 1.39-.6l3.29-.56v.53c0 .59-.14 1.14-.42 1.63z"/>
-                <path d="M81.55 14.33c-.74-.42-1.6-.62-2.56-.62s-1.74.2-2.44.61c-.54.32-.96.75-1.26 1.29v-1.61h-2.95v13.06h3.14v-7.66c0-.58.11-1.07.34-1.49s.54-.74.94-.97c.4-.23.86-.35 1.37-.35s.99.12 1.38.35c.39.23.7.56.92.97s.34.91.34 1.49v7.66h3.14v-8.4c0-.98-.21-1.84-.62-2.58-.42-.74-1-1.32-1.74-1.74z"/>
-                <rect x="86.82" y="9.17" width="3.14" height="3.36"/>
-                <rect x="86.82" y="14" width="3.14" height="13.06"/>
-                <path d="M110.16 14.33c-.73-.42-1.56-.62-2.48-.62-1.04 0-1.96.26-2.76.78-.52.34-.95.8-1.3 1.36-.29-.5-.68-.94-1.2-1.3-.82-.56-1.76-.84-2.83-.84-.98 0-1.82.23-2.54.7-.48.31-.84.73-1.1 1.25v-1.65h-2.95v13.06h3.14v-7.66c0-.58.1-1.07.31-1.49s.5-.74.89-.97c.38-.23.82-.35 1.32-.35s.96.12 1.33.35c.38.23.67.56.88.97s.31.91.31 1.49v7.66h3.14v-7.66c0-.58.1-1.07.31-1.49.21-.42.5-.74.89-.97.38-.23.82-.35 1.32-.35.53 0 .98.12 1.34.35.37.23.66.56.86.97.21.42.31.91.31 1.49v7.66h3.14v-8.4c0-.98-.21-1.84-.62-2.58-.42-.74-.99-1.32-1.72-1.74z"/>
-                <path d="M125.1 14.6c-1.04-.59-2.2-.89-3.48-.89s-2.46.3-3.5.89c-1.04.59-1.87 1.4-2.48 2.42-.62 1.02-.92 2.19-.92 3.5s.31 2.48.92 3.5c.62 1.02 1.45 1.83 2.5 2.42s2.21.89 3.49.89 2.42-.3 3.46-.89c1.04-.59 1.87-1.4 2.5-2.42.62-1.02.94-2.19.94-3.5s-.31-2.5-.92-3.52c-.62-1.02-1.44-1.82-2.48-2.41zm-.35 7.95c-.31.6-.74 1.07-1.27 1.4-.54.34-1.16.5-1.86.5s-1.35-.17-1.9-.5c-.54-.34-.97-.8-1.28-1.4s-.47-1.28-.47-2.03.16-1.44.47-2.03.74-1.05 1.28-1.39c.54-.34 1.18-.52 1.9-.52s1.32.17 1.86.52c.54.34.96.81 1.27 1.39s.47 1.26.47 2.03-.16 1.43-.47 2.03z"/>
-                <rect x="130.93" y="8.89" width="3.14" height="18.17"/>
-                <path d="M143.61 10.28c-.19-.43-.44-.81-.77-1.14-.33-.33-.71-.58-1.14-.77s-.9-.28-1.39-.28c-.66 0-1.27.16-1.81.48-.55.32-.98.75-1.3 1.29s-.48 1.14-.48 1.8.16 1.25.48 1.8.76.98 1.3 1.3c.55.32 1.15.48 1.81.48s1.26-.16 1.8-.48c.54-.32.97-.76 1.29-1.3s.48-1.14.48-1.8c0-.49-.09-.96-.28-1.39zm-.82 2.85c-.26.44-.6.78-1.04 1.04-.43.25-.92.38-1.45.38s-1.03-.13-1.46-.38c-.43-.26-.78-.6-1.04-1.04-.26-.43-.38-.92-.38-1.45s.13-1.01.38-1.45c.26-.43.6-.78 1.04-1.04.43-.26.92-.38 1.46-.38s1.01.13 1.45.38c.43.26.78.6 1.04 1.04s.38.92.38 1.45-.13 1.02-.38 1.46z"/>
-                <path d="M141.61 11.61c.11-.19.16-.4.16-.64 0-.38-.12-.68-.37-.89s-.56-.32-.94-.32h-1.46v3.78h.71v-1.37h.69l.77 1.37h.81l-.88-1.5c.23-.1.4-.25.51-.44zm-.71-.23c-.11.11-.25.17-.44.17h-.74v-1.13h.74c.19 0 .33.05.44.15.11.1.16.24.16.41 0 .16-.05.29-.16.41z"/>
-              </g>
-              <g fill="#39b54a">
-                <path d="M7.97 12.4c1.96 0 3.54-1.59 3.54-3.54s-1.59-3.54-3.54-3.54-3.54 1.59-3.54 3.54 1.59 3.54 3.54 3.54z"/>
-                <path d="M16.83 5.32c-1.96 0-3.54 1.59-3.54 3.54s1.59 3.54 3.54 3.54 3.54-1.59 3.54-3.54-1.59-3.54-3.54-3.54z"/>
-                <path d="M23.03 18.6c1.96 0 3.54-1.59 3.54-3.54s-1.59-3.54-3.54-3.54-3.54 1.59-3.54 3.54 1.59 3.54 3.54 3.54z"/>
-                <path d="M23.03 20.37c-1.96 0-3.54 1.59-3.54 3.54s1.59 3.54 3.54 3.54 3.54-1.59 3.54-3.54-1.59-3.54-3.54-3.54z"/>
-                <path d="M15.06 14.17h-7.97c-2.94 0-5.32 2.38-5.32 5.32s2.38 5.32 5.32 5.32c0 2.93 2.38 5.31 5.31 5.31s5.31-2.38 5.32-5.31v-7.97c0-1.47-1.19-2.66-2.66-2.66z"/>
-              </g>
-            </svg>
-          </a>
-        </div>
-      </li>
-    </ul>
-
     <div class="brands__list">
       <article class="brands__brand brands__brand--solid brands__brand--solid-before reveal" id="marke-inuvet">
         <div class="brands__top">
-          <div>
-            <h3 class="brands__name">Inuvet</h3>
+          <div class="brands__head">
+            <h3 class="brands__name">
+              <span class="brands__mark brands__mark--inuvet" aria-hidden="true">
+                <svg viewBox="0 0 113.4 113.4" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" fill="none">
+                  <g fill="#000">
+                    <path d="M19.4 74.3c0 1.4-1.1 2.6-2.6 2.6s-2.6-1.2-2.6-2.6 1.1-2.5 2.6-2.5 2.5 1.2 2.5 2.5ZM14.7 78.9h4.3v15.4h-4.3z"/>
+                    <path d="M23.1 78.9h3.8l.2 2.1c1.5-1.8 3.1-2.5 5.1-2.5s3.5.7 4.2 2.1c.5.9.7 2 .7 4.1v9.7h-4.3v-8.9c0-1.3 0-1.8-.3-2.3-.3-.6-.8-.9-1.6-.9-1.2 0-2.6 1.1-3.5 2.8v9.3h-4.3z"/>
+                    <path d="M50.5 92.6c-1.4 1.5-2.8 2.1-4.7 2.1s-3.4-.8-4.2-2.2c-.5-.9-.7-2.1-.7-4.2v-9.5h4.3v8.7c0 2.6.5 3.4 1.9 3.4s2.3-.6 3.1-1.9v-10.2h4.3v15.4h-3.8l-.3-1.7z"/>
+                    <path d="M56.8 78.9h4.8l3.6 10.3 3.6-10.3h4.3l-6.3 15.4h-3.9l-6.1-15.4z"/>
+                    <path d="M78.1 87.9c.2 2.6 1.5 3.7 4.4 3.7s2.7-.3 4.4-1.2l1 2.8c-1.8 1.1-3.8 1.6-6.4 1.6-5.2 0-7.8-2.5-7.8-7.7s2.8-8.6 7.5-8.6 6.8 2.6 6.8 7.6v1.8h-9.9zm6.1-2.8c-.2-2.4-1.1-3.5-2.9-3.5s-2.9 1.1-3.2 3.5h6.1z"/>
+                    <path d="M89.7 82.4l.3-3.4h2.5l.2-3.7 4-1.4v5.1h3.8l-.3 3.4h-3.5v5.6c0 2.8.2 3.3 1.6 3.3s1.3-.2 2.1-.5l.8 2.7c-1.5.9-3 1.3-4.5 1.3s-3-.6-3.7-1.8c-.4-.8-.6-2-.6-4.2v-6.5h-2.7z"/>
+                    <path d="M81.4 32h-.3v1h.2c.5 0 .7-.3.7-.6s-.1-.5-.6-.5m.6 3.1-.8-1.5v1.5h-.8v-3.7h1.3c.9 0 1.2.4 1.2 1s-.3 1-.8 1c0 0 .2.3.3.5l.7 1.2h-1zM78.9 33.3c0 1.4 1.1 2.6 2.6 2.6s2.6-1.2 2.6-2.6-1.1-2.6-2.6-2.6-2.6 1.2-2.6 2.6m6.1 0c0 1.9-1.6 3.5-3.5 3.5s-3.6-1.5-3.6-3.5 1.6-3.5 3.6-3.5 3.5 1.5 3.5 3.5"/>
+                  </g>
+                  <g fill="#78b41b">
+                    <path d="M28.7 54.5c1.3 5.2 5.6 9 11.1 10.7 4.1-4.1 6.1-9.5 4.8-14.7-1.3-5.2-5.6-9-11.1-10.7-4.1 4.1-6.1 9.5-4.8 14.7z"/>
+                    <path d="M38.6 32.3c.7 5.3 4.4 9.7 9.7 12 4.6-3.6 7.2-8.6 6.6-14-.6-5.3-4.4-9.7-9.7-12-4.6 3.6-7.2 8.7-6.5 14z"/>
+                    <path d="M84.6 54.5c-1.3 5.2-5.6 9-11.1 10.7-4.1-4.1-6.1-9.5-4.8-14.7 1.3-5.2 5.6-9 11.1-10.7 4.1 4.1 6.1 9.5 4.8 14.7z"/>
+                    <path d="M74.8 32.3c-.7 5.3-4.4 9.7-9.7 12-4.6-3.6-7.2-8.6-6.6-14 .6-5.3 4.4-9.7 9.7-12 4.6 3.6 7.2 8.7 6.6 14z"/>
+                  </g>
+                </svg>
+              </span>
+              <span class="visually-hidden">Inuvet</span>
+            </h3>
             <span class="brands__since"><span class="de">seit 2011</span><span class="en">since 2011</span></span>
           </div>
-          <div>
+          <div class="brands__body">
             <p class="brands__copy">
-              <span class="de">der Ursprung: heute ein global agierendes Tiergesundheitsunternehmen, seit 2011, aus eigener Kraft, ohne Fremdkapital von Investoren.</span>
+              <span class="de">der Ursprung: heute ein global agierendes Unternehmen für Tiergesundheit, seit 2011, aus eigener Kraft, ohne Fremdkapital von Investoren.</span>
               <span class="en">the origin: today a globally operating animal-health company, since 2011, built under its own steam, without outside investor capital.</span>
             </p>
-          </div>
-        </div>
-        <div class="brands__metrics">
-          <div class="brands__metric">
-            <span class="brands__metric-label"><span class="de">Umsatzanstieg</span><span class="en">Revenue growth</span></span>
-            <span class="brands__metric-value"><span class="counter" data-target="840" data-prefix="+" data-suffix="&nbsp;%" data-start="0">+0&nbsp;%</span></span>
-            <div class="brands__spark-wrap">
-              <svg class="brands__spark" viewBox="0 0 160 40" preserveAspectRatio="none" aria-hidden="true">
-                <path class="brands__spark-area" d="M0 30.2 Q10.0 29.9 20 28.5 Q30.0 25.1 40 22.4 Q50.0 21.7 60 21.0 Q70.0 18.9 80 18.6 Q90.0 17.7 100 15.8 Q110.0 14.7 120 15.2 Q130.0 10.8 140 6.7 Q150.0 5.0 160 6.0 V40 H0 Z"/>
-                <path class="brands__spark-line" pathLength="1" d="M0 30.2 Q10.0 29.9 20 28.5 Q30.0 25.1 40 22.4 Q50.0 21.7 60 21.0 Q70.0 18.9 80 18.6 Q90.0 17.7 100 15.8 Q110.0 14.7 120 15.2 Q130.0 10.8 140 6.7 Q150.0 5.0 160 6.0"/>
-              </svg>
-              <span class="brands__spark-dot" style="--dot-y: 15.0%" aria-hidden="true"></span>
-            </div>
-            <div class="brands__metric-years"><span>2011</span><span>2026</span></div>
-          </div>
-          <div class="brands__metric">
-            <span class="brands__metric-label"><span class="de">Produkte</span><span class="en">Products</span></span>
-            <span class="brands__metric-value"><span class="counter" data-target="64" data-start="0">0</span></span>
-            <div class="brands__spark-wrap">
-              <svg class="brands__spark" viewBox="0 0 160 40" preserveAspectRatio="none" aria-hidden="true">
-                <path class="brands__spark-area" d="M0 26.9 Q10.0 24.3 20 24.7 Q30.0 21.5 40 19.6 Q50.0 17.9 60 16.3 Q70.0 16.9 80 15.3 Q90.0 15.6 100 15.0 Q110.0 14.5 120 13.2 Q130.0 12.3 140 11.0 Q150.0 7.3 160 5.0 V40 H0 Z"/>
-                <path class="brands__spark-line" pathLength="1" d="M0 26.9 Q10.0 24.3 20 24.7 Q30.0 21.5 40 19.6 Q50.0 17.9 60 16.3 Q70.0 16.9 80 15.3 Q90.0 15.6 100 15.0 Q110.0 14.5 120 13.2 Q130.0 12.3 140 11.0 Q150.0 7.3 160 5.0"/>
-              </svg>
-              <span class="brands__spark-dot" style="--dot-y: 12.5%" aria-hidden="true"></span>
-            </div>
-            <div class="brands__metric-range"><span>12</span><span>64</span></div>
-          </div>
-          <div class="brands__metric">
-            <span class="brands__metric-label"><span class="de">Mitarbeitende</span><span class="en">Employees</span></span>
-            <span class="brands__metric-value"><span class="counter" data-target="110" data-start="0">0</span></span>
-            <div class="brands__spark-wrap">
-              <svg class="brands__spark" viewBox="0 0 160 40" preserveAspectRatio="none" aria-hidden="true">
-                <path class="brands__spark-area" d="M0 31.6 Q10.0 31.1 20 31.6 Q30.0 27.0 40 24.4 Q50.0 24.1 60 25.0 Q70.0 21.7 80 18.6 Q90.0 17.9 100 18.9 Q110.0 16.3 120 13.9 Q130.0 12.0 140 12.3 Q150.0 8.5 160 7.0 V40 H0 Z"/>
-                <path class="brands__spark-line" pathLength="1" d="M0 31.6 Q10.0 31.1 20 31.6 Q30.0 27.0 40 24.4 Q50.0 24.1 60 25.0 Q70.0 21.7 80 18.6 Q90.0 17.9 100 18.9 Q110.0 16.3 120 13.9 Q130.0 12.0 140 12.3 Q150.0 8.5 160 7.0"/>
-              </svg>
-              <span class="brands__spark-dot" style="--dot-y: 17.5%" aria-hidden="true"></span>
-            </div>
-            <div class="brands__metric-range"><span>18</span><span>110</span></div>
+            <a class="brands__link" href="https://inuvet.com" target="_blank" rel="noopener">
+              inuvet.com
+              <span class="material-symbols-outlined" aria-hidden="true">arrow_outward</span>
+            </a>
           </div>
         </div>
       </article>
@@ -3364,8 +3442,8 @@
     <div class="quote-scroll__content reveal">
       <blockquote class="quote-scroll__quote">
         <p class="quote-scroll__text">
-          <span class="de">… plötzlich ging es ganz schnell.</span>
-          <span class="en">…and suddenly everything moved very fast.</span>
+          <span class="de">»Wir wachsen, ohne uns zu verbiegen.«</span>
+          <span class="en">»We grow without losing who we are.«</span>
         </p>
       </blockquote>
       <footer class="quote-scroll__who">
@@ -3383,133 +3461,161 @@
     <div class="brands__list">
       <article class="brands__brand brands__brand--solid brands__brand--solid-after reveal" id="marke-eqx">
         <div class="brands__top">
-          <div>
-            <h3 class="brands__name">EQX</h3>
+          <div class="brands__head">
+            <h3 class="brands__name">
+              <span class="brands__mark brands__mark--eqx" aria-hidden="true">
+                <svg viewBox="0 0 212.6 85.04" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                  <polygon fill="#0f4" points="212.67 -.11 195.3 -.11 178.89 23.06 162.47 -.11 145.1 -.11 170.2 35.32 145.1 70.75 162.47 70.75 178.89 47.58 195.3 70.75 212.67 70.75 187.57 35.32 212.67 -.11"/>
+                  <polygon fill="#006838" points="49.68 14.06 49.68 -.11 14.24 -.11 .07 -.11 .07 70.75 14.24 70.75 49.68 70.75 49.68 56.58 14.24 56.58 14.24 42.41 35.5 42.41 35.5 28.23 14.24 28.23 14.24 14.06 49.68 14.06"/>
+                  <path fill="#006838" d="M134.72 35.32C134.72 15.78 118.82-.11 99.28-.11s-35.43 15.89-35.43 35.43c0 17.11 12.19 31.43 28.35 34.72v14.89h14.17v-14.89c16.15-3.29 28.35-17.61 28.35-34.72ZM99.28 56.58c-11.72 0-21.26-9.54-21.26-21.26s9.54-21.26 21.26-21.26 21.26 9.54 21.26 21.26-9.54 21.26-21.26 21.26Z"/>
+                </svg>
+              </span>
+              <span class="visually-hidden">EQX</span>
+            </h3>
             <span class="brands__since"><span class="de">seit 2016</span><span class="en">since 2016</span></span>
           </div>
-          <div>
+          <div class="brands__body">
             <p class="brands__copy">
               <span class="de">natürliche Ergänzungsfuttermittel für Pferde, in Tierarztqualität: entwickelt mit Tierärzten, Biologen und Pharmazeuten, empfohlen von Tierärzten und Weltklasse-Reitern.</span>
               <span class="en">natural complementary feed for horses, in veterinary quality: developed with veterinarians, biologists and pharmacists, recommended by veterinarians and world-class riders.</span>
             </p>
-          </div>
-        </div>
-        <div class="brands__metrics">
-          <div class="brands__metric">
-            <span class="brands__metric-label"><span class="de">Umsatzanstieg</span><span class="en">Revenue growth</span></span>
-            <span class="brands__metric-value"><span class="counter" data-target="320" data-prefix="+" data-suffix="&nbsp;%" data-start="0">+0&nbsp;%</span></span>
-            <div class="brands__spark-wrap">
-              <svg class="brands__spark" viewBox="0 0 160 40" preserveAspectRatio="none" aria-hidden="true">
-                <path class="brands__spark-area" d="M0 23.4 Q10.0 22.3 20 20.2 Q30.0 18.9 40 19.5 Q50.0 21.5 60 23.7 Q70.0 21.6 80 20.1 Q90.0 17.3 100 13.7 Q110.0 12.7 120 11.8 Q130.0 10.7 140 7.4 Q150.0 6.0 160 5.0 V40 H0 Z"/>
-                <path class="brands__spark-line" pathLength="1" d="M0 23.4 Q10.0 22.3 20 20.2 Q30.0 18.9 40 19.5 Q50.0 21.5 60 23.7 Q70.0 21.6 80 20.1 Q90.0 17.3 100 13.7 Q110.0 12.7 120 11.8 Q130.0 10.7 140 7.4 Q150.0 6.0 160 5.0"/>
-              </svg>
-              <span class="brands__spark-dot" style="--dot-y: 12.5%" aria-hidden="true"></span>
-            </div>
-            <div class="brands__metric-years"><span>2016</span><span>2026</span></div>
-          </div>
-          <div class="brands__metric">
-            <span class="brands__metric-label"><span class="de">Produkte</span><span class="en">Products</span></span>
-            <span class="brands__metric-value"><span class="counter" data-target="28" data-start="0">0</span></span>
-            <div class="brands__spark-wrap">
-              <svg class="brands__spark" viewBox="0 0 160 40" preserveAspectRatio="none" aria-hidden="true">
-                <path class="brands__spark-area" d="M0 27.4 Q10.0 25.0 20 23.2 Q30.0 24.2 40 22.6 Q50.0 20.3 60 19.2 Q70.0 19.7 80 18.6 Q90.0 16.4 100 17.1 Q110.0 12.5 120 9.8 Q130.0 12.1 140 11.4 Q150.0 9.8 160 6.0 V40 H0 Z"/>
-                <path class="brands__spark-line" pathLength="1" d="M0 27.4 Q10.0 25.0 20 23.2 Q30.0 24.2 40 22.6 Q50.0 20.3 60 19.2 Q70.0 19.7 80 18.6 Q90.0 16.4 100 17.1 Q110.0 12.5 120 9.8 Q130.0 12.1 140 11.4 Q150.0 9.8 160 6.0"/>
-              </svg>
-              <span class="brands__spark-dot" style="--dot-y: 15.0%" aria-hidden="true"></span>
-            </div>
-            <div class="brands__metric-range"><span>6</span><span>28</span></div>
+            <a class="brands__link" href="https://eqx.vet" target="_blank" rel="noopener">
+              eqx.vet
+              <span class="material-symbols-outlined" aria-hidden="true">arrow_outward</span>
+            </a>
           </div>
         </div>
       </article>
-      <article class="brands__brand reveal" id="marke-byox">
+      <article class="brands__brand reveal" id="marke-manukalind">
         <div class="brands__top">
-          <div>
-            <h3 class="brands__name">Byox</h3>
+          <div class="brands__head">
+            <h3 class="brands__name">
+              <span class="brands__mark brands__mark--manukalind" aria-hidden="true">
+                <svg viewBox="0 0 59 88.9" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <g fill="#00a76d">
+                      <polygon points="28.9 12.2 26.1 13.9 26.1 20.3 28.9 22 31.7 23.6 34.6 22 37.4 20.3 37.4 13.9 31.7 10.6 28.9 12.2"/>
+                      <polygon points="19.9 3.2 19.9 9.7 25.5 12.9 28.4 11.3 31.2 9.7 31.2 3.2 25.5 0 19.9 3.2"/>
+                      <polygon points="25.5 21.3 19.9 24.5 19.9 31 25.5 34.2 28.4 32.6 31.2 31 31.2 24.5 28.4 22.9 25.5 21.3"/>
+                      <polygon points="35.1 22.9 32.3 24.5 32.3 31 35.1 32.6 37.9 34.2 40.8 32.6 43.6 31 43.6 24.5 40.8 22.9 37.9 21.3 35.1 22.9"/>
+                      <polygon points="44.1 23.6 49.8 20.3 49.8 13.9 44.1 10.6 38.5 13.9 38.5 20.3 41.3 22 44.1 23.6"/>
+                      <polygon points="43.6 52.2 43.6 45.8 40.8 44.1 37.9 42.5 35.1 44.1 32.3 45.8 32.3 52.2 37.9 55.5 43.6 52.2"/>
+                      <polygon points="7.5 24.5 7.5 31 13.1 34.2 18.8 31 18.8 24.5 13.1 21.3 7.5 24.5"/>
+                      <polygon points="49.8 41.6 49.8 35.1 44.1 31.9 41.3 33.5 38.5 35.1 38.5 41.6 41.3 43.2 44.1 44.8 49.8 41.6"/>
+                      <polygon points="34.6 43.2 37.4 41.6 37.4 35.1 34.6 33.5 31.7 31.9 28.9 33.5 26.1 35.1 26.1 41.6 28.9 43.2 31.7 44.8 34.6 43.2"/>
+                      <polygon points="31.2 52.2 31.2 45.8 28.4 44.1 25.5 42.5 19.9 45.8 19.9 52.2 25.5 55.5 31.2 52.2"/>
+                    </g>
+                    <g fill="#231f20">
+                      <path d="M13.3 74.7h-2.3l-.8-6.8-2.7 5.6h-1.7l-2.7-5.6-.8 6.8H0l1.4-11h1.9l3.4 7.2 3.4-7.2h1.9l1.3 11z"/>
+                      <path d="M20.8 67.2h2.1v7.5h-2.1v-1.1c-.5.8-1.5 1.3-2.5 1.3-2.1 0-3.6-1.6-3.6-3.9s1.5-3.9 3.6-3.9 1.9.4 2.4 1.2v-1zm-.1 3.8c0-1.1-.9-2-2-2s-1.9.9-1.9 2 .8 2 1.9 2 1.9-.9 1.9-2z"/>
+                      <path d="M32.2 70.6v4.1h-2.1v-4c0-1.2-.7-1.7-1.4-1.7s-1.7.4-1.7 1.8v3.9h-2.1v-7.5h2.1v1.2c.4-1 1.5-1.4 2.2-1.4 2 0 3 1.3 3 3.6z"/>
+                      <path d="M39.2 67.2h2.1v7.5h-2.1v-1.2c-.3 1-1.5 1.4-2.2 1.4-2 0-3-1.3-3-3.6v-4.1h2.1v4c0 1.2.7 1.7 1.4 1.7s1.7-.4 1.7-1.8v-4z"/>
+                      <path d="M50.7 74.7h-2.6l-2.6-3.2v3.2h-2.1v-11.5h2.1v6.4l1.9-2.3h2.7l-2.9 3.3 3.6 4.2z"/>
+                      <path d="M56.9 67.2h2.1v7.5h-2.1v-1.1c-.5.8-1.5 1.3-2.5 1.3-2.1 0-3.6-1.6-3.6-3.9s1.5-3.9 3.6-3.9 1.9.4 2.4 1.2v-1zm-.1 3.8c0-1.1-.9-2-2-2s-1.9.9-1.9 2 .8 2 1.9 2 1.9-.9 1.9-2z"/>
+                      <path d="M17.6 86.9h4.2v2h-6.4v-11h2.2v9.1z"/>
+                      <path d="M22.8 78.8c0-.7.6-1.2 1.3-1.2s1.3.5 1.3 1.2-.6 1.3-1.3 1.3-1.3-.6-1.3-1.3zm.3 10.1v-7.5h2.1v7.5h-2.1z"/>
+                      <path d="M34.5 84.8v4.1h-2.1v-4c0-1.2-.7-1.7-1.4-1.7s-1.7.4-1.7 1.8v3.9h-2.1v-7.5h2.1v1.2c.4-1 1.5-1.4 2.2-1.4 2 0 3 1.3 3 3.6z"/>
+                      <path d="M42.1 77.3h2.1v11.5h-2.1v-.9c-.5.8-1.6 1.1-2.4 1.1-1.9 0-3.7-1.5-3.7-3.9s1.7-3.9 3.7-3.9 1.9.3 2.4 1.1v-5zm-.1 7.8c0-1.2-1-2-1.9-2s-1.9.9-1.9 2 .9 2 1.9 2 1.9-.8 1.9-2z"/>
+                    </g>
+                  </svg>
+              </span>
+              <span class="visually-hidden">ManukaLind</span>
+            </h3>
             <span class="brands__since"><span class="de">seit 2019</span><span class="en">since 2019</span></span>
           </div>
-          <div>
+          <div class="brands__body">
             <p class="brands__copy">
-              <span class="de">Wundversorgung für Menschen, mit dem Bestseller ManukaLind: in Apotheken erhältlich, von Arztpraxen empfohlen. Der Beweis, dass unsere Kompetenz aus der Tiergesundheit auch im Humanbereich trägt.</span>
-              <span class="en">Wound care for people, with the bestseller ManukaLind: available in pharmacies, recommended by medical practices. Proof that our animal-health expertise also holds in the human space.</span>
+              <span class="de">Wundversorgung für Menschen: in Apotheken erhältlich, von Arztpraxen empfohlen. Der Beweis, dass unsere Kompetenz aus der Tiergesundheit auch im Humanbereich trägt.</span>
+              <span class="en">Wound care for people: available in pharmacies, recommended by medical practices. Proof that our animal-health expertise also holds in the human space.</span>
             </p>
-          </div>
-        </div>
-        <div class="brands__metrics">
-          <div class="brands__metric">
-            <span class="brands__metric-label"><span class="de">Umsatzanstieg</span><span class="en">Revenue growth</span></span>
-            <span class="brands__metric-value"><span class="counter" data-target="190" data-prefix="+" data-suffix="&nbsp;%" data-start="0">+0&nbsp;%</span></span>
-            <div class="brands__spark-wrap">
-              <svg class="brands__spark" viewBox="0 0 160 40" preserveAspectRatio="none" aria-hidden="true">
-                <path class="brands__spark-area" d="M0 28.8 Q10.0 26.3 20 25.2 Q30.0 25.3 40 24.8 Q50.0 27.3 60 30.0 Q70.0 26.0 80 23.2 Q90.0 19.7 100 16.1 Q110.0 14.7 120 10.9 Q130.0 10.9 140 9.1 Q150.0 8.1 160 5.0 V40 H0 Z"/>
-                <path class="brands__spark-line" pathLength="1" d="M0 28.8 Q10.0 26.3 20 25.2 Q30.0 25.3 40 24.8 Q50.0 27.3 60 30.0 Q70.0 26.0 80 23.2 Q90.0 19.7 100 16.1 Q110.0 14.7 120 10.9 Q130.0 10.9 140 9.1 Q150.0 8.1 160 5.0"/>
-              </svg>
-              <span class="brands__spark-dot" style="--dot-y: 12.5%" aria-hidden="true"></span>
-            </div>
-            <div class="brands__metric-years"><span>2019</span><span>2026</span></div>
-          </div>
-          <div class="brands__metric">
-            <span class="brands__metric-label"><span class="de">Produkte</span><span class="en">Products</span></span>
-            <span class="brands__metric-value"><span class="counter" data-target="16" data-start="0">0</span></span>
-            <div class="brands__spark-wrap">
-              <svg class="brands__spark" viewBox="0 0 160 40" preserveAspectRatio="none" aria-hidden="true">
-                <path class="brands__spark-area" d="M0 22.5 Q10.0 22.9 20 22.5 Q30.0 21.6 40 18.4 Q50.0 19.2 60 18.2 Q70.0 14.4 80 12.1 Q90.0 11.7 100 13.0 Q110.0 11.9 120 8.1 Q130.0 9.0 140 7.5 Q150.0 5.2 160 4.0 V40 H0 Z"/>
-                <path class="brands__spark-line" pathLength="1" d="M0 22.5 Q10.0 22.9 20 22.5 Q30.0 21.6 40 18.4 Q50.0 19.2 60 18.2 Q70.0 14.4 80 12.1 Q90.0 11.7 100 13.0 Q110.0 11.9 120 8.1 Q130.0 9.0 140 7.5 Q150.0 5.2 160 4.0"/>
-              </svg>
-              <span class="brands__spark-dot" style="--dot-y: 10.0%" aria-hidden="true"></span>
-            </div>
-            <div class="brands__metric-range"><span>3</span><span>16</span></div>
+            <a class="brands__link" href="https://manukalind.com" target="_blank" rel="noopener">
+              ManukaLind.com
+              <span class="material-symbols-outlined" aria-hidden="true">arrow_outward</span>
+            </a>
           </div>
         </div>
       </article>
 
       <article class="brands__brand reveal" id="marke-planimol">
         <div class="brands__top">
-          <div>
-            <h3 class="brands__name">Planimol</h3>
+          <div class="brands__head">
+            <h3 class="brands__name">
+              <span class="brands__mark brands__mark--planimol" aria-hidden="true">
+                <svg viewBox="0 0 148.82 35.43" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                  <g fill="#44303f">
+                    <path d="M47.06 9.83c-.94-.44-2.01-.66-3.23-.66h-6.67v17.88h3.26v-6.6h3.41c1.22 0 2.29-.22 3.22-.67.93-.45 1.66-1.09 2.2-1.93.54-.84.8-1.85.8-3.04s-.26-2.22-.79-3.06c-.53-.84-1.26-1.48-2.2-1.92zm-.63 6.42c-.24.42-.58.74-1.01.97-.43.23-.94.35-1.54.35h-3.46v-5.52h3.46c.59 0 1.1.12 1.54.35.43.23.77.55 1.01.96.24.41.36.89.36 1.45s-.12 1.02-.36 1.44z"/>
+                    <rect x="52.21" y="8.89" width="3.14" height="18.17"/>
+                    <path d="M66.73 14.3c-.82-.39-1.76-.59-2.83-.59-.88 0-1.7.14-2.45.43s-1.4.68-1.96 1.19c-.55.5-.96 1.1-1.21 1.79l2.57 1.25c.24-.59.62-1.07 1.14-1.43.52-.36 1.12-.54 1.79-.54.72 0 1.3.19 1.74.56s.66.84.66 1.4v.42l-3.89.63c-1.02.16-1.87.43-2.54.82-.67.38-1.17.86-1.49 1.43-.32.57-.48 1.21-.48 1.93s.18 1.41.55 1.98c.37.57.89 1 1.56 1.31.67.3 1.46.46 2.38.46.72 0 1.38-.1 1.97-.3.59-.2 1.12-.49 1.58-.86.19-.15.36-.33.53-.52v1.39h2.98v-8.69c0-.93-.23-1.74-.68-2.44s-1.09-1.24-1.91-1.63zm-.97 9.06c-.28.5-.67.88-1.18 1.16-.5.28-1.08.42-1.74.42-.51 0-.94-.13-1.28-.4-.34-.26-.52-.62-.52-1.07s.15-.84.46-1.13c.3-.29.77-.49 1.39-.6l3.29-.56v.53c0 .59-.14 1.14-.42 1.63z"/>
+                    <path d="M81.55 14.33c-.74-.42-1.6-.62-2.56-.62s-1.74.2-2.44.61c-.54.32-.96.75-1.26 1.29v-1.61h-2.95v13.06h3.14v-7.66c0-.58.11-1.07.34-1.49s.54-.74.94-.97c.4-.23.86-.35 1.37-.35s.99.12 1.38.35c.39.23.7.56.92.97s.34.91.34 1.49v7.66h3.14v-8.4c0-.98-.21-1.84-.62-2.58-.42-.74-1-1.32-1.74-1.74z"/>
+                    <rect x="86.82" y="9.17" width="3.14" height="3.36"/>
+                    <rect x="86.82" y="14" width="3.14" height="13.06"/>
+                    <path d="M110.16 14.33c-.73-.42-1.56-.62-2.48-.62-1.04 0-1.96.26-2.76.78-.52.34-.95.8-1.3 1.36-.29-.5-.68-.94-1.2-1.3-.82-.56-1.76-.84-2.83-.84-.98 0-1.82.23-2.54.7-.48.31-.84.73-1.1 1.25v-1.65h-2.95v13.06h3.14v-7.66c0-.58.1-1.07.31-1.49s.5-.74.89-.97c.38-.23.82-.35 1.32-.35s.96.12 1.33.35c.38.23.67.56.88.97s.31.91.31 1.49v7.66h3.14v-7.66c0-.58.1-1.07.31-1.49.21-.42.5-.74.89-.97.38-.23.82-.35 1.32-.35.53 0 .98.12 1.34.35.37.23.66.56.86.97.21.42.31.91.31 1.49v7.66h3.14v-8.4c0-.98-.21-1.84-.62-2.58-.42-.74-.99-1.32-1.72-1.74z"/>
+                    <path d="M125.1 14.6c-1.04-.59-2.2-.89-3.48-.89s-2.46.3-3.5.89c-1.04.59-1.87 1.4-2.48 2.42-.62 1.02-.92 2.19-.92 3.5s.31 2.48.92 3.5c.62 1.02 1.45 1.83 2.5 2.42s2.21.89 3.49.89 2.42-.3 3.46-.89c1.04-.59 1.87-1.4 2.5-2.42.62-1.02.94-2.19.94-3.5s-.31-2.5-.92-3.52c-.62-1.02-1.44-1.82-2.48-2.41zm-.35 7.95c-.31.6-.74 1.07-1.27 1.4-.54.34-1.16.5-1.86.5s-1.35-.17-1.9-.5c-.54-.34-.97-.8-1.28-1.4s-.47-1.28-.47-2.03.16-1.44.47-2.03.74-1.05 1.28-1.39c.54-.34 1.18-.52 1.9-.52s1.32.17 1.86.52c.54.34.96.81 1.27 1.39s.47 1.26.47 2.03-.16 1.43-.47 2.03z"/>
+                    <rect x="130.93" y="8.89" width="3.14" height="18.17"/>
+                    <path d="M143.61 10.28c-.19-.43-.44-.81-.77-1.14-.33-.33-.71-.58-1.14-.77s-.9-.28-1.39-.28c-.66 0-1.27.16-1.81.48-.55.32-.98.75-1.3 1.29s-.48 1.14-.48 1.8.16 1.25.48 1.8.76.98 1.3 1.3c.55.32 1.15.48 1.81.48s1.26-.16 1.8-.48c.54-.32.97-.76 1.29-1.3s.48-1.14.48-1.8c0-.49-.09-.96-.28-1.39zm-.82 2.85c-.26.44-.6.78-1.04 1.04-.43.25-.92.38-1.45.38s-1.03-.13-1.46-.38c-.43-.26-.78-.6-1.04-1.04-.26-.43-.38-.92-.38-1.45s.13-1.01.38-1.45c.26-.43.6-.78 1.04-1.04.43-.26.92-.38 1.46-.38s1.01.13 1.45.38c.43.26.78.6 1.04 1.04s.38.92.38 1.45-.13 1.02-.38 1.46z"/>
+                    <path d="M141.61 11.61c.11-.19.16-.4.16-.64 0-.38-.12-.68-.37-.89s-.56-.32-.94-.32h-1.46v3.78h.71v-1.37h.69l.77 1.37h.81l-.88-1.5c.23-.1.4-.25.51-.44zm-.71-.23c-.11.11-.25.17-.44.17h-.74v-1.13h.74c.19 0 .33.05.44.15.11.1.16.24.16.41 0 .16-.05.29-.16.41z"/>
+                  </g>
+                  <g fill="#39b54a">
+                    <path d="M7.97 12.4c1.96 0 3.54-1.59 3.54-3.54s-1.59-3.54-3.54-3.54-3.54 1.59-3.54 3.54 1.59 3.54 3.54 3.54z"/>
+                    <path d="M16.83 5.32c-1.96 0-3.54 1.59-3.54 3.54s1.59 3.54 3.54 3.54 3.54-1.59 3.54-3.54-1.59-3.54-3.54-3.54z"/>
+                    <path d="M23.03 18.6c1.96 0 3.54-1.59 3.54-3.54s-1.59-3.54-3.54-3.54-3.54 1.59-3.54 3.54 1.59 3.54 3.54 3.54z"/>
+                    <path d="M23.03 20.37c-1.96 0-3.54 1.59-3.54 3.54s1.59 3.54 3.54 3.54 3.54-1.59 3.54-3.54-1.59-3.54-3.54-3.54z"/>
+                    <path d="M15.06 14.17h-7.97c-2.94 0-5.32 2.38-5.32 5.32s2.38 5.32 5.32 5.32c0 2.93 2.38 5.31 5.31 5.31s5.31-2.38 5.32-5.31v-7.97c0-1.47-1.19-2.66-2.66-2.66z"/>
+                  </g>
+                </svg>
+              </span>
+              <span class="visually-hidden">Planimol</span>
+            </h3>
             <span class="brands__since"><span class="de">seit 2021</span><span class="en">since 2021</span></span>
           </div>
-          <div>
+          <div class="brands__body">
             <p class="brands__copy">
               <span class="de">die natürliche Tierapotheke für Hunde, von Tierärzten entwickelt: pflanzlich, hochdosiert, ohne unnötige Zusätze — für Magen, Darm, Gelenke, Haut und Wohlbefinden.</span>
               <span class="en">the natural animal pharmacy for dogs, developed by veterinarians: plant-based, highly dosed, without unnecessary additives — for stomach, gut, joints, skin and wellbeing.</span>
             </p>
-          </div>
-        </div>
-        <div class="brands__metrics">
-          <div class="brands__metric">
-            <span class="brands__metric-label"><span class="de">Umsatzanstieg</span><span class="en">Revenue growth</span></span>
-            <span class="brands__metric-value"><span class="counter" data-target="140" data-prefix="+" data-suffix="&nbsp;%" data-start="0">+0&nbsp;%</span></span>
-            <div class="brands__spark-wrap">
-              <svg class="brands__spark" viewBox="0 0 160 40" preserveAspectRatio="none" aria-hidden="true">
-                <path class="brands__spark-area" d="M0 21.5 Q10.0 21.6 20 20.0 Q30.0 20.2 40 19.0 Q50.0 16.6 60 16.6 Q70.0 15.2 80 14.7 Q90.0 13.6 100 13.6 Q110.0 12.3 120 8.1 Q130.0 6.9 140 6.8 Q150.0 4.0 160 3.0 V40 H0 Z"/>
-                <path class="brands__spark-line" pathLength="1" d="M0 21.5 Q10.0 21.6 20 20.0 Q30.0 20.2 40 19.0 Q50.0 16.6 60 16.6 Q70.0 15.2 80 14.7 Q90.0 13.6 100 13.6 Q110.0 12.3 120 8.1 Q130.0 6.9 140 6.8 Q150.0 4.0 160 3.0"/>
-              </svg>
-              <span class="brands__spark-dot" style="--dot-y: 7.5%" aria-hidden="true"></span>
-            </div>
-            <div class="brands__metric-years"><span>2021</span><span>2026</span></div>
-          </div>
-          <div class="brands__metric">
-            <span class="brands__metric-label"><span class="de">Produkte</span><span class="en">Products</span></span>
-            <span class="brands__metric-value"><span class="counter" data-target="11" data-start="0">0</span></span>
-            <div class="brands__spark-wrap">
-              <svg class="brands__spark" viewBox="0 0 160 40" preserveAspectRatio="none" aria-hidden="true">
-                <path class="brands__spark-area" d="M0 23.4 Q10.0 22.5 20 22.4 Q30.0 20.1 40 18.4 Q50.0 18.1 60 18.3 Q70.0 16.1 80 14.3 Q90.0 14.7 100 14.9 Q110.0 12.7 120 8.8 Q130.0 9.2 140 9.6 Q150.0 7.8 160 5.0 V40 H0 Z"/>
-                <path class="brands__spark-line" pathLength="1" d="M0 23.4 Q10.0 22.5 20 22.4 Q30.0 20.1 40 18.4 Q50.0 18.1 60 18.3 Q70.0 16.1 80 14.3 Q90.0 14.7 100 14.9 Q110.0 12.7 120 8.8 Q130.0 9.2 140 9.6 Q150.0 7.8 160 5.0"/>
-              </svg>
-              <span class="brands__spark-dot" style="--dot-y: 12.5%" aria-hidden="true"></span>
-            </div>
-            <div class="brands__metric-range"><span>2</span><span>11</span></div>
+            <a class="brands__link" href="https://planimol.com" target="_blank" rel="noopener">
+              Planimol.com
+              <span class="material-symbols-outlined" aria-hidden="true">arrow_outward</span>
+            </a>
           </div>
         </div>
       </article>
     </div>
 
-    <p class="brands__scope reveal">
-      <span class="de">Wir suchen Unternehmen aus der Tiergesundheit im weitesten Sinne — von Nutraceuticals über Technologie bis Services. Du hast eine spannende Story? Meld dich.</span>
-      <span class="en">We’re looking for companies in animal health in the broadest sense — from nutraceuticals to technology to services. Got an interesting story? Reach out.</span>
-    </p>
   </div>
 </section>
+
+<!-- GRUPPEN-ZAHLEN — drei Zeilen auf Blau, Zahl links, Aussage rechts -->
+<div data-band-blue data-band-delay="0.25">
+<section class="figures" id="zahlen" aria-label="Kennzahlen der Gruppe">
+  <div class="container">
+    <p class="figures__note reveal">
+      <span class="de">Vier Marken, alle selbst aufgebaut. Wir suchen Unternehmen aus der Tiergesundheit im weitesten Sinne — von Nutraceuticals über Technologie bis Services. Du hast eine spannende Story? Meld dich.</span>
+      <span class="en">Four brands, all built ourselves. We’re looking for companies in animal health in the broadest sense — from nutraceuticals to technology to services. Got an interesting story? Reach out.</span>
+    </p>
+    <div class="figures__row reveal">
+      <p class="figures__value">0</p>
+      <p class="figures__label">
+        <span class="de">verkaufte Unternehmen — keine Fondslaufzeit, keine Exit-Uhr</span>
+        <span class="en">companies sold on — no fund term, no exit clock</span>
+      </p>
+    </div>
+    <div class="figures__row reveal">
+      <p class="figures__value">100&nbsp;%</p>
+      <p class="figures__label">
+        <span class="de">der Marken laufen unter ihrem eigenen Namen weiter</span>
+        <span class="en">of the brands live on under their own name</span>
+      </p>
+    </div>
+    <div class="figures__row reveal">
+      <p class="figures__value">100&nbsp;%</p>
+      <p class="figures__label">
+        <span class="de">Eigenkapital — Haltedauer unbegrenzt</span>
+        <span class="en">equity financed — holding period unlimited</span>
+      </p>
+    </div>
+  </div>
+</section>
+</div>
 
 <!-- TEAM -->
 <div class="team-section" id="team">
@@ -3522,7 +3628,7 @@
     <div class="team-strip" data-team-strip>
       <article class="team-strip__person reveal">
         <div class="team-strip__shift">
-          <div class="team-strip__photo" style="background-image: url('assets/images/Inuvet_Team-Event-2023_224.jpg');" role="img" aria-label="Philipp"></div>
+          <div class="team-strip__photo" style="background-image: url('assets/images/Inuvet_Team-Event-2023_2233.jpg');" role="img" aria-label="Philipp"></div>
           <h3>Philipp</h3>
           <p class="team-strip__role">CEO</p>
           <p class="team-strip__bio">
@@ -3533,7 +3639,7 @@
       </article>
       <article class="team-strip__person reveal">
         <div class="team-strip__shift">
-          <div class="team-strip__photo" style="background-image: url('assets/images/Inuvet_Team-Event-2023_137.jpg');" role="img" aria-label="Christoph"></div>
+          <div class="team-strip__photo" style="background-image: url('assets/images/3---Inuvet-Sommerfest-2026_Tag-01_00111.jpg');" role="img" aria-label="Christoph"></div>
           <h3>Christoph</h3>
           <p class="team-strip__role">CEO</p>
           <p class="team-strip__bio">
@@ -3577,8 +3683,8 @@
       </article>
       <article class="team-strip__person reveal">
         <div class="team-strip__shift">
-          <div class="team-strip__photo" style="background-image: url('assets/images/298---Inuvet-Sommerfest-2026_Tag-01_298.jpg');" role="img" aria-label="Siggi"></div>
-          <h3>Siggi</h3>
+          <div class="team-strip__photo" style="background-image: url('assets/images/298---Inuvet-Sommerfest-2026_Tag-01_298.jpg');" role="img" aria-label="Hootch"></div>
+          <h3>Hootch</h3>
           <p class="team-strip__role">DOG</p>
           <p class="team-strip__bio">
             <span class="de">Steht für die vielen Hunde im Team — fast jeder Zweite hat einen, alle dürfen mit ins Büro. Der beste Beweis, dass wir die Tierliebe ernst meinen.</span>
@@ -3596,19 +3702,14 @@
     <div class="section-head section-head--reveal reveal">
       <div>
         <h2>
-          <span class="de">Du verkaufst nicht dein Unternehmen. Du schließt dich an.</span>
-          <span class="en">You’re not selling your company. You’re joining.</span>
+          <span class="de">Wie eine Partnerschaft mit uns aussieht, entscheiden wir gemeinsam.</span>
+          <span class="en">How a partnership with us looks is something we decide together.</span>
         </h2>
       </div>
     </div>
-    <p class="fit__intro reveal">
-      <span class="de">Wie eine Partnerschaft mit uns aussieht, entscheiden wir gemeinsam.</span>
-      <span class="en">How a partnership with us looks is something we decide together.</span>
-    </p>
     <ul class="fit__list">
       <li class="fit__item reveal">
         <div class="fit__cue" aria-hidden="true">
-          <span class="fit__index">01</span>
           <span class="fit__rule"></span>
         </div>
         <p class="fit__text">
@@ -3618,7 +3719,6 @@
       </li>
       <li class="fit__item reveal">
         <div class="fit__cue" aria-hidden="true">
-          <span class="fit__index">02</span>
           <span class="fit__rule"></span>
         </div>
         <p class="fit__text">
@@ -3628,7 +3728,6 @@
       </li>
       <li class="fit__item reveal">
         <div class="fit__cue" aria-hidden="true">
-          <span class="fit__index">03</span>
           <span class="fit__rule"></span>
         </div>
         <p class="fit__text">
@@ -3648,7 +3747,6 @@
     <ul class="fit__list">
       <li class="fit__item reveal">
         <div class="fit__cue" aria-hidden="true">
-          <span class="fit__index">01</span>
           <span class="fit__rule"></span>
         </div>
         <p class="fit__text">
@@ -3658,7 +3756,6 @@
       </li>
       <li class="fit__item reveal">
         <div class="fit__cue" aria-hidden="true">
-          <span class="fit__index">02</span>
           <span class="fit__rule"></span>
         </div>
         <p class="fit__text">
@@ -3668,7 +3765,6 @@
       </li>
       <li class="fit__item reveal">
         <div class="fit__cue" aria-hidden="true">
-          <span class="fit__index">03</span>
           <span class="fit__rule"></span>
         </div>
         <p class="fit__text">
@@ -3678,7 +3774,6 @@
       </li>
       <li class="fit__item reveal">
         <div class="fit__cue" aria-hidden="true">
-          <span class="fit__index">04</span>
           <span class="fit__rule"></span>
         </div>
         <p class="fit__text">
@@ -3708,32 +3803,29 @@
     <ul class="fit__list">
       <li class="fit__item reveal">
         <div class="fit__cue" aria-hidden="true">
-          <span class="fit__index">01</span>
           <span class="fit__rule"></span>
         </div>
         <p class="fit__text">
-          <span class="de">Wenn es profitabel ist — oder klar auf dem Weg dahin.</span>
-          <span class="en">If it’s profitable — or clearly on the way there.</span>
+          <span class="de">Wenn dein Unternehmen profitabel ist — oder klar auf dem Weg dahin</span>
+          <span class="en">If your company is profitable — or clearly on the way there</span>
         </p>
       </li>
       <li class="fit__item reveal">
         <div class="fit__cue" aria-hidden="true">
-          <span class="fit__index">02</span>
           <span class="fit__rule"></span>
         </div>
         <p class="fit__text">
-          <span class="de">Wenn es zur Tiergesundheit im weitesten Sinne gehört.</span>
-          <span class="en">If it belongs to animal health in the broadest sense.</span>
+          <span class="de">Wenn dein Unternehmen zur Tiergesundheit im weitesten Sinne gehört.</span>
+          <span class="en">If your company belongs to animal health in the broadest sense.</span>
         </p>
       </li>
       <li class="fit__item reveal">
         <div class="fit__cue" aria-hidden="true">
-          <span class="fit__index">03</span>
           <span class="fit__rule"></span>
         </div>
         <p class="fit__text">
-          <span class="de">Wenn du dich in unseren <a class="fit__mark" href="#grundsaetze">Grundsätzen</a> wiederfindest.</span>
-          <span class="en">If you recognize yourself in our <a class="fit__mark" href="#grundsaetze">principles</a>.</span>
+          <span class="de">Wenn du dich in unseren <a class="fit__mark" href="#grundsaetze">Grundsätzen<span class="material-symbols-outlined fit__mark-arrow" aria-hidden="true">arrow_outward</span></a> wiederfindest.</span>
+          <span class="en">If you recognize yourself in our <a class="fit__mark" href="#grundsaetze">principles<span class="material-symbols-outlined fit__mark-arrow" aria-hidden="true">arrow_outward</span></a>.</span>
         </p>
       </li>
     </ul>
@@ -3763,8 +3855,8 @@
           <span class="fit__rule"></span>
         </div>
         <p class="fit__text">
-          <span class="de"><a class="fit__mark" href="#kontakt">Melde dich</a>. Anruf, WhatsApp, Mail — was dir am liebsten ist. Kein Formular-Marathon.</span>
-          <span class="en"><a class="fit__mark" href="#kontakt">Get in touch</a>. Call, WhatsApp, email — whichever you prefer. No form marathon.</span>
+          <span class="de"><a class="fit__mark" href="#kontakt">Melde dich<span class="material-symbols-outlined fit__mark-arrow" aria-hidden="true">arrow_outward</span></a>. Anruf, WhatsApp, Mail — was dir am liebsten ist. Kein Formular-Marathon.</span>
+          <span class="en"><a class="fit__mark" href="#kontakt">Get in touch<span class="material-symbols-outlined fit__mark-arrow" aria-hidden="true">arrow_outward</span></a>. Call, WhatsApp, email — whichever you prefer. No form marathon.</span>
         </p>
       </li>
       <li class="fit__item reveal">
@@ -3890,6 +3982,13 @@
   </div>
 </section>
 
+<!-- Haupt-CTA — TODO: echte Buchungs-URL aus Torstens Google-Kalender-Terminplan (calendar.app.google/…) -->
+<a class="book-cta" href="https://calendar.app.google/PLATZHALTER" target="_blank" rel="noopener" data-book-cta>
+  <span class="material-symbols-outlined" aria-hidden="true">calendar_month</span>
+  <span class="de">Termin buchen</span>
+  <span class="en">Book a call</span>
+</a>
+
 <script>
 function toggleLang() {
   document.body.classList.toggle('lang-en');
@@ -3920,49 +4019,63 @@ function toggleLang() {
 (function() {
   const toggle = document.querySelector('.nav-toggle');
   const menuOverlay = document.querySelector('.nav-overlay');
-  const principlesOverlay = document.getElementById('grundsaetze');
   const nav = document.querySelector('.nav');
-  const openers = document.querySelectorAll('a[href="#grundsaetze"]');
+  const overlays = [
+    document.getElementById('grundsaetze'),
+    document.getElementById('unternehmensziel'),
+  ].filter(Boolean);
   let lastFocus = null;
+  let activeOverlay = null;
 
   function setToggleOpen(open) {
     toggle.classList.toggle('is-open', open);
     nav.classList.toggle('overlay-open', open);
     toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
   }
+  function anyOverlayOpen() {
+    return overlays.some((o) => o.classList.contains('is-open'));
+  }
   function openMenu() {
-    if (principlesOverlay?.classList.contains('is-open')) closePrinciples();
+    if (anyOverlayOpen()) closeOverlay();
     menuOverlay.classList.add('is-open');
     setToggleOpen(true);
   }
   function closeMenu() {
     menuOverlay.classList.remove('is-open');
-    if (!principlesOverlay?.classList.contains('is-open')) setToggleOpen(false);
+    if (!anyOverlayOpen()) setToggleOpen(false);
   }
-  function openPrinciples(e) {
+  function openOverlay(overlay, e) {
+    if (!overlay) return;
     if (e) e.preventDefault();
     if (menuOverlay.classList.contains('is-open')) closeMenu();
+    if (activeOverlay && activeOverlay !== overlay) closeOverlay({ restoreFocus: false });
     lastFocus = document.activeElement;
-    principlesOverlay.classList.add('is-open');
-    principlesOverlay.setAttribute('aria-hidden', 'false');
+    activeOverlay = overlay;
+    overlay.classList.add('is-open');
+    overlay.setAttribute('aria-hidden', 'false');
     document.body.classList.add('is-principles-open');
     setToggleOpen(true);
     toggle.focus({ preventScroll: true });
   }
-  function closePrinciples() {
-    if (!principlesOverlay?.classList.contains('is-open')) return;
-    principlesOverlay.classList.remove('is-open');
-    principlesOverlay.setAttribute('aria-hidden', 'true');
-    document.body.classList.remove('is-principles-open');
-    if (!menuOverlay.classList.contains('is-open')) setToggleOpen(false);
-    if (lastFocus && typeof lastFocus.focus === 'function') {
+  function closeOverlay(opts) {
+    const restoreFocus = !opts || opts.restoreFocus !== false;
+    const overlay = activeOverlay || overlays.find((o) => o.classList.contains('is-open'));
+    if (!overlay) return;
+    overlay.classList.remove('is-open');
+    overlay.setAttribute('aria-hidden', 'true');
+    if (!anyOverlayOpen()) {
+      document.body.classList.remove('is-principles-open');
+      if (!menuOverlay.classList.contains('is-open')) setToggleOpen(false);
+    }
+    activeOverlay = null;
+    if (restoreFocus && lastFocus && typeof lastFocus.focus === 'function') {
       lastFocus.focus({ preventScroll: true });
     }
   }
 
   toggle.addEventListener('click', () => {
-    if (principlesOverlay?.classList.contains('is-open')) {
-      closePrinciples();
+    if (anyOverlayOpen()) {
+      closeOverlay();
       return;
     }
     menuOverlay.classList.contains('is-open') ? closeMenu() : openMenu();
@@ -3971,19 +4084,18 @@ function toggleLang() {
     link.addEventListener('click', closeMenu);
   });
 
-  if (principlesOverlay) {
-    openers.forEach((link) => {
-      link.addEventListener('click', openPrinciples);
+  overlays.forEach((overlay) => {
+    document.querySelectorAll(`a[href="#${overlay.id}"]`).forEach((link) => {
+      link.addEventListener('click', (e) => openOverlay(overlay, e));
     });
-    document.addEventListener('keydown', (e) => {
-      if (e.key !== 'Escape') return;
-      if (principlesOverlay.classList.contains('is-open')) closePrinciples();
-      else if (menuOverlay.classList.contains('is-open')) closeMenu();
-    });
-    if (window.location.hash === '#grundsaetze') {
-      openPrinciples();
-    }
-  }
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key !== 'Escape') return;
+    if (anyOverlayOpen()) closeOverlay();
+    else if (menuOverlay.classList.contains('is-open')) closeMenu();
+  });
+  const hashOverlay = overlays.find((o) => window.location.hash === `#${o.id}`);
+  if (hashOverlay) openOverlay(hashOverlay);
 })();
 
 (function() {
@@ -3996,9 +4108,11 @@ function toggleLang() {
     const prefix = el.dataset.prefix || '';
     const suffix = (el.dataset.suffix || '').replace(/&nbsp;/g, '\u00a0');
     const pad = parseInt(el.dataset.pad || '0', 10);
+    const group = el.dataset.group || '';
     function format(n) {
       let s = String(n);
       if (pad > 0) s = s.padStart(pad, '0');
+      else if (group) s = s.replace(/\B(?=(\d{3})+(?!\d))/g, group);
       return prefix + s + suffix;
     }
     if (reduced) {
@@ -4073,7 +4187,13 @@ function toggleLang() {
 
     let blue = 0;
     blueBands.forEach(band => {
-      blue = Math.max(blue, bandMix(band.getBoundingClientRect(), vh, fade));
+      const rect = band.getBoundingClientRect();
+      const delay = parseFloat(band.getAttribute('data-band-delay') || '0');
+      const shift = Number.isFinite(delay) ? delay * vh : 0;
+      blue = Math.max(blue, bandMix({
+        top: rect.top + shift,
+        bottom: rect.bottom,
+      }, vh, fade));
     });
 
     let dark = 0;
@@ -4256,6 +4376,15 @@ function toggleLang() {
         }
       }
       root.style.setProperty('--quote-bg', opacity.toFixed(4));
+
+      /* Bild driftet nach unten, also gegen die Scrollrichtung des Inhalts */
+      if (reduced) {
+        root.style.setProperty('--quote-shift', '0px');
+      } else {
+        const progress = Math.max(0, Math.min(1, (vh - rect.top) / (rect.height + vh)));
+        root.style.setProperty('--quote-shift', `${Math.round((progress - 0.5) * vh * 0.2)}px`);
+      }
+
       navQuote = Math.max(navQuote, opacity);
     });
 
@@ -4345,22 +4474,6 @@ function toggleLang() {
 
 
 (function() {
-  const logos = document.querySelector('[data-brands-logos]');
-  if (!logos) return;
-  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if (reduced || !('IntersectionObserver' in window)) {
-    logos.classList.add('is-in');
-    return;
-  }
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      logos.classList.toggle('is-in', entry.isIntersecting);
-    });
-  }, { threshold: 0.35, rootMargin: '0px 0px -8% 0px' });
-  observer.observe(logos);
-})();
-
-(function() {
   const revealSelectors = '.reveal, .reveal-slide-left, .reveal-slide-right, .reveal-scale';
   if (!('IntersectionObserver' in window)) {
     document.querySelectorAll(revealSelectors).forEach(el => el.classList.add('is-visible'));
@@ -4400,6 +4513,36 @@ function toggleLang() {
   updateLegal();
   window.addEventListener('scroll', updateLegal, { passive: true });
   window.addEventListener('resize', updateLegal);
+})();
+
+/* Termin-CTA — ab #partnerschaft sichtbar, im Kontaktbereich wieder weg (dort stehen die Kanäle) */
+(function() {
+  const cta = document.querySelector('[data-book-cta]');
+  const start = document.getElementById('partnerschaft');
+  const stop = document.getElementById('kontakt');
+  if (!cta || !start) return;
+
+  /* zustandslos aus den Rects — stimmt auch beim Neuladen mitten auf der Seite */
+  function update() {
+    const vh = window.innerHeight;
+    const entered = start.getBoundingClientRect().top < vh * 0.6;
+    const atContact = stop ? stop.getBoundingClientRect().top < vh * 0.85 : false;
+    cta.classList.toggle('is-visible', entered && !atContact);
+  }
+
+  let tick = false;
+  function onScroll() {
+    if (tick) return;
+    tick = true;
+    requestAnimationFrame(() => {
+      update();
+      tick = false;
+    });
+  }
+
+  update();
+  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', onScroll);
 })();
 </script>
 </body>
