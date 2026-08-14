@@ -37,7 +37,7 @@ Patterns that live in the product (and as live examples in `UX-Styleguide.html`)
 
 ## Open todos (`planet-website.html`)
 
-1. **Telefonnummer** unten ergänzen (Footer / Kontakt) — inkl. echte `tel:`- und WhatsApp-Links bei „Und wie geht's weiter?“ (Anruf / WhatsApp).
+1. **Telefonnummer** unten ergänzen (Footer / Kontakt) — inkl. echte `tel:`- und WhatsApp-Links bei „Und wie geht's weiter?“ (Anruf / WhatsApp). Betrifft nur noch `planet-website.html`; in v2 sind Mail, Telefon und WhatsApp aus der Kontaktsektion entfernt, dort führt allein der Fragebogen zum Kontakt.
 2. **E-Mail freigeben** für den Fragebogen-Versand — FormSubmit-Aktivierung für `hello@plnt.group` (Aktivierungslink in der ersten Mail bestätigen). Ohne das kommt keine Antwort an.
 3. **Zahlen** für die einzelnen Unternehmen recherchieren und bestätigen lassen (Marken-Metriken / Stats-Strip).
 4. **Domain** `planet.group` verbinden (öffentliche Site statt GitHub-Pages-Vorschau).
