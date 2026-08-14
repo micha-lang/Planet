@@ -34,6 +34,8 @@ Patterns that live in the product (and as live examples in `UX-Styleguide.html`)
 
 - **Keine Screenshots und keine Browser-Durchläufe zur Routine-Kontrolle.** Änderungen, die am Code eindeutig ablesbar sind, direkt umsetzen und in Worten beschreiben.
 - Nur wenn eine Ursache am Code wirklich nicht erkennbar ist (z. B. Umbruch-/Layout-Verhalten, das erst beim Rendern entsteht), im Browser nachmessen — **vorher kurz fragen**.
+- **Nach dem Push immer nach `main` mergen.** GitHub Pages baut aus `main`; ohne Merge landet nichts in der Vorschau. Nicht jedes Mal nachfragen.
+- Vorschau-URLs: [v2](https://planet-group.github.io/Planet/planet-website-v2.html) · [Live-Fassung](https://planet-group.github.io/Planet/planet-website.html). Es gibt **keine** Seite unter `/Planet/` (404) — `/Planet/Pages/` ist der Signatur-Generator, nicht die Website.
 
 ## Open todos (`planet-website.html`)
 
