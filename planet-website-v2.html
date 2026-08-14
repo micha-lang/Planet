@@ -658,6 +658,19 @@
   .nav-overlay.is-open .nav-overlay-link:nth-child(11) { animation-delay: 660ms; }
   .nav-overlay.is-open .nav-overlay-link:nth-child(12) { animation-delay: 720ms; }
   .nav-overlay.is-open .nav-overlay-link:nth-child(13) { animation-delay: 780ms; }
+  .nav-overlay.is-open .nav-overlay-link:nth-child(14) { animation-delay: 840ms; }
+  /* Haupt-CTA im Menü — gelb und voll deckend, damit sie aus der Liste heraussticht */
+  .nav-overlay-link--cta {
+    color: var(--planet-secondary);
+    opacity: 1;
+  }
+  .nav-overlay.is-open .nav-overlay-link--cta {
+    animation-name: nav-cta-in;
+  }
+  @keyframes nav-cta-in {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
 
   @keyframes hero-overlay-in {
     from { opacity: 0; }
@@ -1093,73 +1106,6 @@
   .nav.overlay-open .lang-toggle:hover { background: var(--planet-white); color: var(--planet-primary); }
 
   /*
-    Termin-CTA — schwebt unten rechts, blendet erst ab #kriterien ein.
-    Gelb gefüllt: trägt auf Weiß, Blau, Foto und Dunkel gleich gut,
-    braucht deshalb keine Scroll-Farblogik wie Logo und Menü-Icon.
-    z-index unter Nav (101) und Overlays (100) — die decken den Button zu.
-  */
-  .book-cta {
-    position: fixed;
-    z-index: 99;
-    right: max(var(--space-4), env(safe-area-inset-right, 0px));
-    bottom: max(var(--space-4), env(safe-area-inset-bottom, 0px));
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5em;
-    height: 52px;
-    padding: 0 var(--space-4);
-    border-radius: var(--radius-pill);
-    background: var(--planet-secondary);
-    color: var(--planet-black);
-    font-family: var(--planet-font);
-    font-weight: var(--weight-display);
-    font-size: var(--text-body);
-    line-height: 1;
-    white-space: nowrap;
-    text-decoration: none;
-    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.22);
-    opacity: 0;
-    transform: translateY(20px);
-    pointer-events: none;
-    transition:
-      opacity 400ms var(--ease-out),
-      transform 400ms var(--ease-out),
-      background 200ms var(--ease-out),
-      color 200ms var(--ease-out);
-  }
-  .book-cta.is-visible {
-    opacity: 1;
-    transform: none;
-    pointer-events: auto;
-  }
-  .book-cta:hover,
-  .book-cta:focus-visible {
-    background: var(--planet-black);
-    color: var(--planet-secondary);
-    text-decoration: none;
-  }
-  .book-cta:focus-visible {
-    outline: 2px solid currentColor;
-    outline-offset: 3px;
-  }
-  .book-cta .material-symbols-outlined {
-    font-size: 1.15em;
-  }
-  @media (max-width: 640px) {
-    .book-cta {
-      right: max(var(--space-3), env(safe-area-inset-right, 0px));
-      bottom: max(var(--space-3), env(safe-area-inset-bottom, 0px));
-      height: 48px;
-      padding: 0 var(--space-3);
-      font-size: var(--text-meta);
-    }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .book-cta { transition: opacity 200ms linear; transform: none; }
-    .book-cta.is-visible { transform: none; }
-  }
-
-  /*
     Zitat Variante B (Landing-Test):
     Foto sofort sichtbar im Band, scrollt langsam (Parallax).
     Text scrollt normal mit. Styleguide behält quote-type (Fade).
@@ -1352,9 +1298,7 @@
     border-bottom-color: var(--line-color);
   }
   .contact-band .section-head h2,
-  .contact-band .contact-intro p,
-  .contact-band .contact-success h3,
-  .contact-band .contact-success p {
+  .contact-band .contact-intro p {
     color: var(--planet-white);
   }
   .contact-layout {
@@ -1391,172 +1335,59 @@
     border-bottom-color: var(--planet-white);
   }
 
-  .contact-form {
-    display: grid;
-    gap: var(--space-4);
+  /* Fragebogen-Einstieg — ersetzt das frühere Kontaktformular */
+  .contact-layout--entry {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    align-items: center;
   }
-  .contact-form__row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: var(--space-4);
-  }
-  .contact-field {
+  .contact-entry {
     display: flex;
     flex-direction: column;
-    gap: 0.35em;
-    border-bottom: var(--line-width) solid color-mix(in srgb, var(--planet-white) 35%, transparent);
-    transition: border-color var(--motion-fast) var(--ease-out);
-  }
-  .contact-field:focus-within {
-    border-bottom-color: var(--planet-white);
-  }
-  .contact-field label {
-    font-family: var(--planet-font);
-    font-weight: var(--weight-display);
-    font-size: var(--text-meta);
-    line-height: 1.2;
-    color: var(--planet-white);
-    opacity: 1;
-  }
-  .contact-field input,
-  .contact-field textarea {
-    width: 100%;
-    border: 0;
-    outline: 0;
-    background: transparent;
-    border-radius: 0;
-    appearance: none;
-    font-family: var(--planet-font);
-    font-size: var(--text-body);
-    font-weight: var(--weight-body);
-    line-height: 1.35;
-    color: var(--planet-white);
-    caret-color: var(--planet-white);
-    padding: 0.15em 0 0.65em;
-    resize: none;
-  }
-  .contact-field textarea {
-    min-height: 7.5em;
-    line-height: 1.4;
-  }
-  .contact-field input::placeholder,
-  .contact-field textarea::placeholder {
-    color: var(--planet-white);
-    opacity: 0.35;
-  }
-  .contact-field input:-webkit-autofill,
-  .contact-field textarea:-webkit-autofill {
-    -webkit-text-fill-color: var(--planet-white);
-    caret-color: var(--planet-white);
-    transition: background-color 9999s ease-out;
-    box-shadow: 0 0 0 1000px transparent inset;
-  }
-  .contact-form__foot {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-between;
+    align-items: start;
     gap: var(--space-3);
-    margin-top: var(--space-1);
   }
-  .contact-form__note {
-    font-size: var(--text-meta);
-    line-height: 1.35;
-    color: var(--planet-white);
-    opacity: 0.5;
-    max-width: 28ch;
-  }
-  .contact-form__submit {
+  .contact-entry__cta {
     display: inline-flex;
     align-items: center;
     gap: var(--space-1);
-    width: auto;
-    min-width: 200px;
     background: var(--planet-secondary);
     color: var(--planet-black);
+    border-color: var(--planet-secondary);
   }
-  .contact-form__submit:hover {
-    background: var(--planet-black);
-    color: var(--planet-secondary);
+  .contact-entry__cta:hover {
+    background: var(--planet-white);
+    color: var(--planet-black);
+    border-color: var(--planet-white);
+    text-decoration: none;
   }
-  .contact-form__submit:focus-visible {
+  .contact-entry__cta:focus-visible {
     outline-color: var(--planet-secondary);
   }
-  .contact-form__submit .material-symbols-outlined {
+  .contact-entry__cta .material-symbols-outlined {
     transition: transform var(--motion-fast) var(--ease-out);
   }
-  .contact-form__submit:hover .material-symbols-outlined {
+  .contact-entry__cta:hover .material-symbols-outlined {
     transform: translateX(4px);
   }
-
-  .contact-form.is-sending .contact-form__submit { opacity: 0.55; pointer-events: none; }
-  .contact-form.is-sent { display: none; }
-  .contact-form__error {
-    display: none;
+  .contact-entry__note {
+    max-width: 34ch;
     margin: 0;
     font-size: var(--text-meta);
     line-height: 1.35;
-    color: var(--planet-secondary);
-    max-width: 36ch;
-  }
-  .contact-form__error.is-visible { display: block; }
-  .contact-success {
-    display: none;
-    flex-direction: column;
-    justify-content: center;
-    gap: var(--space-3);
-    min-height: 280px;
-    padding: var(--space-5) 0;
-    border-top: var(--line-width) solid color-mix(in srgb, var(--planet-white) 35%, transparent);
     color: var(--planet-white);
-  }
-  .contact-success.is-visible {
-    display: flex;
-    animation: contact-success-in 520ms var(--ease-out) both;
-  }
-  .contact-success__icon {
-    width: 2.5rem;
-    height: 2.5rem;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: var(--radius-circle);
-    background: var(--planet-secondary);
-    color: var(--planet-black);
-  }
-  .contact-success__icon .material-symbols-outlined {
-    font-size: 1.35rem;
-    font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-  }
-  .contact-success h3 {
-    font-size: var(--text-h2);
-    line-height: 0.95;
-    max-width: 16ch;
-    color: var(--planet-white);
-    margin: 0;
-  }
-  .contact-success p {
-    max-width: 34ch;
-    line-height: 1.35;
-    opacity: 0.8;
-    color: var(--planet-white);
-    margin: 0;
-  }
-  @keyframes contact-success-in {
-    from { opacity: 0; transform: translateY(12px); }
-    to { opacity: 1; transform: translateY(0); }
+    opacity: 0.6;
   }
 
   @media (max-width: 1024px) {
-    .contact-layout { grid-template-columns: 1fr; gap: var(--space-5); }
+    .contact-layout,
+    .contact-layout--entry { grid-template-columns: 1fr; gap: var(--space-5); }
     .contact-intro p { max-width: 36ch; }
   }
   @media (max-width: 640px) {
     .contact-band { padding: var(--space-6) 0 var(--space-12); }
-    .contact-form__row { grid-template-columns: 1fr; gap: var(--space-3); }
-    .contact-form__foot { flex-direction: column; align-items: stretch; }
-    .contact-form__submit { width: 100%; justify-content: center; }
-    .contact-success h3 { font-size: var(--text-h3); }
+    .contact-entry { align-items: stretch; }
+    .contact-entry__cta { width: 100%; justify-content: center; text-align: center; }
+    .contact-entry__note { max-width: none; }
   }
 
   /* Marken — Entwicklungen seit Gründung */
@@ -2696,6 +2527,302 @@
     letter-spacing: -0.02em;
     color: var(--planet-black);
   }
+  /*
+    Fragebogen — erbt Position, Gelb und Nav-Umschaltung von .principles-overlay.
+    Ein Schritt pro Screen, vertikal zentriert; Fortschritt oben, Steuerung unten.
+  */
+  .quiz-overlay .principles-overlay__scroll {
+    display: flex;
+  }
+  .quiz {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    width: min(100%, 1480px);
+    margin: 0 auto;
+    padding: 0 var(--space-5);
+  }
+  .quiz__bar {
+    flex: none;
+    max-width: 62ch;
+    margin-bottom: var(--space-6);
+  }
+  .quiz__count {
+    margin: 0 0 var(--space-1);
+    font-family: var(--planet-font);
+    font-size: var(--text-meta);
+    font-weight: var(--weight-body);
+    font-variant-numeric: tabular-nums;
+    color: color-mix(in srgb, var(--planet-black) 55%, transparent);
+  }
+  .quiz__track {
+    height: 2px;
+    background: color-mix(in srgb, var(--planet-black) 18%, transparent);
+  }
+  .quiz__fill {
+    display: block;
+    width: 0;
+    height: 100%;
+    background: var(--planet-black);
+    transition: width 320ms var(--ease-out);
+  }
+  .quiz__form {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+  }
+  /* display:flex würde das hidden-Attribut sonst überstimmen */
+  .quiz__form[hidden] { display: none; }
+  /* Schritte liegen nicht gestapelt — der Fluss trägt die Höhe, das vermeidet Sprünge */
+  .quiz__step {
+    flex: 1;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    max-width: 62ch;
+  }
+  .quiz__step[hidden] { display: none; }
+  .quiz__step.is-active {
+    animation: quiz-in 380ms var(--ease-out) both;
+  }
+  @keyframes quiz-in {
+    from { opacity: 0; transform: translateY(14px); }
+    to { opacity: 1; transform: none; }
+  }
+  .quiz__q {
+    padding: 0;
+    margin: 0 0 var(--space-4);
+    font-family: var(--planet-font);
+    font-weight: var(--weight-display);
+    font-size: var(--text-h3);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: var(--planet-black);
+  }
+  .quiz__hint {
+    margin: calc(var(--space-4) * -1 + var(--space-1)) 0 var(--space-4);
+    font-size: var(--text-meta);
+    line-height: 1.4;
+    color: color-mix(in srgb, var(--planet-black) 62%, transparent);
+  }
+  .quiz__options {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+  }
+  .quiz__option {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-2) var(--space-3);
+    border: 2px solid var(--planet-black);
+    border-radius: var(--radius-pill);
+    cursor: pointer;
+    transition:
+      background var(--motion-instant) var(--ease-out),
+      color var(--motion-instant) var(--ease-out);
+  }
+  /* Radio bleibt echtes Input (Tastatur, Screenreader), nur optisch ersetzt */
+  .quiz__option input {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+  .quiz__option-key {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 1.9em;
+    height: 1.9em;
+    border-radius: var(--radius-pill);
+    background: color-mix(in srgb, var(--planet-black) 10%, transparent);
+    font-family: var(--planet-font);
+    font-size: var(--text-meta);
+    font-weight: var(--weight-display);
+    line-height: 1;
+  }
+  .quiz__option-text {
+    font-family: var(--planet-font);
+    font-size: var(--text-body);
+    font-weight: var(--weight-display);
+    line-height: 1.2;
+  }
+  .quiz__option:hover,
+  .quiz__option:has(input:focus-visible) {
+    background: color-mix(in srgb, var(--planet-black) 8%, transparent);
+  }
+  .quiz__option:has(input:focus-visible) {
+    outline: 2px solid var(--planet-black);
+    outline-offset: 3px;
+  }
+  .quiz__option:has(input:checked) {
+    background: var(--planet-black);
+    color: var(--planet-secondary);
+  }
+  .quiz__option:has(input:checked) .quiz__option-key {
+    background: color-mix(in srgb, var(--planet-secondary) 22%, transparent);
+  }
+  .quiz__textarea,
+  .quiz__field input {
+    width: 100%;
+    font-family: var(--planet-font);
+    font-size: var(--text-body);
+    font-weight: var(--weight-body);
+    line-height: 1.35;
+    color: var(--planet-black);
+    background: transparent;
+    border: 0;
+    border-bottom: 2px solid var(--planet-black);
+    border-radius: 0;
+    padding: var(--space-1) 0;
+    resize: vertical;
+  }
+  .quiz__textarea::placeholder,
+  .quiz__field input::placeholder {
+    color: color-mix(in srgb, var(--planet-black) 38%, transparent);
+  }
+  .quiz__textarea:focus,
+  .quiz__field input:focus {
+    outline: none;
+    border-bottom-color: var(--planet-black);
+    box-shadow: 0 2px 0 0 var(--planet-black);
+  }
+  .quiz__fields {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-4) var(--space-3);
+  }
+  .quiz__field label {
+    display: block;
+    margin-bottom: var(--space-1);
+    font-family: var(--planet-font);
+    font-size: var(--text-meta);
+    font-weight: var(--weight-display);
+    color: var(--planet-black);
+  }
+  .quiz__optional {
+    font-weight: var(--weight-body);
+    color: color-mix(in srgb, var(--planet-black) 50%, transparent);
+  }
+  .quiz__field input[aria-invalid="true"] {
+    border-bottom-color: #FF3B30;
+  }
+  .quiz__foot {
+    flex: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
+    max-width: 62ch;
+    padding: var(--space-5) 0 var(--space-6);
+  }
+  .quiz__back {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4em;
+    padding: 0;
+    border: 0;
+    background: none;
+    cursor: pointer;
+    font-family: var(--planet-font);
+    font-size: var(--text-meta);
+    font-weight: var(--weight-display);
+    color: color-mix(in srgb, var(--planet-black) 60%, transparent);
+    transition: color var(--motion-instant) var(--ease-out);
+  }
+  .quiz__back:hover { color: var(--planet-black); }
+  .quiz__back[hidden] { display: none; }
+  /* Zurück-Knopf fehlt im ersten Schritt — Weiter soll trotzdem rechts stehen */
+  .quiz__back[hidden] + .quiz__next { margin-left: auto; }
+  .quiz__next {
+    background: var(--planet-black);
+    color: var(--planet-secondary);
+    border-color: var(--planet-black);
+  }
+  .quiz__next:hover {
+    background: var(--planet-secondary);
+    color: var(--planet-black);
+  }
+  .quiz__next[disabled] {
+    opacity: 0.4;
+    pointer-events: none;
+  }
+  .quiz__error {
+    max-width: 62ch;
+    margin: 0 0 var(--space-6);
+    font-size: var(--text-meta);
+    color: #B00020;
+    opacity: 0;
+    height: 0;
+    overflow: hidden;
+    transition: opacity 200ms var(--ease-out);
+  }
+  .quiz__error.is-visible {
+    opacity: 1;
+    height: auto;
+  }
+  .quiz__done {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    max-width: 62ch;
+    padding-bottom: var(--space-6);
+    animation: quiz-in 420ms var(--ease-out) both;
+  }
+  .quiz__done[hidden] { display: none; }
+  .quiz__done-icon {
+    display: grid;
+    place-items: center;
+    width: 3.5rem;
+    height: 3.5rem;
+    margin-bottom: var(--space-3);
+    border-radius: var(--radius-pill);
+    background: var(--planet-black);
+    color: var(--planet-secondary);
+  }
+  .quiz__done h3 {
+    margin: 0 0 var(--space-2);
+    font-family: var(--planet-font);
+    font-weight: var(--weight-display);
+    font-size: var(--text-h3);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+  }
+  .quiz__done p {
+    margin: 0;
+    font-size: var(--text-body);
+    line-height: 1.35;
+    max-width: 34ch;
+  }
+  .quiz__done-note {
+    margin-top: var(--space-3) !important;
+    font-size: var(--text-meta) !important;
+    color: color-mix(in srgb, var(--planet-black) 62%, transparent);
+  }
+  .quiz__done-note a { color: inherit; }
+  @media (max-width: 640px) {
+    .quiz { padding: 0 var(--space-3); }
+    .quiz__bar { margin-bottom: var(--space-4); }
+    .quiz__q { font-size: var(--text-h4); }
+    .quiz__option { padding: var(--space-1) var(--space-2); }
+    .quiz__option-text { font-size: var(--text-meta); }
+    .quiz__fields { grid-template-columns: 1fr; gap: var(--space-3); }
+    .quiz__foot { padding: var(--space-4) 0 var(--space-5); }
+    .quiz__done h3 { font-size: var(--text-h4); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .quiz__step.is-active,
+    .quiz__done { animation: none; }
+    .quiz__fill { transition: none; }
+  }
+
   /* Mission-Sektion: Gelb-Mark auf Blau */
   #mission .fit__mark {
     color: var(--planet-black);
@@ -2751,6 +2878,7 @@
     <a class="nav-overlay-link" href="#kriterien"><span class="de">Kriterien</span><span class="en">Criteria</span></a>
     <a class="nav-overlay-link" href="#weiter"><span class="de">Weiter</span><span class="en">Next</span></a>
     <a class="nav-overlay-link" href="#kontakt"><span class="de">Kontakt</span><span class="en">Get in touch</span></a>
+    <a class="nav-overlay-link nav-overlay-link--cta" href="#fragebogen"><span class="de">Passt es? — 3 Minuten</span><span class="en">Is it a fit? — 3 minutes</span></a>
   </nav>
 </div>
 
@@ -2845,6 +2973,242 @@
         <span class="de">Jeden Tag ein bisschen geiler.</span>
         <span class="en">A little more awesome every day.</span>
       </p>
+    </div>
+  </div>
+</div>
+
+<!--
+  FRAGEBOGEN — Haupt-CTA statt Terminbuchung.
+  Filtert vor und erzeugt Commitment; Kontaktdaten bewusst zuletzt.
+  Nach dem Absenden kein Kalender, sondern eine Zusage in 2 Werktagen —
+  wer ein Gespräch bekommt, entscheidet die interne Sichtung.
+-->
+<div class="principles-overlay quiz-overlay" id="fragebogen" role="dialog" aria-modal="true" aria-labelledby="quiz-title" aria-hidden="true">
+  <div class="principles-overlay__scroll">
+    <div class="quiz" data-quiz>
+      <div class="quiz__bar" data-quiz-bar>
+        <p class="quiz__count">
+          <span class="de">Frage <span data-quiz-current>1</span> von <span data-quiz-total>6</span></span>
+          <span class="en">Question <span data-quiz-current>1</span> of <span data-quiz-total>6</span></span>
+        </p>
+        <div class="quiz__track" aria-hidden="true"><span class="quiz__fill" data-quiz-fill></span></div>
+      </div>
+
+      <h2 class="visually-hidden" id="quiz-title">
+        <span class="de">Passt dein Unternehmen zu uns?</span>
+        <span class="en">Is your company a fit for us?</span>
+      </h2>
+
+      <form class="quiz__form" data-quiz-form data-quiz-to="hello@plnt.group" novalidate>
+
+        <!-- 1 — Umsatz. Platzhalter-Bänder: von der Geschäftsführung bestätigen lassen -->
+        <fieldset class="quiz__step is-active" data-quiz-step data-quiz-key="Umsatz">
+          <legend class="quiz__q">
+            <span class="de">Welche Umsatzgrößenordnung hat dein Unternehmen?</span>
+            <span class="en">What’s your company’s revenue range?</span>
+          </legend>
+          <div class="quiz__options">
+            <label class="quiz__option">
+              <input type="radio" name="umsatz" value="unter 1 Mio €">
+              <span class="quiz__option-key" aria-hidden="true">A</span>
+              <span class="quiz__option-text"><span class="de">Unter 1 Mio. €</span><span class="en">Under €1M</span></span>
+            </label>
+            <label class="quiz__option">
+              <input type="radio" name="umsatz" value="1–5 Mio €">
+              <span class="quiz__option-key" aria-hidden="true">B</span>
+              <span class="quiz__option-text"><span class="de">1–5 Mio. €</span><span class="en">€1–5M</span></span>
+            </label>
+            <label class="quiz__option">
+              <input type="radio" name="umsatz" value="5–15 Mio €">
+              <span class="quiz__option-key" aria-hidden="true">C</span>
+              <span class="quiz__option-text"><span class="de">5–15 Mio. €</span><span class="en">€5–15M</span></span>
+            </label>
+            <label class="quiz__option">
+              <input type="radio" name="umsatz" value="über 15 Mio €">
+              <span class="quiz__option-key" aria-hidden="true">D</span>
+              <span class="quiz__option-text"><span class="de">Über 15 Mio. €</span><span class="en">Over €15M</span></span>
+            </label>
+          </div>
+        </fieldset>
+
+        <!-- 2 — Profitabilität, gleiche Formulierung wie in den Kriterien -->
+        <fieldset class="quiz__step" data-quiz-step data-quiz-key="Profitabilität" hidden>
+          <legend class="quiz__q">
+            <span class="de">Ist dein Unternehmen profitabel?</span>
+            <span class="en">Is your company profitable?</span>
+          </legend>
+          <div class="quiz__options">
+            <label class="quiz__option">
+              <input type="radio" name="profitabel" value="ja, profitabel">
+              <span class="quiz__option-key" aria-hidden="true">A</span>
+              <span class="quiz__option-text"><span class="de">Ja, profitabel</span><span class="en">Yes, profitable</span></span>
+            </label>
+            <label class="quiz__option">
+              <input type="radio" name="profitabel" value="klar auf dem Weg dahin">
+              <span class="quiz__option-key" aria-hidden="true">B</span>
+              <span class="quiz__option-text"><span class="de">Klar auf dem Weg dahin</span><span class="en">Clearly on the way there</span></span>
+            </label>
+            <label class="quiz__option">
+              <input type="radio" name="profitabel" value="noch nicht">
+              <span class="quiz__option-key" aria-hidden="true">C</span>
+              <span class="quiz__option-text"><span class="de">Noch nicht</span><span class="en">Not yet</span></span>
+            </label>
+          </div>
+        </fieldset>
+
+        <!-- 3 — spiegelt die Sektion „Zwei Wege“ -->
+        <fieldset class="quiz__step" data-quiz-step data-quiz-key="Weg" hidden>
+          <legend class="quiz__q">
+            <span class="de">Worum geht es dir — Wachstum oder Nachfolge?</span>
+            <span class="en">What’s it about for you — growth or succession?</span>
+          </legend>
+          <div class="quiz__options">
+            <label class="quiz__option">
+              <input type="radio" name="weg" value="Wachstum">
+              <span class="quiz__option-key" aria-hidden="true">A</span>
+              <span class="quiz__option-text"><span class="de">Wachstum</span><span class="en">Growth</span></span>
+            </label>
+            <label class="quiz__option">
+              <input type="radio" name="weg" value="Nachfolge">
+              <span class="quiz__option-key" aria-hidden="true">B</span>
+              <span class="quiz__option-text"><span class="de">Nachfolge</span><span class="en">Succession</span></span>
+            </label>
+            <label class="quiz__option">
+              <input type="radio" name="weg" value="beides">
+              <span class="quiz__option-key" aria-hidden="true">C</span>
+              <span class="quiz__option-text"><span class="de">Beides</span><span class="en">Both</span></span>
+            </label>
+            <label class="quiz__option">
+              <input type="radio" name="weg" value="noch offen">
+              <span class="quiz__option-key" aria-hidden="true">D</span>
+              <span class="quiz__option-text"><span class="de">Noch offen</span><span class="en">Still open</span></span>
+            </label>
+          </div>
+        </fieldset>
+
+        <!-- 4 — Zeithorizont -->
+        <fieldset class="quiz__step" data-quiz-step data-quiz-key="Zeithorizont" hidden>
+          <legend class="quiz__q">
+            <span class="de">Bis wann willst du etwas verändern?</span>
+            <span class="en">By when do you want to change something?</span>
+          </legend>
+          <div class="quiz__options">
+            <label class="quiz__option">
+              <input type="radio" name="zeithorizont" value="so schnell wie möglich">
+              <span class="quiz__option-key" aria-hidden="true">A</span>
+              <span class="quiz__option-text"><span class="de">So schnell wie möglich</span><span class="en">As soon as possible</span></span>
+            </label>
+            <label class="quiz__option">
+              <input type="radio" name="zeithorizont" value="in den nächsten 12 Monaten">
+              <span class="quiz__option-key" aria-hidden="true">B</span>
+              <span class="quiz__option-text"><span class="de">In den nächsten 12 Monaten</span><span class="en">Within the next 12 months</span></span>
+            </label>
+            <label class="quiz__option">
+              <input type="radio" name="zeithorizont" value="in 1–3 Jahren">
+              <span class="quiz__option-key" aria-hidden="true">C</span>
+              <span class="quiz__option-text"><span class="de">In 1–3 Jahren</span><span class="en">In 1–3 years</span></span>
+            </label>
+            <label class="quiz__option">
+              <input type="radio" name="zeithorizont" value="noch offen">
+              <span class="quiz__option-key" aria-hidden="true">D</span>
+              <span class="quiz__option-text"><span class="de">Noch offen</span><span class="en">Still open</span></span>
+            </label>
+          </div>
+        </fieldset>
+
+        <!-- 5 — Beweggrund. Freitext: bringt zum Nachdenken und qualifiziert das Gespräch vor -->
+        <fieldset class="quiz__step" data-quiz-step data-quiz-key="Beweggrund" hidden>
+          <legend class="quiz__q">
+            <span class="de">Was treibt dich gerade um?</span>
+            <span class="en">What’s on your mind right now?</span>
+          </legend>
+          <p class="quiz__hint">
+            <span class="de">Ein paar Sätze reichen. Je ehrlicher, desto besser können wir einschätzen, ob es passt.</span>
+            <span class="en">A few sentences are enough. The more honest, the better we can judge the fit.</span>
+          </p>
+          <textarea
+            class="quiz__textarea"
+            name="beweggrund"
+            rows="5"
+            data-ph-de="Zum Beispiel: Ich mache seit 14 Jahren alles selbst und merke, dass ich an eine Grenze komme."
+            data-ph-en="For example: I’ve done everything myself for 14 years and I’m hitting a wall."
+            placeholder="Zum Beispiel: Ich mache seit 14 Jahren alles selbst und merke, dass ich an eine Grenze komme."
+          ></textarea>
+        </fieldset>
+
+        <!-- 6 — Kontaktdaten ganz am Ende, das hebt die Abschlussquote -->
+        <fieldset class="quiz__step" data-quiz-step data-quiz-key="Kontakt" hidden>
+          <legend class="quiz__q">
+            <span class="de">Wer bist du?</span>
+            <span class="en">Who are you?</span>
+          </legend>
+          <p class="quiz__hint">
+            <span class="de">Damit wir uns melden können. Keine Newsletter, keine Weitergabe.</span>
+            <span class="en">So we can get back to you. No newsletters, nothing shared.</span>
+          </p>
+          <div class="quiz__fields">
+            <div class="quiz__field">
+              <label for="q-name"><span class="de">Name</span><span class="en">Name</span></label>
+              <input id="q-name" name="name" type="text" autocomplete="name" required placeholder="Alex Mertens">
+            </div>
+            <div class="quiz__field">
+              <label for="q-firma"><span class="de">Unternehmen</span><span class="en">Company</span></label>
+              <input id="q-firma" name="unternehmen" type="text" autocomplete="organization" required placeholder="Mertens Tiergesundheit GmbH">
+            </div>
+            <div class="quiz__field">
+              <label for="q-mail"><span class="de">E-Mail</span><span class="en">Email</span></label>
+              <input id="q-mail" name="email" type="email" autocomplete="email" required placeholder="alex@company.com">
+            </div>
+            <div class="quiz__field">
+              <label for="q-tel">
+                <span class="de">Telefon <span class="quiz__optional">optional</span></span>
+                <span class="en">Phone <span class="quiz__optional">optional</span></span>
+              </label>
+              <input id="q-tel" name="telefon" type="tel" autocomplete="tel" placeholder="+49 …">
+            </div>
+          </div>
+        </fieldset>
+
+        <!-- Honeypot (FormSubmit: _honey) -->
+        <input type="text" name="_honey" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;opacity:0;height:0;width:0;">
+
+        <div class="quiz__foot">
+          <button type="button" class="quiz__back" data-quiz-back hidden>
+            <span class="material-symbols-outlined" aria-hidden="true">arrow_back</span>
+            <span class="de">Zurück</span>
+            <span class="en">Back</span>
+          </button>
+          <button type="submit" class="btn quiz__next" data-quiz-next>
+            <span class="de" data-quiz-next-de>Weiter</span>
+            <span class="en" data-quiz-next-en>Continue</span>
+            <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span>
+          </button>
+        </div>
+
+        <p class="quiz__error" data-quiz-error role="alert">
+          <span class="de">Senden fehlgeschlagen. Bitte nochmal versuchen oder direkt an hello@plnt.group schreiben.</span>
+          <span class="en">Sending failed. Please try again or email hello@plnt.group directly.</span>
+        </p>
+      </form>
+
+      <!-- Wellenbrecher: bewusst kein Buchungslink -->
+      <div class="quiz__done" data-quiz-done aria-live="polite" tabindex="-1" hidden>
+        <span class="quiz__done-icon" aria-hidden="true">
+          <span class="material-symbols-outlined">check</span>
+        </span>
+        <h3>
+          <span class="de">Danke — angekommen.</span>
+          <span class="en">Thank you — received.</span>
+        </h3>
+        <p>
+          <span class="de">Wir prüfen deine Angaben und melden uns innerhalb von 2 Werktagen persönlich bei dir.</span>
+          <span class="en">We’ll review your answers and get back to you personally within 2 business days.</span>
+        </p>
+        <p class="quiz__done-note">
+          <span class="de">Wenn es dringend ist: <a href="mailto:hello@plnt.group">hello@plnt.group</a></span>
+          <span class="en">If it’s urgent: <a href="mailto:hello@plnt.group">hello@plnt.group</a></span>
+        </p>
+      </div>
     </div>
   </div>
 </div>
@@ -3855,13 +4219,23 @@
           <span class="fit__rule"></span>
         </div>
         <p class="fit__text">
-          <span class="de"><a class="fit__mark" href="#kontakt">Melde dich<span class="material-symbols-outlined fit__mark-arrow" aria-hidden="true">arrow_outward</span></a>. Anruf, WhatsApp, Mail — was dir am liebsten ist. Kein Formular-Marathon.</span>
-          <span class="en"><a class="fit__mark" href="#kontakt">Get in touch<span class="material-symbols-outlined fit__mark-arrow" aria-hidden="true">arrow_outward</span></a>. Call, WhatsApp, email — whichever you prefer. No form marathon.</span>
+          <span class="de">Du füllst den <a class="fit__mark" href="#fragebogen">Fragebogen<span class="material-symbols-outlined fit__mark-arrow" aria-hidden="true">arrow_outward</span></a> aus. Sechs Fragen, drei Minuten — danach wissen wir beide, worum es geht.</span>
+          <span class="en">You fill in the <a class="fit__mark" href="#fragebogen">questionnaire<span class="material-symbols-outlined fit__mark-arrow" aria-hidden="true">arrow_outward</span></a>. Six questions, three minutes — after that we both know what this is about.</span>
         </p>
       </li>
       <li class="fit__item reveal">
         <div class="fit__cue" aria-hidden="true">
           <span class="fit__index">02</span>
+          <span class="fit__rule"></span>
+        </div>
+        <p class="fit__text">
+          <span class="de">Wir lesen deine Antworten und melden uns innerhalb von 2 Werktagen persönlich. Kein Callcenter, kein automatischer Kalender.</span>
+          <span class="en">We read your answers and get back to you personally within 2 business days. No call center, no automated calendar.</span>
+        </p>
+      </li>
+      <li class="fit__item reveal">
+        <div class="fit__cue" aria-hidden="true">
+          <span class="fit__index">03</span>
           <span class="fit__rule"></span>
         </div>
         <p class="fit__text">
@@ -3871,7 +4245,7 @@
       </li>
       <li class="fit__item reveal">
         <div class="fit__cue" aria-hidden="true">
-          <span class="fit__index">03</span>
+          <span class="fit__index">04</span>
           <span class="fit__rule"></span>
         </div>
         <p class="fit__text">
@@ -3888,14 +4262,14 @@
   <div class="container">
     <div class="section-head section-head--reveal reveal">
       <div>
-        <h2><span class="de">Schreib uns.</span><span class="en">Write to us.</span></h2>
+        <h2><span class="de">Passt dein Unternehmen zu uns?</span><span class="en">Is your company a fit for us?</span></h2>
       </div>
     </div>
-    <div class="contact-layout">
+    <div class="contact-layout contact-layout--entry">
       <div class="contact-intro reveal">
         <p>
-          <span class="de">Idee, Beteiligung, Zielunternehmen — oder einfach Interesse. Hinterlass eine Nachricht. Wir melden uns.</span>
-          <span class="en">An idea, equity, a target company — or just interest. Leave a message. We’ll get back to you.</span>
+          <span class="de">Sechs Fragen, drei Minuten. Danach wissen wir beide, ob es sich lohnt zu reden — und du hast für dich ein paar Dinge sortiert.</span>
+          <span class="en">Six questions, three minutes. After that we both know whether it’s worth talking — and you’ll have sorted a few things out for yourself.</span>
         </p>
         <div class="contact-intro__channels">
           <a class="contact-intro__mail" href="mailto:hello@plnt.group">hello@plnt.group</a>
@@ -3905,59 +4279,16 @@
         </div>
       </div>
 
-      <div>
-        <form class="contact-form reveal" data-contact-form data-contact-to="hello@plnt.group" novalidate>
-          <div class="contact-form__row">
-            <div class="contact-field">
-              <label for="c-name"><span class="de">Name</span><span class="en">Name</span></label>
-              <input id="c-name" name="name" type="text" autocomplete="name" required placeholder="Alex Mertens">
-            </div>
-            <div class="contact-field">
-              <label for="c-mail"><span class="de">E-Mail</span><span class="en">Email</span></label>
-              <input id="c-mail" name="email" type="email" autocomplete="email" required placeholder="alex@company.com">
-            </div>
-          </div>
-          <div class="contact-field">
-            <label for="c-msg"><span class="de">Nachricht</span><span class="en">Message</span></label>
-            <textarea
-              id="c-msg"
-              name="message"
-              rows="5"
-              required
-              data-ph-de="Was möchtest du mit uns bauen?"
-              data-ph-en="What do you want to build with us?"
-              placeholder="Was möchtest du mit uns bauen?"
-            ></textarea>
-          </div>
-          <!-- Honeypot (FormSubmit: _honey) -->
-          <input type="text" name="_honey" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;opacity:0;height:0;width:0;">
-          <div class="contact-form__foot">
-            <p class="contact-form__note">
-              <span class="de">Keine Newsletter. Nur eine Antwort von uns.</span>
-              <span class="en">No newsletters. Just a reply from us.</span>
-            </p>
-            <button type="submit" class="btn contact-form__submit">
-              <span class="de">Nachricht senden</span>
-              <span class="en">Send message</span>
-              <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span>
-            </button>
-          </div>
-          <p class="contact-form__error" data-contact-error role="alert">
-            <span class="de">Senden fehlgeschlagen. Bitte nochmal versuchen oder direkt an hello@plnt.group schreiben.</span>
-            <span class="en">Sending failed. Please try again or email hello@plnt.group directly.</span>
-          </p>
-        </form>
-
-        <div class="contact-success" data-contact-success aria-live="polite" tabindex="-1" hidden>
-          <span class="contact-success__icon" aria-hidden="true">
-            <span class="material-symbols-outlined">check</span>
-          </span>
-          <h3><span class="de">Nachricht gesendet.</span><span class="en">Message sent.</span></h3>
-          <p>
-            <span class="de">Danke — wir haben deine Nachricht erhalten und melden uns in Kürze.</span>
-            <span class="en">Thank you — we’ve received your message and will get back to you shortly.</span>
-          </p>
-        </div>
+      <div class="contact-entry reveal">
+        <a class="btn contact-entry__cta" href="#fragebogen">
+          <span class="de">Jetzt in 3 Minuten herausfinden</span>
+          <span class="en">Find out in 3 minutes</span>
+          <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span>
+        </a>
+        <p class="contact-entry__note">
+          <span class="de">Kein Termin, kein Verkaufsgespräch. Wir sichten deine Antworten und melden uns innerhalb von 2 Werktagen.</span>
+          <span class="en">No appointment, no sales call. We review your answers and get back to you within 2 business days.</span>
+        </p>
       </div>
     </div>
   </div>
@@ -3981,14 +4312,6 @@
     </footer>
   </div>
 </section>
-
-<!-- Haupt-CTA — TODO: echte Buchungs-URL aus Torstens Google-Kalender-Terminplan (calendar.app.google/…) -->
-<a class="book-cta" href="https://calendar.app.google/PLATZHALTER" target="_blank" rel="noopener" data-book-cta>
-  <span class="material-symbols-outlined" aria-hidden="true">calendar_month</span>
-  <span class="de">Termin buchen</span>
-  <span class="en">Book a call</span>
-</a>
-
 <script>
 function toggleLang() {
   document.body.classList.toggle('lang-en');
@@ -4023,6 +4346,7 @@ function toggleLang() {
   const overlays = [
     document.getElementById('grundsaetze'),
     document.getElementById('unternehmensziel'),
+    document.getElementById('fragebogen'),
   ].filter(Boolean);
   let lastFocus = null;
   let activeOverlay = null;
@@ -4268,37 +4592,117 @@ function toggleLang() {
   window.addEventListener('resize', onScroll);
 })();
 
-/* Kontakt — FormSubmit → hello@plnt.group + Success-/Error-State */
+/*
+  Fragebogen — ein Schritt pro Screen, Auswahl springt selbst weiter.
+  Versand gesammelt über FormSubmit, danach der Danke-Screen statt eines Kalenders.
+*/
 (function() {
-  const form = document.querySelector('[data-contact-form]');
-  const success = document.querySelector('[data-contact-success]');
-  const errorEl = document.querySelector('[data-contact-error]');
-  if (!form || !success) return;
+  const root = document.querySelector('[data-quiz]');
+  if (!root) return;
 
-  const endpoint = `https://formsubmit.co/ajax/${encodeURIComponent(form.dataset.contactTo || 'hello@plnt.group')}`;
+  const form = root.querySelector('[data-quiz-form]');
+  const steps = [...root.querySelectorAll('[data-quiz-step]')];
+  const back = root.querySelector('[data-quiz-back]');
+  const next = root.querySelector('[data-quiz-next]');
+  const fill = root.querySelector('[data-quiz-fill]');
+  const bar = root.querySelector('[data-quiz-bar]');
+  const done = root.querySelector('[data-quiz-done]');
+  const errorEl = root.querySelector('[data-quiz-error]');
+  const scroller = root.closest('.principles-overlay__scroll');
+  if (!form || !steps.length) return;
 
-  const msg = form.querySelector('#c-msg');
+  const endpoint = `https://formsubmit.co/ajax/${encodeURIComponent(form.dataset.quizTo || 'hello@plnt.group')}`;
+  const total = steps.length;
+  let index = 0;
+  let advanceTimer = null;
+
+  root.querySelectorAll('[data-quiz-total]').forEach((el) => { el.textContent = total; });
+
+  const radiosOf = (step) => [...step.querySelectorAll('input[type="radio"]')];
+  const isChoice = (step) => radiosOf(step).length > 0;
+  const isAnswered = (step) => !isChoice(step) || radiosOf(step).some((r) => r.checked);
+
+  function setNextLabel() {
+    const last = index === total - 1;
+    const de = next.querySelector('[data-quiz-next-de]');
+    const en = next.querySelector('[data-quiz-next-en]');
+    if (de) de.textContent = last ? 'Absenden' : 'Weiter';
+    if (en) en.textContent = last ? 'Send' : 'Continue';
+  }
+
+  function render() {
+    const step = steps[index];
+    steps.forEach((s, i) => {
+      s.classList.remove('is-active');
+      s.hidden = i !== index;
+    });
+    void step.offsetWidth; /* Reflow, sonst startet die Einblendung nicht neu */
+    step.classList.add('is-active');
+
+    root.querySelectorAll('[data-quiz-current]').forEach((el) => { el.textContent = index + 1; });
+    if (fill) fill.style.width = `${((index + 1) / total) * 100}%`;
+    if (back) back.hidden = index === 0;
+    next.disabled = !isAnswered(step);
+    setNextLabel();
+    scroller?.scrollTo({ top: 0 });
+
+    /* Freitext und Kontakt bekommen den Fokus, Auswahlschritte nicht — dort stört er */
+    if (!isChoice(step)) {
+      step.querySelector('textarea, input')?.focus({ preventScroll: true });
+    }
+  }
+
+  function go(to) {
+    clearTimeout(advanceTimer);
+    index = Math.max(0, Math.min(total - 1, to));
+    render();
+  }
+
+  form.addEventListener('change', (e) => {
+    if (e.target.type !== 'radio') return;
+    next.disabled = false;
+    if (index === total - 1) return;
+    clearTimeout(advanceTimer);
+    advanceTimer = setTimeout(() => go(index + 1), 280);
+  });
+
+  back?.addEventListener('click', () => go(index - 1));
+
+  /* Enter im Freitext soll eine Zeile machen, nicht absenden */
+  form.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && e.target.tagName === 'TEXTAREA') e.stopPropagation();
+  });
+
+  const textarea = form.querySelector('.quiz__textarea');
   function syncPlaceholder() {
-    if (!msg) return;
+    if (!textarea) return;
     const en = document.body.classList.contains('lang-en');
-    msg.placeholder = en
-      ? (msg.dataset.phEn || msg.placeholder)
-      : (msg.dataset.phDe || msg.placeholder);
+    textarea.placeholder = en
+      ? (textarea.dataset.phEn || textarea.placeholder)
+      : (textarea.dataset.phDe || textarea.placeholder);
   }
   syncPlaceholder();
-  document.addEventListener('langchange', syncPlaceholder);
+  document.addEventListener('langchange', () => { syncPlaceholder(); setNextLabel(); });
 
   function showError(on) {
-    if (!errorEl) return;
-    errorEl.classList.toggle('is-visible', !!on);
+    errorEl?.classList.toggle('is-visible', !!on);
   }
 
-  function showSuccess() {
-    form.classList.add('is-sent');
-    success.hidden = false;
-    success.classList.add('is-visible');
-    success.focus?.();
-    success.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  function payload() {
+    const data = {};
+    steps.forEach((step) => {
+      const key = step.dataset.quizKey;
+      if (!key) return;
+      const picked = radiosOf(step).find((r) => r.checked);
+      if (picked) data[key] = picked.value;
+    });
+    const val = (n) => (form.elements[n]?.value || '').trim();
+    data['Beweggrund'] = val('beweggrund') || '—';
+    data['Name'] = val('name');
+    data['Unternehmen'] = val('unternehmen');
+    data['E-Mail'] = val('email');
+    data['Telefon'] = val('telefon') || '—';
+    return data;
   }
 
   form.addEventListener('submit', async (e) => {
@@ -4306,17 +4710,29 @@ function toggleLang() {
     const honey = form.querySelector('[name="_honey"]');
     if (honey && honey.value) return;
 
-    const name = (form.name.value || '').trim();
-    const email = (form.email.value || '').trim();
-    const message = (form.message.value || '').trim();
-    if (!name || !email || !message) {
-      form.reportValidity();
+    if (index < total - 1) {
+      if (!isAnswered(steps[index])) return;
+      go(index + 1);
+      return;
+    }
+
+    const required = ['name', 'unternehmen', 'email'];
+    let firstBad = null;
+    required.forEach((n) => {
+      const field = form.elements[n];
+      const ok = field.checkValidity() && field.value.trim();
+      field.setAttribute('aria-invalid', ok ? 'false' : 'true');
+      if (!ok && !firstBad) firstBad = field;
+    });
+    if (firstBad) {
+      firstBad.focus();
       return;
     }
 
     showError(false);
-    form.classList.add('is-sending');
+    next.disabled = true;
 
+    const data = payload();
     try {
       const res = await fetch(endpoint, {
         method: 'POST',
@@ -4325,25 +4741,28 @@ function toggleLang() {
           Accept: 'application/json'
         },
         body: JSON.stringify({
-          name,
-          email,
-          message,
-          _replyto: email,
-          _subject: `Planet Kontakt — ${name}`,
+          ...data,
+          _replyto: data['E-Mail'],
+          _subject: `Planet Fragebogen — ${data['Unternehmen']} (${data['Weg'] || 'ohne Angabe'})`,
           _template: 'table',
           _captcha: false
         })
       });
-      const data = await res.json().catch(() => ({}));
-      const failed = !res.ok || data.success === false || data.success === 'false';
-      if (failed) throw new Error(data.message || 'send failed');
-      showSuccess();
+      const json = await res.json().catch(() => ({}));
+      const failed = !res.ok || json.success === false || json.success === 'false';
+      if (failed) throw new Error(json.message || 'send failed');
+
+      form.hidden = true;
+      if (bar) bar.hidden = true;
+      done.hidden = false;
+      done.focus?.();
     } catch (err) {
       showError(true);
-    } finally {
-      form.classList.remove('is-sending');
+      next.disabled = false;
     }
   });
+
+  render();
 })();
 
 /* Zitate — soft Fade (quote-type) + Parallax-Band (quote-scroll); Nav teilt --quote-bg */
@@ -4513,36 +4932,6 @@ function toggleLang() {
   updateLegal();
   window.addEventListener('scroll', updateLegal, { passive: true });
   window.addEventListener('resize', updateLegal);
-})();
-
-/* Termin-CTA — ab #partnerschaft sichtbar, im Kontaktbereich wieder weg (dort stehen die Kanäle) */
-(function() {
-  const cta = document.querySelector('[data-book-cta]');
-  const start = document.getElementById('partnerschaft');
-  const stop = document.getElementById('kontakt');
-  if (!cta || !start) return;
-
-  /* zustandslos aus den Rects — stimmt auch beim Neuladen mitten auf der Seite */
-  function update() {
-    const vh = window.innerHeight;
-    const entered = start.getBoundingClientRect().top < vh * 0.6;
-    const atContact = stop ? stop.getBoundingClientRect().top < vh * 0.85 : false;
-    cta.classList.toggle('is-visible', entered && !atContact);
-  }
-
-  let tick = false;
-  function onScroll() {
-    if (tick) return;
-    tick = true;
-    requestAnimationFrame(() => {
-      update();
-      tick = false;
-    });
-  }
-
-  update();
-  window.addEventListener('scroll', onScroll, { passive: true });
-  window.addEventListener('resize', onScroll);
 })();
 </script>
 </body>
