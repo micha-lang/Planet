@@ -43,6 +43,19 @@
     --line-width: 1px;
   }
 
+  /* Nur fuer Screenreader — z. B. Markenname hinter dem Logo */
+  .visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+    border: 0;
+  }
+
   /*
     Scroll-Farbe auf html — kein Sektions-Rand zum Content darüber
     (!important: planet.css setzt html/body auf Weiß)
@@ -125,7 +138,8 @@
     color: var(--planet-white);
     max-width: min(12ch, 100%);
     margin-bottom: 0;
-    animation: hero-rise 1200ms var(--ease-out) both;
+    opacity: 0;
+    animation: hero-rise 1400ms var(--ease-out) 700ms both;
   }
   .hero-full__content.flow > h1 + * { --flow-space: var(--space-2); }
   .hero-full__sub {
@@ -134,7 +148,8 @@
     font-weight: var(--weight-body);
     color: rgba(255,255,255,0.88);
     max-width: 36ch;
-    animation: hero-rise 1200ms var(--ease-out) 180ms both;
+    opacity: 0;
+    animation: hero-rise 1400ms var(--ease-out) 1200ms both;
   }
   .hero-full__scroll {
     position: absolute;
@@ -149,7 +164,8 @@
     color: rgba(255,255,255,0.55);
     font-size: var(--text-meta);
     font-weight: var(--weight-display);
-    animation: hero-rise 1200ms var(--ease-out) 360ms both;
+    opacity: 0;
+    animation: hero-rise 1200ms var(--ease-out) 1700ms both;
   }
   .hero-full__scroll .material-symbols-outlined {
     font-size: var(--icon);
@@ -451,6 +467,12 @@
   .stack__item:nth-child(6).reveal { transition-delay: 300ms; }
   .stack__item:nth-child(7).reveal { transition-delay: 360ms; }
   .stack__item:nth-child(8).reveal { transition-delay: 420ms; }
+  .stack__item:nth-child(9).reveal { transition-delay: 480ms; }
+  .stack__item:nth-child(10).reveal { transition-delay: 540ms; }
+  .stack__item:nth-child(11).reveal { transition-delay: 600ms; }
+  .stack__item:nth-child(12).reveal { transition-delay: 660ms; }
+  .stack__item:nth-child(13).reveal { transition-delay: 720ms; }
+  .stack__item:nth-child(14).reveal { transition-delay: 780ms; }
   @media (max-width: 1024px) {
     .stack__grid {
       grid-template-columns: 1fr 1fr;
@@ -540,7 +562,7 @@
     font-family: var(--planet-font);
     font-size: 3.25px;
     font-weight: var(--weight-body);
-    letter-spacing: 0.03em;
+    letter-spacing: 0.12em;
     fill: var(--planet-primary);
   }
   .pillar-band--blue .pillar-orbit__caption text { fill: var(--planet-white); }
@@ -632,6 +654,22 @@
     .nav-overlay.is-open .nav-overlay-link:nth-child(9) { animation-delay: 540ms; }
   .nav-overlay.is-open .nav-overlay-link:nth-child(9) { animation-delay: 540ms; }
   .nav-overlay.is-open .nav-overlay-link:nth-child(10) { animation-delay: 600ms; }
+  .nav-overlay.is-open .nav-overlay-link:nth-child(11) { animation-delay: 660ms; }
+  .nav-overlay.is-open .nav-overlay-link:nth-child(12) { animation-delay: 720ms; }
+  .nav-overlay.is-open .nav-overlay-link:nth-child(13) { animation-delay: 780ms; }
+  .nav-overlay.is-open .nav-overlay-link:nth-child(14) { animation-delay: 840ms; }
+  /* Haupt-CTA im Menü — gelb und voll deckend, damit sie aus der Liste heraussticht */
+  .nav-overlay-link--cta {
+    color: var(--planet-secondary);
+    opacity: 1;
+  }
+  .nav-overlay.is-open .nav-overlay-link--cta {
+    animation-name: nav-cta-in;
+  }
+  @keyframes nav-cta-in {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
 
   @keyframes hero-overlay-in {
     from { opacity: 0; }
@@ -805,7 +843,7 @@
     .hero-full__overlay { animation: none; }
     .hero-full h1,
     .hero-full__sub,
-    .hero-full__scroll { animation: none; }
+    .hero-full__scroll { animation: none; opacity: 1; transform: none; }
     .hero-full__scroll .material-symbols-outlined { animation: none; }
     .reveal-slide-left,
     .reveal-slide-right,
@@ -829,22 +867,6 @@
       width: clamp(2rem, 4vw, 3.5rem);
       transition: none;
     }
-    .brands__spark-line,
-    .brands__brand.is-visible .brands__spark-line {
-      stroke-dashoffset: 0;
-      transition: none;
-    }
-    .brands__spark-dot,
-    .brands__brand.is-visible .brands__spark-dot {
-      opacity: 1;
-      transition: none;
-    }
-    .brands__logos > li,
-    .brands__logos.is-in > li {
-      opacity: 1;
-      transform: none;
-      transition: none;
-    }
     .fit__mark::before,
     .fit__item.is-visible .fit__mark::before {
       transform: none;
@@ -852,6 +874,31 @@
     }
     .team-strip__person:not(:last-child)::after {
       transform: scaleY(1);
+      transition: none;
+    }
+    .compare__side,
+    .compare__a,
+    .compare__b,
+    .compare__closing,
+    .compare__layout.is-visible .compare__side,
+    .compare__layout.is-visible .compare__a,
+    .compare__layout.is-visible .compare__b,
+    .compare__layout.is-visible .compare__closing {
+      opacity: 1;
+      transform: none;
+      transition: none;
+    }
+    .compare__label,
+    .compare__layout.is-visible .compare__label {
+      opacity: 1;
+      transform: translate(-50%, -50%);
+      transition: none;
+    }
+    .compare__rule::before,
+    .compare__rule::after,
+    .compare__layout.is-visible .compare__rule::before,
+    .compare__layout.is-visible .compare__rule::after {
+      transform: scaleX(1);
       transition: none;
     }
     .planet-legal__item {
@@ -869,6 +916,9 @@
     #karten .pillar-orbit__caption text {
       fill: var(--planet-white);
     }
+    #unterschied {
+      --text-invert: 1;
+    }
     #weiter {
       --text-invert: 1;
     }
@@ -879,6 +929,16 @@
     }
     #weiter .fit__index { color: var(--planet-white); }
     #weiter .fit__rule { background: var(--planet-white); }
+    #mission {
+      --text-invert: 1;
+    }
+    #mission .section-head h2,
+    #mission .mission__body p {
+      color: var(--planet-white);
+    }
+    #mission .pillar-orbit__caption text {
+      fill: var(--planet-white);
+    }
     .pillar-band--white { background: transparent; }
     .pillar-band--blue { background: transparent; }
     .pillar-band--planet {
@@ -1135,6 +1195,81 @@
     opacity: 0.85;
     color: inherit;
   }
+  .quote-scroll__who a {
+    color: inherit;
+    text-decoration: none;
+  }
+  .quote-scroll__who a:hover {
+    text-decoration: none;
+  }
+  /* Gelb-Markierung wie bei #weiter */
+  .quote-scroll__who .fit__mark {
+    color: var(--planet-black);
+    isolation: isolate;
+  }
+  .quote-scroll__who .fit__mark::before,
+  .quote-scroll__content.is-visible .fit__mark::before {
+    transform: scaleX(1);
+    transition-delay: 0ms;
+  }
+  /* Grundsätz-Zitat: Quelle voll deckend; Link mit Gelb + Follower wie fit__mark */
+  #grundsatz-zitat.quote-type {
+    --quote-shift: 0px;
+    color: var(--planet-white);
+  }
+  /*
+    Parallax: das Bild liegt fix im Viewport, stünde also still.
+    Die Übergröße (124 % bei top:-12 %) gibt oben und unten je 12 % Spielraum —
+    genug für den gegenläufigen Drift von ±10 vh-Prozent.
+  */
+  #grundsatz-zitat .quote-type__bg img {
+    position: absolute;
+    left: 0;
+    top: -12%;
+    width: 100%;
+    height: 124%;
+    transform: translate3d(0, var(--quote-shift), 0);
+    will-change: transform;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    #grundsatz-zitat .quote-type__bg img { transform: none; }
+  }
+  #grundsatz-zitat .quote-type__who {
+    opacity: 1;
+  }
+  /* planet.css setzt .quote-type__who span auf display:block — sonst beide Sprachen sichtbar */
+  #grundsatz-zitat .quote-type__who > .en { display: none; }
+  body.lang-en #grundsatz-zitat .quote-type__who > .de { display: none; }
+  body.lang-en #grundsatz-zitat .quote-type__who > .en { display: inline; }
+  #grundsatz-zitat .quote-type__who > .de,
+  #grundsatz-zitat .quote-type__who > .en {
+    opacity: 1;
+    color: var(--planet-white);
+  }
+  #grundsatz-zitat .quote-type__who .fit__mark {
+    display: inline;
+    color: var(--planet-black);
+    isolation: isolate;
+  }
+  #grundsatz-zitat .quote-type__who .fit__mark::before {
+    transform: scaleX(1);
+    transition:
+      transform 180ms var(--ease-out),
+      top 180ms var(--ease-out),
+      bottom 180ms var(--ease-out),
+      left 180ms var(--ease-out),
+      right 180ms var(--ease-out);
+  }
+  #grundsatz-zitat .quote-type__who .fit__mark:hover::before,
+  #grundsatz-zitat .quote-type__who .fit__mark:focus-visible::before {
+    top: 0.02em;
+    bottom: 0;
+    left: -0.08em;
+    right: -0.08em;
+  }
+  #grundsatz-zitat .photo-credit {
+    z-index: 2;
+  }
   .quote-scroll__who strong {
     display: block;
     font-size: inherit;
@@ -1162,9 +1297,7 @@
     border-bottom-color: var(--line-color);
   }
   .contact-band .section-head h2,
-  .contact-band .contact-intro p,
-  .contact-band .contact-success h3,
-  .contact-band .contact-success p {
+  .contact-band .contact-intro p {
     color: var(--planet-white);
   }
   .contact-layout {
@@ -1179,190 +1312,60 @@
     line-height: 1.3;
     opacity: 0.85;
   }
-  .contact-intro__mail {
-    display: inline-block;
-    margin-top: var(--space-4);
-    font-weight: var(--weight-display);
-    font-size: var(--text-body);
-    color: var(--planet-white);
-    text-decoration: none;
-    border-bottom: var(--line-width) solid color-mix(in srgb, var(--planet-white) 70%, transparent);
-    padding-bottom: 0.1em;
-    transition: opacity var(--motion-instant) var(--ease-out), border-color var(--motion-instant) var(--ease-out);
-  }
-  .contact-intro__mail:hover {
-    opacity: 0.65;
-    text-decoration: none;
-    border-bottom-color: var(--planet-white);
-  }
 
-  .contact-form {
-    display: grid;
-    gap: var(--space-4);
+  /* Fragebogen-Einstieg — ersetzt das frühere Kontaktformular */
+  .contact-layout--entry {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    align-items: center;
   }
-  .contact-form__row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: var(--space-4);
-  }
-  .contact-field {
+  .contact-entry {
     display: flex;
     flex-direction: column;
-    gap: 0.35em;
-    border-bottom: var(--line-width) solid color-mix(in srgb, var(--planet-white) 35%, transparent);
-    transition: border-color var(--motion-fast) var(--ease-out);
-  }
-  .contact-field:focus-within {
-    border-bottom-color: var(--planet-white);
-  }
-  .contact-field label {
-    font-family: var(--planet-font);
-    font-weight: var(--weight-display);
-    font-size: var(--text-meta);
-    line-height: 1.2;
-    color: var(--planet-white);
-    opacity: 0.55;
-  }
-  .contact-field:focus-within label { opacity: 1; }
-  .contact-field input,
-  .contact-field textarea {
-    width: 100%;
-    border: 0;
-    outline: 0;
-    background: transparent;
-    border-radius: 0;
-    appearance: none;
-    font-family: var(--planet-font);
-    font-size: var(--text-body);
-    font-weight: var(--weight-body);
-    line-height: 1.35;
-    color: var(--planet-white);
-    caret-color: var(--planet-white);
-    padding: 0.15em 0 0.65em;
-    resize: none;
-  }
-  .contact-field textarea {
-    min-height: 7.5em;
-    line-height: 1.4;
-  }
-  .contact-field input::placeholder,
-  .contact-field textarea::placeholder {
-    color: var(--planet-white);
-    opacity: 0.35;
-  }
-  .contact-field input:-webkit-autofill,
-  .contact-field textarea:-webkit-autofill {
-    -webkit-text-fill-color: var(--planet-white);
-    caret-color: var(--planet-white);
-    transition: background-color 9999s ease-out;
-    box-shadow: 0 0 0 1000px transparent inset;
-  }
-  .contact-form__foot {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-between;
+    align-items: start;
     gap: var(--space-3);
-    margin-top: var(--space-1);
   }
-  .contact-form__note {
-    font-size: var(--text-meta);
-    line-height: 1.35;
-    color: var(--planet-white);
-    opacity: 0.5;
-    max-width: 28ch;
-  }
-  .contact-form__submit {
+  .contact-entry__cta {
     display: inline-flex;
     align-items: center;
     gap: var(--space-1);
-    width: auto;
-    min-width: 200px;
     background: var(--planet-secondary);
     color: var(--planet-black);
+    border-color: var(--planet-secondary);
   }
-  .contact-form__submit:hover {
-    background: var(--planet-black);
-    color: var(--planet-secondary);
+  .contact-entry__cta:hover {
+    background: var(--planet-white);
+    color: var(--planet-black);
+    border-color: var(--planet-white);
+    text-decoration: none;
   }
-  .contact-form__submit:focus-visible {
+  .contact-entry__cta:focus-visible {
     outline-color: var(--planet-secondary);
   }
-  .contact-form__submit .material-symbols-outlined {
+  .contact-entry__cta .material-symbols-outlined {
     transition: transform var(--motion-fast) var(--ease-out);
   }
-  .contact-form__submit:hover .material-symbols-outlined {
+  .contact-entry__cta:hover .material-symbols-outlined {
     transform: translateX(4px);
   }
-
-  .contact-form.is-sending .contact-form__submit { opacity: 0.55; pointer-events: none; }
-  .contact-form.is-sent { display: none; }
-  .contact-form__error {
-    display: none;
+  .contact-entry__note {
+    max-width: 34ch;
     margin: 0;
     font-size: var(--text-meta);
     line-height: 1.35;
-    color: var(--planet-secondary);
-    max-width: 36ch;
-  }
-  .contact-form__error.is-visible { display: block; }
-  .contact-success {
-    display: none;
-    flex-direction: column;
-    justify-content: center;
-    gap: var(--space-3);
-    min-height: 280px;
-    padding: var(--space-5) 0;
-    border-top: var(--line-width) solid color-mix(in srgb, var(--planet-white) 35%, transparent);
     color: var(--planet-white);
-  }
-  .contact-success.is-visible {
-    display: flex;
-    animation: contact-success-in 520ms var(--ease-out) both;
-  }
-  .contact-success__icon {
-    width: 2.5rem;
-    height: 2.5rem;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: var(--radius-circle);
-    background: var(--planet-secondary);
-    color: var(--planet-black);
-  }
-  .contact-success__icon .material-symbols-outlined {
-    font-size: 1.35rem;
-    font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-  }
-  .contact-success h3 {
-    font-size: var(--text-h2);
-    line-height: 0.95;
-    max-width: 16ch;
-    color: var(--planet-white);
-    margin: 0;
-  }
-  .contact-success p {
-    max-width: 34ch;
-    line-height: 1.35;
-    opacity: 0.8;
-    color: var(--planet-white);
-    margin: 0;
-  }
-  @keyframes contact-success-in {
-    from { opacity: 0; transform: translateY(12px); }
-    to { opacity: 1; transform: translateY(0); }
+    opacity: 0.6;
   }
 
   @media (max-width: 1024px) {
-    .contact-layout { grid-template-columns: 1fr; gap: var(--space-5); }
+    .contact-layout,
+    .contact-layout--entry { grid-template-columns: 1fr; gap: var(--space-5); }
     .contact-intro p { max-width: 36ch; }
   }
   @media (max-width: 640px) {
     .contact-band { padding: var(--space-6) 0 var(--space-12); }
-    .contact-form__row { grid-template-columns: 1fr; gap: var(--space-3); }
-    .contact-form__foot { flex-direction: column; align-items: stretch; }
-    .contact-form__submit { width: 100%; justify-content: center; }
-    .contact-success h3 { font-size: var(--text-h3); }
+    .contact-entry { align-items: stretch; }
+    .contact-entry__cta { width: 100%; justify-content: center; text-align: center; }
+    .contact-entry__note { max-width: none; }
   }
 
   /* Marken — Entwicklungen seit Gründung */
@@ -1373,135 +1376,41 @@
   .brands .section-head {
     margin-bottom: var(--space-4);
   }
-  .brands__scope {
-    margin: var(--space-5) 0 0;
-    max-width: 52ch;
-    font-size: var(--text-body);
-    line-height: 1.45;
-    color: color-mix(in srgb, var(--planet-black) 78%, transparent);
-  }
-  .brands__logos {
-    list-style: none;
-    margin: 0 0 var(--space-6);
-    padding: 0;
-    display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: var(--space-4) var(--space-5);
-    width: 100%;
-    max-width: none;
-  }
-  .brands__logos > li {
-    min-width: 0;
-    opacity: 0;
-    transform: translate3d(0, 2.5rem, 0);
-    transition:
-      opacity 700ms var(--ease-out),
-      transform 1000ms var(--ease-out);
-    will-change: transform, opacity;
-  }
-  .brands__logos.is-in > li {
-    opacity: 1;
-    transform: translate3d(0, 0, 0);
-  }
-  .brands__logos > li:nth-child(1) { transition-delay: 0ms; }
-  .brands__logos > li:nth-child(2) { transition-delay: 90ms; }
-  .brands__logos > li:nth-child(3) { transition-delay: 180ms; }
-  .brands__logos > li:nth-child(4) { transition-delay: 270ms; }
-  /* Beim Rausgleiten: Reihenfolge umkehren */
-  .brands__logos:not(.is-in) > li:nth-child(1) { transition-delay: 270ms; }
-  .brands__logos:not(.is-in) > li:nth-child(2) { transition-delay: 180ms; }
-  .brands__logos:not(.is-in) > li:nth-child(3) { transition-delay: 90ms; }
-  .brands__logos:not(.is-in) > li:nth-child(4) { transition-delay: 0ms; }
-  .brands__cluster {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
-  }
-  .brands__cluster > .brands__logo-wrap {
-    width: 100%;
-    flex-shrink: 0;
-  }
-  .brands__cluster-line {
+  /* Marken-Signet — steht jetzt im jeweiligen Markenabschnitt, nicht mehr in einer Reihe */
+  .brands__mark {
     display: block;
-    width: var(--line-width);
-    height: clamp(0.85rem, 2.2vw, 1.35rem);
-    background: var(--planet-primary);
-    flex-shrink: 0;
   }
-  .brands__logo-wrap {
-    position: relative;
-    width: 100%;
-  }
-  .brands__logo-index {
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: 1;
-    pointer-events: none;
-    font-family: var(--planet-font);
-    font-size: clamp(10px, 0.95vw, 12px);
-    font-weight: var(--weight-body);
-    font-variant-numeric: tabular-nums;
-    letter-spacing: 0.04em;
-    line-height: 1;
-    color: var(--planet-primary);
-    transform: translate(-0.15em, -0.55em);
-  }
-  .brands__logo {
-    --brand-accent: var(--planet-primary);
-    display: grid;
-    place-items: center;
-    width: 100%;
-    aspect-ratio: 1 / 1;
-    overflow: hidden;
-    padding: 22%;
-    box-sizing: border-box;
-    border-radius: var(--radius-circle);
-    border: none;
-    color: color-mix(in srgb, var(--planet-black) 38%, transparent);
-    background: color-mix(in srgb, var(--planet-black) 4%, transparent);
-    text-decoration: none;
-    transition:
-      color 220ms var(--ease-out),
-      background 220ms var(--ease-out);
-  }
-  .brands__logo:hover,
-  .brands__logo:focus-visible {
-    color: var(--brand-accent);
-    background: color-mix(in srgb, var(--brand-accent) 10%, transparent);
-    text-decoration: none;
-  }
-  .brands__logo:focus-visible {
-    outline: 2px solid var(--planet-primary);
-    outline-offset: 4px;
-  }
-  .brands__logo svg {
+  .brands__mark svg {
     display: block;
-    width: 100%;
-    height: 100%;
+    width: auto;
     max-width: 100%;
-    max-height: 100%;
   }
-  .brands__logo--inuvet {
-    --brand-accent: #78b41b;
-    padding: 20%;
+  /* Hoehen einzeln, damit die sehr unterschiedlichen Seitenverhaeltnisse optisch gleich wiegen */
+  /* Inuvet und ManukaLind sind gestapelte Lockups — brauchen mehr Hoehe, um gleich stark zu wirken */
+  .brands__mark--inuvet svg { height: clamp(88px, 9vw, 124px); }
+  .brands__mark--eqx svg { height: clamp(40px, 4.2vw, 54px); }
+  .brands__mark--manukalind svg { height: clamp(96px, 10vw, 136px); }
+  .brands__mark--planimol svg { height: clamp(32px, 3.4vw, 44px); }
+  .brands__link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3em;
+    margin-top: var(--space-3);
+    font-size: var(--text-body);
+    line-height: 1.2;
+    color: var(--planet-primary);
+    text-decoration: none;
+    border-bottom: var(--line-width) solid color-mix(in srgb, var(--planet-primary) 30%, transparent);
+    padding-bottom: 3px;
+    transition: border-color 220ms var(--ease-out);
   }
-  .brands__logo--eqx {
-    --brand-accent: #006838;
-    padding: 18% 22%;
+  .brands__link:hover,
+  .brands__link:focus-visible {
+    text-decoration: none;
+    border-bottom-color: var(--planet-primary);
   }
-  .brands__logo--byox {
-    --brand-accent: #009fe3;
-    padding: 18% 22%;
-  }
-  .brands__logo--manukalind {
-    --brand-accent: #00a76d;
-    padding: 14%;
-  }
-  .brands__logo--planimol {
-    --brand-accent: #39b54a;
-    padding: 0 7%;
+  .brands__link .material-symbols-outlined {
+    font-size: 1.05em;
   }
   .brands__list {
     display: flex;
@@ -1543,21 +1452,25 @@
   .brands__brand.brands__brand--solid-after:last-child {
     border-top: 0;
   }
+  /* Vierspaltiges Raster: 1 Signet | 2 Jahr | 3–4 Beschreibung */
   .brands__top {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: var(--space-5) var(--space-7);
     align-items: start;
     margin-bottom: var(--space-5);
   }
+  /* Wrapper loest sich auf, damit Signet und Jahr echte Spalten des Rasters sind */
+  .brands__head { display: contents; }
+  .brands__body { grid-column: 3 / span 2; }
   .brands__name {
-    font-size: var(--text-h2);
-    line-height: 0.95;
+    /* traegt nur noch das Signet, der Name steckt visuell versteckt darin */
+    font-size: 0;
+    line-height: 0;
     margin: 0;
   }
   .brands__since {
     display: block;
-    margin-top: var(--space-2);
     font-size: var(--text-meta);
     opacity: 0.55;
   }
@@ -1570,121 +1483,101 @@
   .brands__copy + .brands__copy {
     margin-top: var(--space-3);
   }
-  .brands__metrics {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: var(--space-4) var(--space-5);
-  }
-  .brands__metrics:has(.brands__metric:nth-child(2):last-child) {
-    grid-template-columns: repeat(2, 1fr);
-    max-width: 66.666%;
-  }
-  .brands__metric {
-    min-width: 0;
-  }
-  .brands__metric-label {
-    display: block;
-    font-size: var(--text-meta);
-    opacity: 0.55;
-    margin-bottom: 2px;
-    line-height: 1.2;
-  }
-  .brands__metric-value {
-    display: block;
-    font-family: var(--planet-font);
-    font-weight: var(--weight-display);
-    font-size: var(--text-h2);
-    line-height: 0.95;
-    letter-spacing: -0.02em;
-    color: var(--planet-primary);
-    margin-bottom: 2px;
-    font-variant-numeric: tabular-nums;
-  }
-  .brands__spark-wrap {
-    position: relative;
-    height: 48px;
-  }
-  .brands__spark {
-    display: block;
-    width: 100%;
-    height: 100%;
-    overflow: visible;
-  }
-  .brands__spark-area {
-    fill: var(--planet-primary);
-    opacity: 0.12;
-  }
-  .brands__spark-line {
-    fill: none;
-    stroke: var(--planet-primary);
-    stroke-width: 1;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-    stroke-dasharray: 1;
-    stroke-dashoffset: 1;
-    transition: stroke-dashoffset 1.1s var(--ease-out);
-  }
-  .brands__spark-dot {
-    position: absolute;
-    right: 0;
-    top: var(--dot-y, 12%);
-    width: 7px;
-    height: 7px;
-    border-radius: var(--radius-circle);
-    background: var(--planet-primary);
-    transform: translate(40%, -50%);
-    opacity: 0;
-    transition: opacity 400ms var(--ease-out);
-  }
-  .brands__brand.is-visible .brands__spark-line {
-    stroke-dashoffset: 0;
-  }
-  .brands__brand.is-visible .brands__spark-dot {
-    opacity: 1;
-    transition-delay: 900ms;
-  }
-  .brands__metric:nth-child(1) .brands__spark-line { transition-delay: 80ms; }
-  .brands__metric:nth-child(2) .brands__spark-line { transition-delay: 180ms; }
-  .brands__metric:nth-child(3) .brands__spark-line { transition-delay: 280ms; }
-  .brands__metric:nth-child(1) .brands__spark-dot { transition-delay: 980ms; }
-  .brands__metric:nth-child(2) .brands__spark-dot { transition-delay: 1080ms; }
-  .brands__metric:nth-child(3) .brands__spark-dot { transition-delay: 1180ms; }
-  .brands__metric-years,
-  .brands__metric-range {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 2px;
-    font-size: clamp(11px, 1vw, 13px);
-    font-variant-numeric: tabular-nums;
-    letter-spacing: 0.02em;
-    opacity: 0.55;
-  }
   @media (max-width: 1024px) {
     .brands__top {
       grid-template-columns: 1fr;
       gap: var(--space-3);
       margin-bottom: var(--space-4);
     }
-    .brands__metrics,
-    .brands__metrics:has(.brands__metric:nth-child(2):last-child) {
-      grid-template-columns: 1fr;
-      max-width: none;
-      gap: var(--space-4);
+    /* gestapeltes Layout: Signet links, »seit …« oben rechts */
+    .brands__head {
+      display: grid;
+      grid-template-columns: auto auto;
+      justify-content: space-between;
+      align-items: start;
+      gap: var(--space-3);
     }
-    .brands__logos {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      max-width: none;
-      gap: var(--space-3) var(--space-4);
-    }
+    .brands__body { grid-column: auto; }
+    .brands__since { text-align: right; }
   }
   @media (max-width: 640px) {
     .brands { padding: var(--space-8) 0; }
     .brands__brand { padding: var(--space-5) 0; }
-    .brands__name,
-    .brands__metric-value { font-size: var(--text-h3); }
-    .brands__logos {
-      margin-bottom: var(--space-5);
-      gap: var(--space-3);
+  }
+
+  /* Gruppen-Kennzahlen — drei Zeilen im Blau-Band, Zahl links, Aussage rechts */
+  .figures {
+    /* großzügig, damit das Blau-Band den Screen voll erreicht, bevor es wieder geht */
+    padding: var(--space-16) 0;
+    background: transparent;
+    /* Farben folgen dem Blau-Band (--text-invert) */
+    --figures-ink: color-mix(
+      in srgb,
+      var(--planet-primary) calc((1 - var(--text-invert, 0)) * 100%),
+      var(--planet-white)
+    );
+    --figures-label-ink: color-mix(
+      in srgb,
+      var(--planet-black) calc((1 - var(--text-invert, 0)) * 100%),
+      var(--planet-white)
+    );
+    --figures-line: color-mix(in srgb, var(--figures-ink) 40%, transparent);
+  }
+  .figures__row {
+    display: grid;
+    grid-template-columns: minmax(0, 38%) minmax(0, 1fr);
+    gap: var(--space-3) var(--space-5);
+    align-items: center;
+    padding: var(--space-6) 0;
+    border-top: var(--line-width) solid var(--figures-line);
+  }
+  .figures__value {
+    margin: 0;
+    font-family: var(--planet-font);
+    font-weight: var(--weight-display);
+    font-size: var(--text-stat-xl);
+    line-height: 0.85;
+    letter-spacing: -0.03em;
+    color: var(--figures-ink);
+    font-variant-numeric: tabular-nums;
+  }
+  .figures__label {
+    margin: 0;
+    max-width: 28ch;
+    font-size: var(--text-h3);
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    color: var(--figures-label-ink);
+  }
+  /* Einleitung ueber den drei Zeilen — die erste Haarlinie gehoert schon zur ersten Zahl */
+  .figures__note {
+    margin: 0;
+    padding-bottom: var(--space-6);
+    max-width: 34ch;
+    /* gleiche Typo wie .figures__label */
+    font-size: var(--text-h3);
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    /* leicht zurueckgenommen — ueber color-mix statt opacity, sonst kollidiert es mit .reveal */
+    color: color-mix(in srgb, var(--figures-label-ink) 78%, transparent);
+  }
+  /* Geschwister-Selektoren statt nth-child: unabhaengig von Elementen vor den Zeilen */
+  .figures__note.reveal { transition-delay: 0ms; }
+  .figures__row.reveal { transition-delay: 100ms; }
+  .figures__row ~ .figures__row.reveal { transition-delay: 200ms; }
+  .figures__row ~ .figures__row ~ .figures__row.reveal { transition-delay: 300ms; }
+  @media (max-width: 640px) {
+    .figures { padding: var(--space-8) 0; }
+    .figures__row {
+      grid-template-columns: 1fr;
+      gap: var(--space-2);
+      padding: var(--space-4) 0;
+    }
+    .figures__label { font-size: var(--text-h4); max-width: none; }
+    .figures__note {
+      font-size: var(--text-h4);
+      max-width: none;
+      padding-bottom: var(--space-4);
     }
   }
 
@@ -1694,6 +1587,14 @@
     background: transparent;
   }
   .team-section .section-head { margin-bottom: var(--space-6); }
+  /* Headline kann vom Blau der Zahlen-Sektion erwischt werden — mitfaden statt schwarz bleiben */
+  #team .section-head h2 {
+    color: color-mix(
+      in srgb,
+      var(--planet-black) calc((1 - var(--text-invert, 0)) * 100%),
+      var(--planet-white)
+    );
+  }
 
   .team-strip {
     display: grid;
@@ -1872,6 +1773,434 @@
   .fit--next .fit__text {
     max-width: 42ch;
   }
+  .fit__subhead {
+    margin-top: var(--space-8);
+  }
+  .fit__payoff {
+    margin: var(--space-6) 0 0;
+    max-width: 42ch;
+    font-size: var(--text-body);
+    line-height: 1.35;
+    font-weight: var(--weight-body);
+  }
+  /* Vergleich — Investor (rot / −) vs Planet (blau / +), Abbinder rechts */
+  .compare {
+    --compare-main: minmax(0, 1.75fr);
+    --compare-aside: minmax(14rem, 0.7fr);
+    --compare-gap: clamp(var(--space-5), 4vw, var(--space-8));
+    --compare-pe-ink: color-mix(
+      in srgb,
+      color-mix(in srgb, var(--planet-black) 42%, var(--planet-white)) calc((1 - var(--text-invert, 0)) * 100%),
+      rgb(255 255 255 / 0.55)
+    );
+    --compare-planet: var(--planet-primary);
+    --compare-planet-ink: color-mix(
+      in srgb,
+      var(--compare-planet) calc((1 - var(--text-invert, 0)) * 100%),
+      var(--planet-white)
+    );
+    padding: var(--space-10) 0;
+    background: transparent;
+  }
+  #unterschied .section-head h2 {
+    color: color-mix(
+      in srgb,
+      var(--planet-black) calc((1 - var(--text-invert, 0)) * 100%),
+      var(--planet-white)
+    );
+  }
+  .compare .section-head--reveal::after {
+    background: var(--line-color);
+  }
+  .compare__layout {
+    display: grid;
+    gap: 0;
+  }
+  .compare__layout.reveal {
+    opacity: 1;
+    transform: none;
+  }
+  .compare__head {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    padding-bottom: var(--space-5);
+    margin-bottom: 0;
+    align-items: end;
+  }
+  .compare__side {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    font-size: var(--text-h3);
+    line-height: 1.1;
+    letter-spacing: -0.015em;
+    font-weight: var(--weight-display);
+    opacity: 0;
+    transition: opacity 700ms var(--ease-out), transform 700ms var(--ease-out);
+  }
+  .compare__icon {
+    position: relative;
+    display: block;
+    width: clamp(2.75rem, 4.6vw, 3.75rem);
+    height: clamp(2.75rem, 4.6vw, 3.75rem);
+    margin-bottom: 0.55em;
+    border-radius: 50%;
+  }
+  .compare__icon::before,
+  .compare__icon::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    background: var(--planet-white);
+    border-radius: 1px;
+    transform: translate(-50%, -50%);
+  }
+  .compare__icon::before {
+    width: 42%;
+    height: 3px;
+  }
+  .compare__side--pe {
+    color: var(--compare-pe-ink);
+    padding-right: clamp(1.25rem, 3vw, 2.5rem);
+    transform: translate3d(-28px, 0, 0);
+  }
+  .compare__side--pe .compare__icon {
+    background: var(--compare-pe-ink);
+  }
+  .compare__side--pe .compare__icon::before {
+    background: color-mix(
+      in srgb,
+      var(--planet-white) calc((1 - var(--text-invert, 0)) * 100%),
+      var(--planet-primary)
+    );
+  }
+  .compare__side--planet {
+    color: var(--compare-planet-ink);
+    padding-left: clamp(1.25rem, 3vw, 2.5rem);
+    transform: translate3d(28px, 0, 0);
+  }
+  .compare__side--planet .compare__icon {
+    background: var(--compare-planet-ink);
+  }
+  .compare__side--planet .compare__icon::before,
+  .compare__side--planet .compare__icon::after {
+    background: color-mix(
+      in srgb,
+      var(--planet-white) calc((1 - var(--text-invert, 0)) * 100%),
+      var(--compare-planet)
+    );
+  }
+  .compare__side--planet .compare__icon::after {
+    width: 3px;
+    height: 42%;
+  }
+  .compare__layout.is-visible .compare__side {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+  .compare__layout.is-visible .compare__side--pe { transition-delay: 0ms; }
+  .compare__layout.is-visible .compare__side--planet { transition-delay: 70ms; }
+  .compare__rows {
+    position: relative;
+    min-width: 0;
+  }
+  .compare__row { overflow: visible; }
+  .compare__rule {
+    position: relative;
+  }
+  /* Gestrichelte Linie: links Investor, rechts Planet — wächst aus der Mitte */
+  .compare__rule::before,
+  .compare__rule::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    width: 50%;
+    border-top: 1px dashed;
+    transform: scaleX(0);
+    transition: transform 850ms var(--ease-out);
+    pointer-events: none;
+  }
+  .compare__rule::before {
+    left: 0;
+    border-color: var(--compare-pe-ink);
+    transform-origin: right center;
+  }
+  .compare__rule::after {
+    right: 0;
+    border-color: var(--compare-planet-ink);
+    transform-origin: left center;
+  }
+  .compare__layout.is-visible .compare__rule::before,
+  .compare__layout.is-visible .compare__rule::after {
+    transform: scaleX(1);
+  }
+  .compare__rule-slot {
+    position: relative;
+    display: block;
+    width: 100%;
+  }
+  .compare__label {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    z-index: 1;
+    transform: translate(-50%, -50%);
+    padding: 0.35em 0.75em;
+    background: color-mix(
+      in srgb,
+      color-mix(
+        in srgb,
+        var(--planet-white) calc((1 - var(--bg-mix, 0)) * 100%),
+        var(--planet-primary)
+      ) calc((1 - var(--bg-dark-mix, 0)) * 100%),
+      var(--planet-black)
+    );
+    color: var(--line-color);
+    font-size: clamp(11px, 1vw, 13px);
+    letter-spacing: 0.04em;
+    line-height: 1;
+    font-weight: var(--weight-body);
+    text-align: center;
+    white-space: nowrap;
+    opacity: 0;
+    transition: opacity 450ms var(--ease-out);
+  }
+  .compare__layout.is-visible .compare__label {
+    opacity: 1;
+  }
+  .compare__cells {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    padding: var(--space-4) 0 var(--space-5);
+  }
+  .compare__a,
+  .compare__b {
+    font-size: var(--text-h3);
+    line-height: 1.15;
+    letter-spacing: -0.015em;
+    font-weight: var(--weight-body);
+    opacity: 0;
+    transition: opacity 700ms var(--ease-out), transform 700ms var(--ease-out);
+  }
+  .compare__a {
+    color: var(--compare-pe-ink);
+    padding-right: clamp(1.25rem, 3vw, 2.5rem);
+    transform: translate3d(-28px, 0, 0);
+  }
+  .compare__b {
+    color: var(--compare-planet-ink);
+    padding-left: clamp(1.25rem, 3vw, 2.5rem);
+    transform: translate3d(28px, 0, 0);
+  }
+  .compare__layout.is-visible .compare__a,
+  .compare__layout.is-visible .compare__b {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+  .compare__layout.is-visible .compare__rule--span::before,
+  .compare__layout.is-visible .compare__rule--span::after { transition-delay: 100ms; }
+  .compare__layout.is-visible .compare__rule--span .compare__label { transition-delay: 260ms; }
+  .compare__layout.is-visible .compare__row:nth-child(1) .compare__a { transition-delay: 300ms; }
+  .compare__layout.is-visible .compare__row:nth-child(1) .compare__b { transition-delay: 380ms; }
+  .compare__layout.is-visible .compare__row:nth-child(2) .compare__rule::before,
+  .compare__layout.is-visible .compare__row:nth-child(2) .compare__rule::after { transition-delay: 460ms; }
+  .compare__layout.is-visible .compare__row:nth-child(2) .compare__label { transition-delay: 600ms; }
+  .compare__layout.is-visible .compare__row:nth-child(2) .compare__a { transition-delay: 640ms; }
+  .compare__layout.is-visible .compare__row:nth-child(2) .compare__b { transition-delay: 720ms; }
+  .compare__layout.is-visible .compare__row:nth-child(3) .compare__rule::before,
+  .compare__layout.is-visible .compare__row:nth-child(3) .compare__rule::after { transition-delay: 800ms; }
+  .compare__layout.is-visible .compare__row:nth-child(3) .compare__label { transition-delay: 940ms; }
+  .compare__layout.is-visible .compare__row:nth-child(3) .compare__a { transition-delay: 980ms; }
+  .compare__layout.is-visible .compare__row:nth-child(3) .compare__b { transition-delay: 1060ms; }
+  .compare__layout.is-visible .compare__row:nth-child(4) .compare__rule::before,
+  .compare__layout.is-visible .compare__row:nth-child(4) .compare__rule::after { transition-delay: 1140ms; }
+  .compare__layout.is-visible .compare__row:nth-child(4) .compare__label { transition-delay: 1280ms; }
+  .compare__layout.is-visible .compare__row:nth-child(4) .compare__a { transition-delay: 1320ms; }
+  .compare__layout.is-visible .compare__row:nth-child(4) .compare__b { transition-delay: 1400ms; }
+  .compare__closing {
+    margin: var(--space-7) 0 0;
+    max-width: 48ch;
+    font-size: var(--text-body);
+    line-height: 1.4;
+    font-weight: var(--weight-body);
+    font-style: normal;
+    color: var(--compare-planet-ink);
+    opacity: 0;
+    transform: translate3d(0, 14px, 0);
+    transition: opacity 700ms var(--ease-out), transform 700ms var(--ease-out);
+  }
+  .compare__layout.is-visible .compare__closing {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+    transition-delay: 1480ms;
+  }
+  @media (min-width: 1100px) {
+    .compare__layout {
+      grid-template-columns: var(--compare-main) var(--compare-aside);
+      column-gap: var(--compare-gap);
+      row-gap: 0;
+      align-items: start;
+    }
+    .compare__head {
+      grid-column: 1;
+      grid-row: 1;
+    }
+    .compare__rule--span {
+      grid-column: 1;
+      grid-row: 2;
+    }
+    .compare__rows {
+      grid-column: 1;
+      grid-row: 3;
+    }
+    .compare__closing {
+      grid-column: 2;
+      grid-row: 2 / 4;
+      margin-top: 0;
+      max-width: 18ch;
+      padding-top: 0.65em;
+      font-size: var(--text-h3);
+      line-height: 1.15;
+      letter-spacing: -0.015em;
+      font-style: italic;
+      color: var(--compare-planet-ink);
+    }
+  }
+  @media (max-width: 720px) {
+    .compare { padding: var(--space-8) 0; }
+    .compare__side,
+    .compare__a,
+    .compare__b {
+      font-size: var(--text-body);
+      line-height: 1.25;
+    }
+    .compare__icon {
+      width: 2.25rem;
+      height: 2.25rem;
+      margin-bottom: 0.4em;
+    }
+    .compare__side--pe,
+    .compare__a { padding-right: var(--space-3); }
+    .compare__side--planet,
+    .compare__b { padding-left: var(--space-3); }
+    .compare__head { padding-bottom: var(--space-4); }
+    .compare__cells { padding: var(--space-3) 0 var(--space-4); }
+  }
+
+  /* Unternehmer — Abbinder nach nummerierter Liste */
+  .stance-lines__close {
+    margin: var(--space-6) 0 0;
+    max-width: 36ch;
+    font-size: var(--text-body);
+    line-height: 1.35;
+  }
+  #unternehmer .fit__list {
+    margin-top: var(--space-2);
+  }
+
+  /* Mission — transparent wie Karten; Blau nur über html-Scroll (gemeinsames Band mit #wege) */
+  .mission {
+    padding: var(--space-10) 0;
+    background: transparent;
+  }
+  #mission {
+    --line-color: color-mix(
+      in srgb,
+      var(--planet-primary) calc((1 - var(--text-invert, 0)) * 100%),
+      var(--planet-white)
+    );
+  }
+  #mission .section-head h2,
+  #mission .mission__body p {
+    color: color-mix(
+      in srgb,
+      var(--planet-black) calc((1 - var(--text-invert, 0)) * 100%),
+      var(--planet-white)
+    );
+  }
+  #mission .pillar-orbit__caption text {
+    fill: color-mix(
+      in srgb,
+      var(--planet-primary) calc((1 - var(--text-invert, 0)) * 100%),
+      var(--planet-white)
+    );
+  }
+  .mission__body {
+    max-width: 42ch;
+  }
+  .mission__body.flow > * + * { --flow-space: var(--space-3); }
+  .mission__body p {
+    font-size: var(--text-body);
+    line-height: 1.4;
+  }
+  @media (max-width: 640px) {
+    .mission { padding: var(--space-8) 0; }
+  }
+
+  /* Legal-Overlays via :target (ohne JS-Änderung) */
+  .legal-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    background: var(--planet-white);
+    color: var(--planet-black);
+    opacity: 0;
+    pointer-events: none;
+    visibility: hidden;
+    transition: opacity 320ms var(--ease-out), visibility 320ms var(--ease-out);
+  }
+  .legal-overlay:target {
+    opacity: 1;
+    pointer-events: auto;
+    visibility: visible;
+  }
+  .legal-overlay__scroll {
+    flex: 1;
+    overflow-y: auto;
+    padding:
+      calc(var(--nav-height, 4rem) + var(--space-4))
+      0
+      var(--space-8);
+  }
+  .legal-overlay__inner {
+    max-width: 1280px;
+    margin: 0 auto;
+    width: 100%;
+    padding: 0 var(--space-4);
+    box-sizing: border-box;
+  }
+  .legal-overlay__close {
+    display: inline-block;
+    margin-bottom: var(--space-4);
+    font-size: var(--text-meta);
+    color: var(--planet-primary);
+    text-decoration: none;
+    border-bottom: var(--line-width) solid var(--planet-primary);
+  }
+  .legal-overlay__close:hover { opacity: 0.55; text-decoration: none; }
+  .legal-overlay__title {
+    margin: 0 0 var(--space-4);
+    font-size: var(--text-h2);
+    line-height: 0.95;
+  }
+  .legal-overlay__body {
+    max-width: 52ch;
+    font-size: var(--text-body);
+    line-height: 1.4;
+  }
+  .legal-overlay__body p + p { margin-top: var(--space-3); }
+  .legal-overlay__note {
+    margin-top: var(--space-4);
+    font-size: var(--text-meta);
+    opacity: 0.55;
+  }
+  @media (max-width: 640px) {
+    .legal-overlay__inner { padding-inline: var(--space-3); }
+  }
+
   /* #weiter — Blau über html-Scroll-Fade, Sektion transparent (keine Kante) */
   #weiter {
     background: transparent;
@@ -1920,6 +2249,8 @@
     padding: 0 0.08em;
     margin: 0 -0.02em;
     border-radius: 0.05em;
+    /* der gelbe Marker ist ein absolut positioniertes ::before — über zwei Zeilenboxen zerfällt er */
+    white-space: nowrap;
   }
   .fit__mark:hover,
   .fit__mark:focus {
@@ -1963,6 +2294,23 @@
   .fit__mark:focus-visible {
     outline: 2px solid var(--planet-black);
     outline-offset: 3px;
+  }
+  /*
+    Pfeil im Gelb-Mark — sonst ist ein Link nicht von einer reinen Hervorhebung zu unterscheiden.
+    Selektor bewusst zweistufig: planet.css setzt .quote-type__who span auf block/0.65.
+  */
+  .fit__mark .fit__mark-arrow {
+    /*
+      inline, nicht inline-block: ein inline-block ist ein atomarer Kasten und erzeugt
+      davor eine Umbruchstelle — der Pfeil rutschte dadurch allein in die nächste Zeile
+      und der gelbe Marker zerfiel (absolut positioniertes ::before über zwei Zeilenboxen).
+    */
+    display: inline;
+    opacity: 1;
+    font-size: 0.62em;
+    line-height: 1;
+    margin-left: 0.16em;
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
   }
   @media (max-width: 640px) {
     .fit { padding: var(--space-8) 0; }
@@ -2135,6 +2483,348 @@
       transition: none;
     }
   }
+  /* Mission-Overlay: eine Spalte, gleiche Aufzählungs-Linien wie Grundsätze */
+  .principles-overlay__grid--mission {
+    grid-template-columns: 1fr;
+    max-width: 62ch;
+  }
+  .principles-overlay__grid--mission .principles-overlay__col {
+    margin-top: 0;
+  }
+  .principles-overlay__grid--mission .principles-overlay__col li {
+    margin-bottom: 1.15em;
+    line-height: 1.45;
+  }
+  .principles-overlay__tagline {
+    margin: var(--space-6) 0 0;
+    max-width: 62ch;
+    font-family: var(--planet-font);
+    font-weight: var(--weight-display);
+    font-size: var(--text-h3);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: var(--planet-black);
+  }
+  /*
+    Fragebogen — erbt Position, Gelb und Nav-Umschaltung von .principles-overlay.
+    Ein Schritt pro Screen, vertikal zentriert; Fortschritt oben, Steuerung unten.
+  */
+  .quiz-overlay .principles-overlay__scroll {
+    display: flex;
+  }
+  .quiz {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    width: min(100%, 1480px);
+    margin: 0 auto;
+    padding: 0 var(--space-5);
+  }
+  .quiz__bar {
+    flex: none;
+    max-width: 62ch;
+    margin-bottom: var(--space-6);
+  }
+  .quiz__count {
+    margin: 0 0 var(--space-1);
+    font-family: var(--planet-font);
+    font-size: var(--text-meta);
+    font-weight: var(--weight-body);
+    font-variant-numeric: tabular-nums;
+    color: color-mix(in srgb, var(--planet-black) 55%, transparent);
+  }
+  .quiz__track {
+    height: 2px;
+    background: color-mix(in srgb, var(--planet-black) 18%, transparent);
+  }
+  .quiz__fill {
+    display: block;
+    width: 0;
+    height: 100%;
+    background: var(--planet-black);
+    transition: width 320ms var(--ease-out);
+  }
+  .quiz__form {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+  }
+  /* display:flex würde das hidden-Attribut sonst überstimmen */
+  .quiz__form[hidden] { display: none; }
+  /* Schritte liegen nicht gestapelt — der Fluss trägt die Höhe, das vermeidet Sprünge */
+  .quiz__step {
+    flex: 1;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    max-width: 62ch;
+  }
+  .quiz__step[hidden] { display: none; }
+  .quiz__step.is-active {
+    animation: quiz-in 380ms var(--ease-out) both;
+  }
+  @keyframes quiz-in {
+    from { opacity: 0; transform: translateY(14px); }
+    to { opacity: 1; transform: none; }
+  }
+  .quiz__q {
+    padding: 0;
+    margin: 0 0 var(--space-4);
+    font-family: var(--planet-font);
+    font-weight: var(--weight-display);
+    font-size: var(--text-h3);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: var(--planet-black);
+  }
+  .quiz__hint {
+    margin: calc(var(--space-4) * -1 + var(--space-1)) 0 var(--space-4);
+    font-size: var(--text-meta);
+    line-height: 1.4;
+    color: color-mix(in srgb, var(--planet-black) 62%, transparent);
+  }
+  .quiz__options {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+  }
+  .quiz__option {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-2) var(--space-3);
+    border: 2px solid var(--planet-black);
+    border-radius: var(--radius-pill);
+    cursor: pointer;
+    transition:
+      background var(--motion-instant) var(--ease-out),
+      color var(--motion-instant) var(--ease-out);
+  }
+  /* Radio bleibt echtes Input (Tastatur, Screenreader), nur optisch ersetzt */
+  .quiz__option input {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+  .quiz__option-key {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 1.9em;
+    height: 1.9em;
+    border-radius: var(--radius-pill);
+    background: color-mix(in srgb, var(--planet-black) 10%, transparent);
+    font-family: var(--planet-font);
+    font-size: var(--text-meta);
+    font-weight: var(--weight-display);
+    line-height: 1;
+  }
+  .quiz__option-text {
+    font-family: var(--planet-font);
+    font-size: var(--text-body);
+    font-weight: var(--weight-display);
+    line-height: 1.2;
+  }
+  .quiz__option:hover,
+  .quiz__option:has(input:focus-visible) {
+    background: color-mix(in srgb, var(--planet-black) 8%, transparent);
+  }
+  .quiz__option:has(input:focus-visible) {
+    outline: 2px solid var(--planet-black);
+    outline-offset: 3px;
+  }
+  .quiz__option:has(input:checked) {
+    background: var(--planet-black);
+    color: var(--planet-secondary);
+  }
+  .quiz__option:has(input:checked) .quiz__option-key {
+    background: color-mix(in srgb, var(--planet-secondary) 22%, transparent);
+  }
+  .quiz__textarea,
+  .quiz__field input {
+    width: 100%;
+    font-family: var(--planet-font);
+    font-size: var(--text-body);
+    font-weight: var(--weight-body);
+    line-height: 1.35;
+    color: var(--planet-black);
+    background: transparent;
+    border: 0;
+    border-bottom: 2px solid var(--planet-black);
+    border-radius: 0;
+    padding: var(--space-1) 0;
+    resize: vertical;
+  }
+  .quiz__textarea::placeholder,
+  .quiz__field input::placeholder {
+    color: color-mix(in srgb, var(--planet-black) 38%, transparent);
+  }
+  .quiz__textarea:focus,
+  .quiz__field input:focus {
+    outline: none;
+    border-bottom-color: var(--planet-black);
+    box-shadow: 0 2px 0 0 var(--planet-black);
+  }
+  .quiz__fields {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-4) var(--space-3);
+  }
+  .quiz__field label {
+    display: block;
+    margin-bottom: var(--space-1);
+    font-family: var(--planet-font);
+    font-size: var(--text-meta);
+    font-weight: var(--weight-display);
+    color: var(--planet-black);
+  }
+  .quiz__optional {
+    font-weight: var(--weight-body);
+    color: color-mix(in srgb, var(--planet-black) 50%, transparent);
+  }
+  .quiz__field input[aria-invalid="true"] {
+    border-bottom-color: #FF3B30;
+  }
+  .quiz__foot {
+    flex: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
+    max-width: 62ch;
+    padding: var(--space-5) 0 var(--space-6);
+  }
+  .quiz__back {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4em;
+    padding: 0;
+    border: 0;
+    background: none;
+    cursor: pointer;
+    font-family: var(--planet-font);
+    font-size: var(--text-meta);
+    font-weight: var(--weight-display);
+    color: color-mix(in srgb, var(--planet-black) 60%, transparent);
+    transition: color var(--motion-instant) var(--ease-out);
+  }
+  .quiz__back:hover { color: var(--planet-black); }
+  .quiz__back[hidden] { display: none; }
+  /* Zurück-Knopf fehlt im ersten Schritt — Weiter soll trotzdem rechts stehen */
+  .quiz__back[hidden] + .quiz__next { margin-left: auto; }
+  .quiz__next {
+    background: var(--planet-black);
+    color: var(--planet-secondary);
+    border-color: var(--planet-black);
+  }
+  .quiz__next:hover {
+    background: var(--planet-secondary);
+    color: var(--planet-black);
+  }
+  .quiz__next[disabled] {
+    opacity: 0.4;
+    pointer-events: none;
+  }
+  .quiz__error {
+    max-width: 62ch;
+    margin: 0 0 var(--space-6);
+    font-size: var(--text-meta);
+    color: #B00020;
+    opacity: 0;
+    height: 0;
+    overflow: hidden;
+    transition: opacity 200ms var(--ease-out);
+  }
+  .quiz__error.is-visible {
+    opacity: 1;
+    height: auto;
+  }
+  .quiz__done {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    max-width: 62ch;
+    padding-bottom: var(--space-6);
+    animation: quiz-in 420ms var(--ease-out) both;
+  }
+  .quiz__done[hidden] { display: none; }
+  .quiz__done-icon {
+    display: grid;
+    place-items: center;
+    width: 3.5rem;
+    height: 3.5rem;
+    margin-bottom: var(--space-3);
+    border-radius: var(--radius-pill);
+    background: var(--planet-black);
+    color: var(--planet-secondary);
+  }
+  .quiz__done h3 {
+    margin: 0 0 var(--space-2);
+    font-family: var(--planet-font);
+    font-weight: var(--weight-display);
+    font-size: var(--text-h3);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+  }
+  .quiz__done p {
+    margin: 0;
+    font-size: var(--text-body);
+    line-height: 1.35;
+    max-width: 34ch;
+  }
+  .quiz__done-note {
+    margin-top: var(--space-3) !important;
+    font-size: var(--text-meta) !important;
+    color: color-mix(in srgb, var(--planet-black) 62%, transparent);
+  }
+  .quiz__done-note a { color: inherit; }
+  @media (max-width: 640px) {
+    .quiz { padding: 0 var(--space-3); }
+    .quiz__bar { margin-bottom: var(--space-4); }
+    .quiz__q { font-size: var(--text-h4); }
+    .quiz__option { padding: var(--space-1) var(--space-2); }
+    .quiz__option-text { font-size: var(--text-meta); }
+    .quiz__fields { grid-template-columns: 1fr; gap: var(--space-3); }
+    .quiz__foot { padding: var(--space-4) 0 var(--space-5); }
+    .quiz__done h3 { font-size: var(--text-h4); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .quiz__step.is-active,
+    .quiz__done { animation: none; }
+    .quiz__fill { transition: none; }
+  }
+
+  /* Mission-Sektion: Gelb-Mark auf Blau */
+  #mission .fit__mark {
+    color: var(--planet-black);
+    isolation: isolate;
+  }
+  #mission .fit__mark::before {
+    transform: scaleX(1);
+    transition:
+      transform 180ms var(--ease-out),
+      top 180ms var(--ease-out),
+      bottom 180ms var(--ease-out),
+      left 180ms var(--ease-out),
+      right 180ms var(--ease-out);
+  }
+  #mission .fit__mark:hover::before,
+  #mission .fit__mark:focus-visible::before {
+    top: 0.02em;
+    bottom: 0;
+    left: -0.08em;
+    right: -0.08em;
+  }
+  #mission .fit__mark:focus-visible {
+    outline-color: var(--planet-white);
+  }
 </style>
 </head>
 <body>
@@ -2153,16 +2843,18 @@
 
 <div class="nav-overlay" role="dialog" aria-label="Navigation">
   <nav class="nav-overlay-links">
-    <a class="nav-overlay-link" href="#haltung"><span class="de">Haltung</span><span class="en">Stance</span></a>
+    <a class="nav-overlay-link" href="#unternehmer"><span class="de">Unternehmer</span><span class="en">Entrepreneurs</span></a>
+    <a class="nav-overlay-link" href="#haltung"><span class="de">Haltung</span><span class="en">Who we are</span></a>
+    <a class="nav-overlay-link" href="#unterschied"><span class="de">Unterschied</span><span class="en">Why us</span></a>
+    <a class="nav-overlay-link" href="#mission"><span class="de">Mission</span><span class="en">Mission</span></a>
     <a class="nav-overlay-link" href="#wege"><span class="de">Zwei Wege</span><span class="en">Two paths</span></a>
     <a class="nav-overlay-link" href="#infrastruktur"><span class="de">Infrastruktur</span><span class="en">Infrastructure</span></a>
     <a class="nav-overlay-link" href="#marken"><span class="de">Marken</span><span class="en">Brands</span></a>
-    <a class="nav-overlay-link" href="#zitat"><span class="de">Zitat</span><span class="en">Quote</span></a>
     <a class="nav-overlay-link" href="#team"><span class="de">Team</span><span class="en">Team</span></a>
     <a class="nav-overlay-link" href="#partnerschaft"><span class="de">Partnerschaft</span><span class="en">Partnership</span></a>
-    <a class="nav-overlay-link" href="#kriterien"><span class="de">Kriterien</span><span class="en">Criteria</span></a>
-    <a class="nav-overlay-link" href="#weiter"><span class="de">Weiter</span><span class="en">Next</span></a>
+    <a class="nav-overlay-link" href="#kriterien"><span class="de">Kriterien</span><span class="en">Fit</span></a>
     <a class="nav-overlay-link" href="#kontakt"><span class="de">Kontakt</span><span class="en">Get in touch</span></a>
+    <a class="nav-overlay-link nav-overlay-link--cta" href="#fragebogen"><span class="de">Passt es? — 3 Minuten</span><span class="en">Is this a fit? — 3 minutes</span></a>
   </nav>
 </div>
 
@@ -2178,20 +2870,20 @@
           <h3><span class="de">Fokus</span><span class="en">Focus</span></h3>
           <ul>
             <li><span class="de">Wir machen Kunden zu Fans.</span><span class="en">We turn customers into fans.</span></li>
-            <li><span class="de">Wir geben mehr als wir versprechen.</span><span class="en">We give more than we promise.</span></li>
+            <li><span class="de">Wir geben mehr als wir versprechen.</span><span class="en">We deliver more than we promise.</span></li>
             <li><span class="de">Wir setzen uns Ziele.</span><span class="en">We set goals.</span></li>
-            <li><span class="de">Wir halten uns an Termine und Verpflichtungen.</span><span class="en">We keep deadlines and commitments.</span></li>
+            <li><span class="de">Wir halten uns an Termine und Verpflichtungen.</span><span class="en">We keep our deadlines and our word.</span></li>
           </ul>
         </article>
         <article class="principles-overlay__col">
           <h3><span class="de">Teamgeist</span><span class="en">Team spirit</span></h3>
           <ul>
             <li><span class="de">Wir mögen Menschen. Wir lieben Tiere.</span><span class="en">We like people. We love animals.</span></li>
-            <li><span class="de">Wir sind ein geiles Team und haben Spaß.</span><span class="en">We’re a great team and we have fun.</span></li>
-            <li><span class="de">Wir helfen uns gegenseitig (zur Selbsthilfe).</span><span class="en">We help each other (toward self-help).</span></li>
-            <li><span class="de">Wir feiern zusammen unsere Erfolge.</span><span class="en">We celebrate our successes together.</span></li>
+            <li><span class="de">Wir sind ein geiles Team und haben Spaß.</span><span class="en">We’re a damn good team, and we have fun.</span></li>
+            <li><span class="de">Wir helfen uns gegenseitig (zur Selbsthilfe).</span><span class="en">We help each other stand on our own two feet.</span></li>
+            <li><span class="de">Wir feiern zusammen unsere Erfolge.</span><span class="en">We celebrate wins together.</span></li>
             <li><span class="de">Wir sind offen und direkt.</span><span class="en">We’re open and direct.</span></li>
-            <li><span class="de">Wir finden für jeden, der unsere Grundsätze lebt, den richtigen Job.</span><span class="en">For everyone who lives our principles, we find the right job.</span></li>
+            <li><span class="de">Wir finden für jeden, der unsere Grundsätze lebt, den richtigen Job.</span><span class="en">If you live our principles, we’ll find you the right job.</span></li>
           </ul>
         </article>
         <article class="principles-overlay__col">
@@ -2199,10 +2891,10 @@
           <ul>
             <li><span class="de">Wir haben Spaß.</span><span class="en">We have fun.</span></li>
             <li><span class="de">Wir teilen unser Wissen.</span><span class="en">We share our knowledge.</span></li>
-            <li><span class="de">Jede Tätigkeit ist gleich viel wert.</span><span class="en">Every task is equally valuable.</span></li>
-            <li><span class="de">Die richtigen Fragen bringen die besten Lösungen.</span><span class="en">The right questions lead to the best solutions.</span></li>
-            <li><span class="de">Wir arbeiten immer im konstruktiven Modus. Im Zentrum jeder Diskussion steht die angestrebte Lösung.</span><span class="en">We always work in constructive mode. Every discussion centers on the intended solution.</span></li>
-            <li><span class="de">Festina Lente — Eile mit Weile, schnell und agil, aber nicht überhastet.</span><span class="en">Festina lente — make haste slowly: fast and agile, but never rushed.</span></li>
+            <li><span class="de">Jede Tätigkeit ist gleich viel wert.</span><span class="en">No job here is beneath anyone.</span></li>
+            <li><span class="de">Die richtigen Fragen bringen die besten Lösungen.</span><span class="en">Ask better questions, get better answers.</span></li>
+            <li><span class="de">Wir arbeiten immer im konstruktiven Modus. Im Zentrum jeder Diskussion steht die angestrebte Lösung.</span><span class="en">We stay in problem-solving mode. Every conversation is about the answer.</span></li>
+            <li><span class="de">Festina Lente — Eile mit Weile, schnell und agil, aber nicht überhastet.</span><span class="en">Festina lente — make haste slowly. Move fast. Don’t rush.</span></li>
           </ul>
         </article>
         <article class="principles-overlay__col">
@@ -2210,12 +2902,12 @@
           <ul>
             <li><span class="de">Ich nehme mich selbst nicht so ernst.</span><span class="en">I don’t take myself too seriously.</span></li>
             <li><span class="de">Ich bin immer ehrlich (besonders zu mir selbst).</span><span class="en">I’m always honest (especially with myself).</span></li>
-            <li><span class="de">Ich darf so sein wie ich bin.</span><span class="en">I’m allowed to be who I am.</span></li>
-            <li><span class="de">Ich bin neugierig wie ein kleines Kind.</span><span class="en">I’m curious like a little kid.</span></li>
+            <li><span class="de">Ich darf so sein wie ich bin.</span><span class="en">I get to be myself.</span></li>
+            <li><span class="de">Ich bin neugierig wie ein kleines Kind.</span><span class="en">I stay curious.</span></li>
             <li><span class="de">Ich liebe Veränderung.</span><span class="en">I love change.</span></li>
-            <li><span class="de">Ich arbeite jeden Tag an mir (Zeit für Lesen und Nachdenken).</span><span class="en">I work on myself every day (time to read and think).</span></li>
-            <li><span class="de">Ich mache mich nicht zum Opfer.</span><span class="en">I don’t cast myself as the victim.</span></li>
-            <li><span class="de">Ich entscheide selbst und übernehme Verantwortung.</span><span class="en">I decide for myself and take responsibility.</span></li>
+            <li><span class="de">Ich arbeite jeden Tag an mir (Zeit für Lesen und Nachdenken).</span><span class="en">I work on myself every day. I make time to read and think.</span></li>
+            <li><span class="de">Ich mache mich nicht zum Opfer.</span><span class="en">I don’t play the victim.</span></li>
+            <li><span class="de">Ich entscheide selbst und übernehme Verantwortung.</span><span class="en">I make the call. I own the outcome.</span></li>
             <li><span class="de">Ich bin dankbar.</span><span class="en">I’m grateful.</span></li>
           </ul>
         </article>
@@ -2224,17 +2916,334 @@
   </div>
 </div>
 
+<div class="principles-overlay" id="unternehmensziel" role="dialog" aria-modal="true" aria-labelledby="mission-overlay-title" aria-hidden="true">
+  <div class="principles-overlay__scroll">
+    <div class="principles-overlay__inner">
+      <h2 class="principles-overlay__title" id="mission-overlay-title">
+        <span class="de">Unternehmensziel: Glück</span>
+        <span class="en">The point is happiness</span>
+      </h2>
+      <div class="principles-overlay__grid principles-overlay__grid--mission">
+        <article class="principles-overlay__col">
+          <ul>
+            <li>
+              <span class="de">Unsere Mission ist dein Glück und unser Glück. Wir sind überzeugt, dass erfolgreiche und glückliche Unternehmen nur von glücklichen Menschen geschaffen werden können. Unternehmensziel: Glück ist das Fundament unseres Erfolgs, und Erfolg ist die Basis unseres Glücks.</span>
+              <span class="en">Your happiness is the mission. Ours too. Great companies are built by people who actually like their lives. Happiness is how we succeed — and success is how happiness lasts.</span>
+            </li>
+            <li>
+              <span class="de">Doch eines ist klar: Glück jagt man nicht hinterher – man kultiviert es jeden Tag. Wie alles im Leben wächst auch das Glück, wenn man daran arbeitet. Und machen wir uns nichts vor – es ist nicht immer einfach. Aber einfach ist auch nicht das, wonach wir suchen. Was zählt, ist die Mühe, die wir hineinstecken, und der Fortschritt, den wir Schritt für Schritt machen.</span>
+              <span class="en">You don’t chase happiness. You grow it. Same as anything else worth having: it gets bigger when you work at it. That’s not always easy. Easy was never the brief. What counts is the work, and the ground you gain.</span>
+            </li>
+            <li>
+              <span class="de">Mit Bescheidenheit, den Füßen fest auf dem Boden und den Augen auf massive 10x-Ziele gerichtet, wollen wir die Welt um uns herum jeden Tag ein kleines bisschen besser und schöner machen. Mit unseren Produkten, unserem Service und unserer Kreativität möchten wir Freude verbreiten – immer mit Begeisterung und einem Lächeln. Wir streben danach, gute Menschen zu sein – mutig, gerecht, diszipliniert und weise. Wir suchen nach einem Selbstwertgefühl, das unabhängig von äußeren Einflüssen und Meinungen ist. Wir wollen bedeutsame Beziehungen zu unseren Mitmenschen aufbauen. Und vor allem streben wir nach Glück und Zufriedenheit.</span>
+              <span class="en">Feet on the ground. Eyes on 10x goals. We want the world around us a little better, and a little more beautiful, every day. Products, service, craft — we want them to land as joy. Energy on. Smile on. We try to be decent people: brave, fair, disciplined, wise. We want self-worth that doesn’t hinge on other people’s opinions. We want real relationships. And more than anything, we want to be happy — and okay.</span>
+            </li>
+            <li>
+              <span class="de">Unternehmensziel: Glück ist für alle, die sich voller Begeisterung auf diese Reise einlassen. Es ist für alle, die bereit sind, jeden Tag ihr Bestes zu geben, um zu wachsen und sich weiterzuentwickeln. Unternehmensziel: Glück ist für Menschen, die mit ganzem Herzen lieben – die Menschen, Tiere und das Leben selbst wertschätzen. Es ist für die Rechtschaffenen, die den Mut haben, das Richtige zu tun. Für die Fröhlichen, die das Leben mit Leichtigkeit sehen. Für die Frechen, die den Mut haben, anders zu denken. Für die Dankbaren, die in jedem Moment etwas Gutes finden. Und für die Pippi Langstrumpfs dieser Welt, die mit Fantasie und Abenteuerlust Neues erschaffen. Unternehmensziel: Glück ist für Dich. Und für mich. Und für jeden, der daran glaubt, dass Glück wächst, wenn wir daran arbeiten.</span>
+              <span class="en">Happiness is for people who jump in with both feet. For anyone willing to show up and keep growing. It’s for people who love hard — people, animals, life. For anyone brave enough to do the right thing. Anyone who can take life lightly. Anyone who thinks sideways. Anyone grateful enough to find something good in the day. And for the Pippi Longstockings — the ones who invent the next thing out of sheer imagination. Happiness is for you. For me. For anyone who believes it grows if you work at it.</span>
+            </li>
+          </ul>
+        </article>
+      </div>
+      <p class="principles-overlay__tagline">
+        <span class="de">Jeden Tag ein bisschen geiler.</span>
+        <span class="en">A little more awesome every day.</span>
+      </p>
+    </div>
+  </div>
+</div>
+
+<!--
+  FRAGEBOGEN — Haupt-CTA statt Terminbuchung.
+  Filtert vor und erzeugt Commitment; Kontaktdaten bewusst zuletzt.
+  Nach dem Absenden kein Kalender, sondern eine Zusage in 2 Werktagen —
+  wer ein Gespräch bekommt, entscheidet die interne Sichtung.
+-->
+<div class="principles-overlay quiz-overlay" id="fragebogen" role="dialog" aria-modal="true" aria-labelledby="quiz-title" aria-hidden="true">
+  <div class="principles-overlay__scroll">
+    <div class="quiz" data-quiz>
+      <div class="quiz__bar" data-quiz-bar>
+        <p class="quiz__count">
+          <span class="de">Frage <span data-quiz-current>1</span> von <span data-quiz-total>6</span></span>
+          <span class="en">Question <span data-quiz-current>1</span> of <span data-quiz-total>6</span></span>
+        </p>
+        <div class="quiz__track" aria-hidden="true"><span class="quiz__fill" data-quiz-fill></span></div>
+      </div>
+
+      <h2 class="visually-hidden" id="quiz-title">
+        <span class="de">Passt dein Unternehmen zu uns?</span>
+        <span class="en">Is this a fit?</span>
+      </h2>
+
+      <!-- Empfänger: Torsten sichtet die Fragebögen und lädt persönlich ein -->
+      <form class="quiz__form" data-quiz-form data-quiz-to="torsten@plnt.group" novalidate>
+
+        <!-- 1 — Umsatz. Platzhalter-Bänder: von der Geschäftsführung bestätigen lassen -->
+        <fieldset class="quiz__step is-active" data-quiz-step data-quiz-key="Umsatz">
+          <legend class="quiz__q">
+            <span class="de">Welche Umsatzgrößenordnung hat dein Unternehmen?</span>
+            <span class="en">What’s your revenue?</span>
+          </legend>
+          <div class="quiz__options">
+            <label class="quiz__option">
+              <input type="radio" name="umsatz" value="unter 1 Mio €">
+              <span class="quiz__option-key" aria-hidden="true">A</span>
+              <span class="quiz__option-text"><span class="de">Unter 1 Mio. €</span><span class="en">Under €1M</span></span>
+            </label>
+            <label class="quiz__option">
+              <input type="radio" name="umsatz" value="1–5 Mio €">
+              <span class="quiz__option-key" aria-hidden="true">B</span>
+              <span class="quiz__option-text"><span class="de">1–5 Mio. €</span><span class="en">€1–5M</span></span>
+            </label>
+            <label class="quiz__option">
+              <input type="radio" name="umsatz" value="5–15 Mio €">
+              <span class="quiz__option-key" aria-hidden="true">C</span>
+              <span class="quiz__option-text"><span class="de">5–15 Mio. €</span><span class="en">€5–15M</span></span>
+            </label>
+            <label class="quiz__option">
+              <input type="radio" name="umsatz" value="über 15 Mio €">
+              <span class="quiz__option-key" aria-hidden="true">D</span>
+              <span class="quiz__option-text"><span class="de">Über 15 Mio. €</span><span class="en">Over €15M</span></span>
+            </label>
+          </div>
+        </fieldset>
+
+        <!-- 2 — Profitabilität, gleiche Formulierung wie in den Kriterien -->
+        <fieldset class="quiz__step" data-quiz-step data-quiz-key="Profitabilität" hidden>
+          <legend class="quiz__q">
+            <span class="de">Ist dein Unternehmen profitabel?</span>
+            <span class="en">Is your company profitable?</span>
+          </legend>
+          <div class="quiz__options">
+            <label class="quiz__option">
+              <input type="radio" name="profitabel" value="ja, profitabel">
+              <span class="quiz__option-key" aria-hidden="true">A</span>
+              <span class="quiz__option-text"><span class="de">Ja, profitabel</span><span class="en">Yes — profitable</span></span>
+            </label>
+            <label class="quiz__option">
+              <input type="radio" name="profitabel" value="klar auf dem Weg dahin">
+              <span class="quiz__option-key" aria-hidden="true">B</span>
+              <span class="quiz__option-text"><span class="de">Klar auf dem Weg dahin</span><span class="en">On the way there</span></span>
+            </label>
+            <label class="quiz__option">
+              <input type="radio" name="profitabel" value="noch nicht">
+              <span class="quiz__option-key" aria-hidden="true">C</span>
+              <span class="quiz__option-text"><span class="de">Noch nicht</span><span class="en">Not yet</span></span>
+            </label>
+          </div>
+        </fieldset>
+
+        <!-- 3 — spiegelt die Sektion „Zwei Wege“ -->
+        <fieldset class="quiz__step" data-quiz-step data-quiz-key="Weg" hidden>
+          <legend class="quiz__q">
+            <span class="de">Worum geht es dir — Wachstum oder Nachfolge?</span>
+            <span class="en">Growth, or succession?</span>
+          </legend>
+          <div class="quiz__options">
+            <label class="quiz__option">
+              <input type="radio" name="weg" value="Wachstum">
+              <span class="quiz__option-key" aria-hidden="true">A</span>
+              <span class="quiz__option-text"><span class="de">Wachstum</span><span class="en">Growth</span></span>
+            </label>
+            <label class="quiz__option">
+              <input type="radio" name="weg" value="Nachfolge">
+              <span class="quiz__option-key" aria-hidden="true">B</span>
+              <span class="quiz__option-text"><span class="de">Nachfolge</span><span class="en">Succession</span></span>
+            </label>
+            <label class="quiz__option">
+              <input type="radio" name="weg" value="beides">
+              <span class="quiz__option-key" aria-hidden="true">C</span>
+              <span class="quiz__option-text"><span class="de">Beides</span><span class="en">Both</span></span>
+            </label>
+            <label class="quiz__option">
+              <input type="radio" name="weg" value="noch offen">
+              <span class="quiz__option-key" aria-hidden="true">D</span>
+              <span class="quiz__option-text"><span class="de">Noch offen</span><span class="en">Still open</span></span>
+            </label>
+          </div>
+        </fieldset>
+
+        <!-- 4 — Zeithorizont -->
+        <fieldset class="quiz__step" data-quiz-step data-quiz-key="Zeithorizont" hidden>
+          <legend class="quiz__q">
+            <span class="de">Bis wann willst du etwas verändern?</span>
+            <span class="en">What’s your timeline?</span>
+          </legend>
+          <div class="quiz__options">
+            <label class="quiz__option">
+              <input type="radio" name="zeithorizont" value="so schnell wie möglich">
+              <span class="quiz__option-key" aria-hidden="true">A</span>
+              <span class="quiz__option-text"><span class="de">So schnell wie möglich</span><span class="en">As soon as possible</span></span>
+            </label>
+            <label class="quiz__option">
+              <input type="radio" name="zeithorizont" value="in den nächsten 12 Monaten">
+              <span class="quiz__option-key" aria-hidden="true">B</span>
+              <span class="quiz__option-text"><span class="de">In den nächsten 12 Monaten</span><span class="en">Within the next 12 months</span></span>
+            </label>
+            <label class="quiz__option">
+              <input type="radio" name="zeithorizont" value="in 1–3 Jahren">
+              <span class="quiz__option-key" aria-hidden="true">C</span>
+              <span class="quiz__option-text"><span class="de">In 1–3 Jahren</span><span class="en">In 1–3 years</span></span>
+            </label>
+            <label class="quiz__option">
+              <input type="radio" name="zeithorizont" value="noch offen">
+              <span class="quiz__option-key" aria-hidden="true">D</span>
+              <span class="quiz__option-text"><span class="de">Noch offen</span><span class="en">Still open</span></span>
+            </label>
+          </div>
+        </fieldset>
+
+        <!-- 5 — Beweggrund. Freitext: bringt zum Nachdenken und qualifiziert das Gespräch vor -->
+        <fieldset class="quiz__step" data-quiz-step data-quiz-key="Beweggrund" hidden>
+          <legend class="quiz__q">
+            <span class="de">Was treibt dich gerade um?</span>
+            <span class="en">What’s on your mind right now?</span>
+          </legend>
+          <p class="quiz__hint">
+            <span class="de">Ein paar Sätze reichen. Je ehrlicher, desto besser können wir einschätzen, ob es passt.</span>
+            <span class="en">A few sentences is plenty. The more honest you are, the easier it is to tell if this is a fit.</span>
+          </p>
+          <textarea
+            class="quiz__textarea"
+            name="beweggrund"
+            rows="5"
+            data-ph-de="Zum Beispiel: Ich mache seit 14 Jahren alles selbst und merke, dass ich an eine Grenze komme."
+            data-ph-en="For example: I’ve done everything myself for 14 years and I’m hitting a wall."
+            placeholder="Zum Beispiel: Ich mache seit 14 Jahren alles selbst und merke, dass ich an eine Grenze komme."
+          ></textarea>
+        </fieldset>
+
+        <!-- 6 — Kontaktdaten ganz am Ende, das hebt die Abschlussquote -->
+        <fieldset class="quiz__step" data-quiz-step data-quiz-key="Kontakt" hidden>
+          <legend class="quiz__q">
+            <span class="de">Wer bist du?</span>
+            <span class="en">How do we reach you?</span>
+          </legend>
+          <p class="quiz__hint">
+            <span class="de">Damit wir uns melden können. Keine Newsletter, keine Weitergabe.</span>
+            <span class="en">So we can get back to you. No newsletters. We don’t share your details.</span>
+          </p>
+          <div class="quiz__fields">
+            <div class="quiz__field">
+              <label for="q-name"><span class="de">Name</span><span class="en">Name</span></label>
+              <input id="q-name" name="name" type="text" autocomplete="name" required placeholder="Alex Mertens">
+            </div>
+            <div class="quiz__field">
+              <label for="q-firma"><span class="de">Unternehmen</span><span class="en">Company</span></label>
+              <input id="q-firma" name="unternehmen" type="text" autocomplete="organization" required placeholder="Mertens Tiergesundheit GmbH">
+            </div>
+            <div class="quiz__field">
+              <label for="q-mail"><span class="de">E-Mail</span><span class="en">Email</span></label>
+              <input id="q-mail" name="email" type="email" autocomplete="email" required placeholder="alex@company.com">
+            </div>
+            <div class="quiz__field">
+              <label for="q-tel">
+                <span class="de">Telefon <span class="quiz__optional">optional</span></span>
+                <span class="en">Phone <span class="quiz__optional">optional</span></span>
+              </label>
+              <input id="q-tel" name="telefon" type="tel" autocomplete="tel" placeholder="+49 …">
+            </div>
+          </div>
+        </fieldset>
+
+        <!-- Honeypot (FormSubmit: _honey) -->
+        <input type="text" name="_honey" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;opacity:0;height:0;width:0;">
+
+        <div class="quiz__foot">
+          <button type="button" class="quiz__back" data-quiz-back hidden>
+            <span class="material-symbols-outlined" aria-hidden="true">arrow_back</span>
+            <span class="de">Zurück</span>
+            <span class="en">Back</span>
+          </button>
+          <button type="submit" class="btn quiz__next" data-quiz-next>
+            <span class="de" data-quiz-next-de>Weiter</span>
+            <span class="en" data-quiz-next-en>Continue</span>
+            <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span>
+          </button>
+        </div>
+
+        <p class="quiz__error" data-quiz-error role="alert">
+          <span class="de">Senden fehlgeschlagen. Bitte nochmal versuchen oder direkt an hello@plnt.group schreiben.</span>
+          <span class="en">That didn’t send. Try again, or email hello@plnt.group.</span>
+        </p>
+      </form>
+
+      <!-- Wellenbrecher: bewusst kein Buchungslink -->
+      <div class="quiz__done" data-quiz-done aria-live="polite" tabindex="-1" hidden>
+        <span class="quiz__done-icon" aria-hidden="true">
+          <span class="material-symbols-outlined">check</span>
+        </span>
+        <h3>
+          <span class="de">Danke — angekommen.</span>
+          <span class="en">Thanks. We got it.</span>
+        </h3>
+        <p>
+          <span class="de">Wir prüfen deine Angaben und melden uns innerhalb von 2 Werktagen persönlich bei dir.</span>
+          <span class="en">We’ll read your answers and get in touch within two business days.</span>
+        </p>
+        <p class="quiz__done-note">
+          <span class="de">Wenn es dringend ist: <a href="mailto:hello@plnt.group">hello@plnt.group</a></span>
+          <span class="en">If it’s urgent: <a href="mailto:hello@plnt.group">hello@plnt.group</a></span>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- IMPRESSUM / DATENSCHUTZ — :target-Overlays, Platzhalter bis juristische Texte liegen -->
+<div class="legal-overlay" id="impressum" role="dialog" aria-modal="true" aria-labelledby="impressum-title">
+  <div class="legal-overlay__scroll">
+    <div class="legal-overlay__inner">
+      <a class="legal-overlay__close" href="#top"><span class="de">Schließen</span><span class="en">Close</span></a>
+      <h2 class="legal-overlay__title" id="impressum-title"><span class="de">Impressum</span><span class="en">Imprint</span></h2>
+      <div class="legal-overlay__body">
+        <p>
+          <span class="de">Platzhalter — der verbindliche Impressumstext wird juristisch geliefert und hier eingesetzt.</span>
+          <span class="en">Placeholder — the binding imprint text will be provided legally and inserted here.</span>
+        </p>
+        <p>
+          <span class="de">PLNT Group<br>hello@plnt.group</span>
+          <span class="en">PLNT Group<br>hello@plnt.group</span>
+        </p>
+      </div>
+      <p class="legal-overlay__note">
+        <span class="de">Noch kein rechtsgültiger Inhalt.</span>
+        <span class="en">Not yet legally binding content.</span>
+      </p>
+    </div>
+  </div>
+</div>
+
+<div class="legal-overlay" id="datenschutz" role="dialog" aria-modal="true" aria-labelledby="datenschutz-title">
+  <div class="legal-overlay__scroll">
+    <div class="legal-overlay__inner">
+      <a class="legal-overlay__close" href="#top"><span class="de">Schließen</span><span class="en">Close</span></a>
+      <h2 class="legal-overlay__title" id="datenschutz-title"><span class="de">Datenschutz</span><span class="en">Privacy</span></h2>
+      <div class="legal-overlay__body">
+        <p>
+          <span class="de">Platzhalter — die verbindliche Datenschutzerklärung wird juristisch geliefert und hier eingesetzt.</span>
+          <span class="en">Placeholder — the binding privacy policy will be provided legally and inserted here.</span>
+        </p>
+      </div>
+      <p class="legal-overlay__note">
+        <span class="de">Noch kein rechtsgültiger Inhalt.</span>
+        <span class="en">Not yet legally binding content.</span>
+      </p>
+    </div>
+  </div>
+</div>
+
 <!-- HERO -->
 <section class="hero-full" id="top">
   <div class="hero-full__media" aria-hidden="true">
-    <img src="assets/images/283---Inuvet-Sommerfest-2026_Tag-01_283.jpg" alt="">
+    <img src="assets/images/279---Inuvet-Sommerfest-2026_Tag-01_279.jpg" alt="">
     <div class="hero-full__overlay"></div>
   </div>
   <div class="hero-full__content flow">
     <h1><span class="de">Gesunde Tiere. Starke Marken.</span><span class="en">Healthy animals. Strong brands.</span></h1>
     <p class="hero-full__sub">
       <span class="de">Planet ist die Unternehmergruppe für Tiergesundheit — und hilft dir, dein Unternehmen weiterzubauen.</span>
-      <span class="en">Planet is the entrepreneurial group for animal health — and helps you keep building your company.</span>
+      <span class="en">We’re founders in animal health. We help you keep building.</span>
     </p>
   </div>
   <a class="hero-full__scroll" href="#stats" aria-label="Scroll">
@@ -2252,21 +3261,77 @@
     <div class="stat-strip__grid">
       <div class="stat-strip__item reveal">
         <div class="stat-strip__num"><span class="counter" data-target="2011" data-start="2000">2000</span></div>
-        <p class="stat-strip__label"><span class="de">Gründung des ersten Unternehmens</span><span class="en">First company founded</span></p>
+        <p class="stat-strip__label"><span class="de">Gründung des ersten Unternehmens</span><span class="en">We started in</span></p>
       </div>
       <div class="stat-strip__item reveal">
         <div class="stat-strip__num"><span class="counter" data-target="150" data-suffix="+">0</span></div>
-        <p class="stat-strip__label"><span class="de">Mitarbeitende in der Gruppe</span><span class="en">Employees across the group</span></p>
+        <p class="stat-strip__label"><span class="de">Mitarbeitende in der Gruppe</span><span class="en">People in the group</span></p>
       </div>
       <div class="stat-strip__item reveal">
         <div class="stat-strip__num"><span class="counter" data-target="4">0</span></div>
-        <p class="stat-strip__label"><span class="de">Marken unter einem Dach</span><span class="en">Brands under one roof</span></p>
+        <p class="stat-strip__label"><span class="de">Marken unter einem Dach</span><span class="en">Brands</span></p>
       </div>
       <div class="stat-strip__item reveal">
-        <div class="stat-strip__num"><span class="counter" data-target="33" data-suffix="&nbsp;%" data-start="0">0&nbsp;%</span></div>
-        <p class="stat-strip__label"><span class="de">Ø jährliches Umsatzwachstum der Gruppe</span><span class="en">Avg. annual revenue growth of the group</span></p>
+        <div class="stat-strip__num"><span class="counter" data-target="20" data-prefix="&gt;" data-suffix="%" data-start="0">&gt;0%</span></div>
+        <p class="stat-strip__label"><span class="de">Ø jährliches Umsatzwachstum der Gruppe</span><span class="en">Yearly growth</span></p>
       </div>
     </div>
+  </div>
+</section>
+
+<!-- UNTERNEHMER -->
+<section class="stance" id="unternehmer">
+  <div class="container">
+    <div class="section-head section-head--reveal reveal">
+      <div>
+        <h2>
+          <span class="de">Du bist Unternehmer</span>
+          <span class="en">You’re a founder</span>
+        </h2>
+      </div>
+    </div>
+    <ul class="fit__list">
+      <li class="fit__item reveal">
+        <div class="fit__cue" aria-hidden="true">
+          <span class="fit__rule"></span>
+        </div>
+        <p class="fit__text">
+          <span class="de">Du hast gegründet.</span>
+          <span class="en">You built this.</span>
+        </p>
+      </li>
+      <li class="fit__item reveal">
+        <div class="fit__cue" aria-hidden="true">
+          <span class="fit__rule"></span>
+        </div>
+        <p class="fit__text">
+          <span class="de">Du trägst jeden Tag Verantwortung.</span>
+          <span class="en">You own it, every day.</span>
+        </p>
+      </li>
+      <li class="fit__item reveal">
+        <div class="fit__cue" aria-hidden="true">
+          <span class="fit__rule"></span>
+        </div>
+        <p class="fit__text">
+          <span class="de">Du gehst Risiken ein.</span>
+          <span class="en">The risk is yours.</span>
+        </p>
+      </li>
+      <li class="fit__item reveal">
+        <div class="fit__cue" aria-hidden="true">
+          <span class="fit__rule"></span>
+        </div>
+        <p class="fit__text">
+          <span class="de">Du hast Rückschläge weggesteckt und Erfolge gefeiert.</span>
+          <span class="en">You’ve taken the knocks. You’ve had the wins.</span>
+        </p>
+      </li>
+    </ul>
+    <p class="stance-lines__close reveal">
+      <span class="de">Wir kennen jeden dieser Sätze. Aus eigener Erfahrung.</span>
+      <span class="en">We know. We’ve been there.</span>
+    </p>
   </div>
 </section>
 
@@ -2277,7 +3342,7 @@
       <div>
         <h2>
           <span class="de">Kein Fonds. Keine Bank. Unternehmer – genau wie du.</span>
-          <span class="en">Not a fund. Not a bank. Entrepreneurs — just like you.</span>
+          <span class="en">Not a fund. Not a bank. Founders — like you.</span>
         </h2>
       </div>
     </div>
@@ -2285,7 +3350,7 @@
       <div class="stance__media reveal-scale">
         <div class="pillar-orbit">
           <div class="pillar-orbit__media">
-            <div class="pillar-circle-img" style="background-image: url('assets/images/3---Inuvet-Sommerfest-2026_Tag-01_001.jpg');" role="img" aria-label=""></div>
+            <div class="pillar-circle-img" style="background-image: url('assets/images/326---Inuvet-Sommerfest-2026_Tag-01_326.jpg');" role="img" aria-label=""></div>
           </div>
           <svg class="pillar-orbit__caption" viewBox="0 0 100 100" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
             <defs>
@@ -2299,36 +3364,37 @@
       </div>
       <div class="stance__body flow reveal-slide-right">
         <p>
-          <span class="de">Vielleicht hast du dein Unternehmen gegründet, weil dir etwas gefehlt hat: ein Produkt, das es für dein Tier so nicht gab. Eine Lösung, die niemand hatte. Bei uns war es genauso.</span>
-          <span class="en">Maybe you started your company because something was missing: a product that didn’t exist for your animal. A solution nobody had. It was the same for us.</span>
+          <span class="de">Vielleicht hast du dein Unternehmen gegründet, weil dir etwas gefehlt hat: ein Produkt, das es für dein Tier so nicht gab. Bei uns war es genauso.</span>
+          <span class="en">Maybe you started the company because something was missing: a product that didn’t exist for your animal. Same for us.</span>
         </p>
         <p>
           <span class="de">Aus dieser Tierliebe ist die Planet Group gewachsen — ein Unternehmen mit einer Mission: Tiere natürlich gesund machen. Und mit einer Leidenschaft: Unternehmen beim Wachsen begleiten. Deins vielleicht auch.</span>
-          <span class="en">From that love of animals, Planet Group has grown — a company with a mission: making animals naturally healthy. And with a passion: helping companies grow. Yours, perhaps, too.</span>
+          <span class="en">Out of that love of animals, Planet Group grew — a company with a mission: keep animals healthy, naturally. And a passion: help companies grow. Yours, maybe.</span>
         </p>
       </div>
     </div>
   </div>
 </section>
 
-<!-- OFFENE KARTEN — Bildtext, Text links / Bild rechts -->
-<section class="stance stance--flip" id="karten" data-band-blue>
+<!-- KARTEN → UNTERSCHIED → ZITAT → MISSION → WEGE — ein Blau-Band, kein Weißblitz dazwischen -->
+<div data-band-blue>
+<section class="stance stance--flip" id="karten">
   <div class="container">
     <div class="stance__grid">
       <div class="stance__body flow reveal-slide-left">
         <p>
-          <span class="de">Wenn du mit uns sprichst, sitzt dir deshalb kein Fonds gegenüber und keine Bank — sondern Unternehmer, denen die Gruppe zu 100&nbsp;% selbst gehört. Niemand, der dein Lebenswerk nach acht Jahren weiterverkaufen muss. Niemand, der nur deine Zahlen sieht und nicht die Tiere dahinter.</span>
-          <span class="en">So when you talk to us, you’re not facing a fund or a bank — but entrepreneurs who own the group 100%. No one who has to sell on your life’s work after eight years. No one who only sees your numbers and not the animals behind them.</span>
+          <span class="de">Wenn du mit uns sprichst, sitzt dir deshalb kein Private-Equity-Fonds gegenüber und keine Bank — sondern Unternehmer, denen die Gruppe zu 100&nbsp;% selbst gehört. Niemand, der dein Lebenswerk nach acht Jahren weiterverkaufen muss. Niemand, der nur deine Zahlen sieht und nicht die Tiere dahinter.</span>
+          <span class="en">When you sit down with us, there is no PE fund across the table. No bank. Founders who own the group, 100%. Nobody who has to sell what you built in eight years. Nobody who only sees the numbers and misses the animals.</span>
         </p>
         <p>
           <span class="de">Und ja: Geld verdienen wollen wir trotzdem — wie du auch. Wir spielen mit offenen Karten. Das kannst du von uns erwarten.</span>
-          <span class="en">And yes: we still want to make money — just like you. We play with open cards. You can expect that from us.</span>
+          <span class="en">And yes — we want to make money. Same as you. We’ll put that on the table. You can hold us to it.</span>
         </p>
       </div>
       <div class="stance__media reveal-scale">
         <div class="pillar-orbit">
           <div class="pillar-orbit__media">
-            <div class="pillar-circle-img" style="background-image: url('assets/images/279---Inuvet-Sommerfest-2026_Tag-01_279.jpg');" role="img" aria-label=""></div>
+            <div class="pillar-circle-img" style="background-image: url('assets/images/273---Inuvet-Sommerfest-2026_Tag-01_273.jpg');" role="img" aria-label=""></div>
           </div>
           <svg class="pillar-orbit__caption" viewBox="0 0 100 100" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
             <defs>
@@ -2344,14 +3410,148 @@
   </div>
 </section>
 
-<!-- ZWEI WEGE -->
+<!-- UNTERSCHIED -->
+<section class="compare" id="unterschied">
+  <div class="container">
+    <div class="section-head section-head--reveal reveal">
+      <div>
+        <h2>
+          <span class="de">Ein Unterschied, der zählt.</span>
+          <span class="en">What actually changes.</span>
+        </h2>
+      </div>
+    </div>
+    <div class="compare__layout reveal">
+      <div class="compare__head">
+        <span class="compare__side compare__side--pe">
+          <span class="compare__icon" aria-hidden="true"></span>
+          <span class="de">Investor</span>
+          <span class="en">Investor</span>
+        </span>
+        <span class="compare__side compare__side--planet">
+          <span class="compare__icon" aria-hidden="true"></span>
+          Planet
+        </span>
+      </div>
+      <div class="compare__rule compare__rule--span">
+        <span class="compare__rule-slot">
+          <span class="compare__label"><span class="de">Haltedauer</span><span class="en">Holding period</span></span>
+        </span>
+      </div>
+      <div class="compare__rows">
+        <div class="compare__row">
+          <div class="compare__cells">
+            <span class="compare__a"><span class="de">Exit nach 5–8 Jahren</span><span class="en">Exit after 5–8 years</span></span>
+            <span class="compare__b"><span class="de">Kein Exit-Datum</span><span class="en">No exit date</span></span>
+          </div>
+        </div>
+        <div class="compare__row">
+          <div class="compare__rule">
+            <span class="compare__label"><span class="de">Maßstab & Werte</span><span class="en">What counts</span></span>
+          </div>
+          <div class="compare__cells">
+            <span class="compare__a"><span class="de">Rendite zum Zeitpunkt des Verkaufs</span><span class="en">Return at sale</span></span>
+            <span class="compare__b"><span class="de">Marke, Team und Tiere</span><span class="en">Brand, team and animals</span></span>
+          </div>
+        </div>
+        <div class="compare__row">
+          <div class="compare__rule">
+            <span class="compare__label"><span class="de">Nach dem Kauf</span><span class="en">After the deal</span></span>
+          </div>
+          <div class="compare__cells">
+            <span class="compare__a"><span class="de">Effizienz und Optimierung der Kosten</span><span class="en">Cut costs. Squeeze the rest.</span></span>
+            <span class="compare__b"><span class="de">Aufbau: Vertrieb, Marketing, Operations</span><span class="en">Build: sales, marketing, operations</span></span>
+          </div>
+        </div>
+        <div class="compare__row">
+          <div class="compare__rule">
+            <span class="compare__label"><span class="de">Deine Rolle</span><span class="en">Your role</span></span>
+          </div>
+          <div class="compare__cells">
+            <span class="compare__a"><span class="de">vom Investor definiert</span><span class="en">the investor decides</span></span>
+            <span class="compare__b"><span class="de">gemeinsam definiert</span><span class="en">we decide together</span></span>
+          </div>
+        </div>
+      </div>
+      <p class="compare__closing">
+        <span class="de">Dein Lebenswerk verdient eine Zukunft. Nicht bei einem Finanzinvestor. Sondern mit Unternehmern, die weiterbauen statt weiterverkaufen.</span>
+        <span class="en">What you built deserves a future. Not parked with a financial investor. With founders who keep building, instead of looking for the next buyer.</span>
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- Zitat + Mission + Wege — im selben Blau-Band, sonst blitzt es dazwischen weiss auf -->
+<section class="quote-type" id="grundsatz-zitat" data-quote-type>
+  <div class="quote-type__bg" aria-hidden="true">
+    <img src="assets/images/149---Inuvet-Sommerfest-2026_Tag-01_149.jpg" alt="">
+    <div class="quote-type__bg-veil"></div>
+  </div>
+  <div class="quote-type__content reveal">
+    <blockquote class="quote-type__quote">
+      <p class="quote-type__text">
+        <span class="de">»Wir mögen Menschen. Wir lieben Tiere.«</span>
+        <span class="en">»We like people. We love animals.«</span>
+      </p>
+    </blockquote>
+    <footer class="quote-type__who">
+      <span class="de">aus unseren <a class="fit__mark" href="#grundsaetze">Unternehmensgrundsätzen<span class="material-symbols-outlined fit__mark-arrow" aria-hidden="true">arrow_outward</span></a></span>
+      <span class="en">from our <a class="fit__mark" href="#grundsaetze">principles<span class="material-symbols-outlined fit__mark-arrow" aria-hidden="true">arrow_outward</span></a></span>
+    </footer>
+  </div>
+  <p class="photo-credit">
+    <span class="de">Bild: Planet Sommerparty 2026</span>
+    <span class="en">Image: Planet Summer Party 2026</span>
+  </p>
+</section>
+
+<section class="mission" id="mission">
+  <div class="container">
+    <div class="section-head section-head--reveal reveal">
+      <div>
+        <h2>
+          <span class="de">Du wirst Teil einer <a class="fit__mark" href="#unternehmensziel">Mission<span class="material-symbols-outlined fit__mark-arrow" aria-hidden="true">arrow_outward</span></a></span>
+          <span class="en">You join a <a class="fit__mark" href="#unternehmensziel">mission<span class="material-symbols-outlined fit__mark-arrow" aria-hidden="true">arrow_outward</span></a></span>
+        </h2>
+      </div>
+    </div>
+    <div class="stance__grid">
+      <div class="mission__body flow reveal-slide-left">
+        <p>
+          <span class="de">Gemeinsam verbessern wir das Leben von Tieren — mit starken Marken, innovativen Produkten und echtem Engagement. Wir bauen Unternehmen nicht nur für den Erfolg, sondern für eine <a class="fit__mark" href="#unternehmensziel">Mission<span class="material-symbols-outlined fit__mark-arrow" aria-hidden="true">arrow_outward</span></a>.</span>
+          <span class="en">We make animals’ lives better — with strong brands, products that work, and real commitment. We don’t build companies just to win. We build them for a <a class="fit__mark" href="#unternehmensziel">mission<span class="material-symbols-outlined fit__mark-arrow" aria-hidden="true">arrow_outward</span></a>.</span>
+        </p>
+        <p>
+          <span class="de">Unser Unternehmensziel heißt Glück. Wir glauben, dass erfolgreiche Unternehmen bei glücklichen Menschen beginnen. Deshalb fördern wir nicht nur Unternehmenswachstum, sondern auch persönliches Wachstum — Unternehmer lernen bei uns voneinander.</span>
+          <span class="en">Our goal as a company is happiness. We believe good companies start with happy people. So we don’t just grow the business — we grow the people who run it. Founders learn from each other here.</span>
+        </p>
+      </div>
+      <div class="stance__media reveal-scale">
+        <div class="pillar-orbit">
+          <div class="pillar-orbit__media">
+            <div class="pillar-circle-img" style="background-image: url('assets/images/160---Inuvet-Sommerfest-2026_Tag-01_160.jpg');" role="img" aria-label=""></div>
+          </div>
+          <svg class="pillar-orbit__caption" viewBox="0 0 100 100" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+            <defs>
+              <path id="orbit-mission" fill="none" d="M50,50 m-47,0 a47,47 0 1,1 94,0 a47,47 0 1,1 -94,0"/>
+            </defs>
+            <text>
+              <textPath href="#orbit-mission" xlink:href="#orbit-mission" startOffset="8%">Bild: Planet Sommerparty 2026</textPath>
+            </text>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <section class="paths paths-scroll" id="wege">
   <div class="container">
     <div class="section-head section-head--reveal reveal">
       <div>
         <h2>
           <span class="de">Zwei Wege. Welcher ist deiner?</span>
-          <span class="en">Two paths. Which one is yours?</span>
+          <span class="en">Two paths. Which is yours?</span>
         </h2>
       </div>
     </div>
@@ -2364,8 +3564,8 @@
         </div>
         <div class="paths__body flow">
           <p>
-            <span class="de">Du hast ein Unternehmen aufgebaut, das läuft. Aber du machst noch alles selbst: Logistik, Buchhaltung, IT, Personal. Zeit, die dir fehlt — für Marke, Produkt und Wachstum. Als Teil der Planet Group gibst du genau das ab. Du bleibst Unternehmer in deinem Unternehmen, mit einer Gruppe die dir den Rücken freihält.</span>
-            <span class="en">You’ve built a company that works. But you’re still doing everything yourself: logistics, accounting, IT, HR. Time you don’t have — for brand, product, and growth. As part of Planet Group, you hand exactly that over. You stay the entrepreneur in your company, with a group that has your back.</span>
+            <span class="de">Du hast ein Unternehmen aufgebaut, das läuft. Aber du machst noch alles selbst: Logistik, Finanzen, IT, Personal. Zeit, die dir fehlt — für Marke, Produkt und Wachstum. Als Teil der Planet Group gibst du genau das ab. Du bleibst Unternehmer in deinem Unternehmen, mit einer Gruppe die dir den Rücken freihält.</span>
+            <span class="en">You’ve built a company that works. You’re still running logistics, finance, IT and HR yourself. That’s time you don’t have for brand, product and growth. Join Planet Group and hand that over. You stay the founder. We watch your back.</span>
           </p>
         </div>
       </article>
@@ -2378,13 +3578,14 @@
         <div class="paths__body flow">
           <p>
             <span class="de">Du denkst über Unternehmensnachfolge nach — aber nicht um jeden Preis. Dein Unternehmen soll weiterleben: der Name, das Team, die Idee dahinter. Bei uns bleibt es in der Tiergesundheit, geführt von Menschen, die verstehen, warum du es gegründet hast. Ob du übergibst und gehst, übergibst und bleibst, oder erstmal nur reden willst: Du bestimmst das Tempo.</span>
-            <span class="en">You’re thinking about succession — but not at any price. Your company should live on: the name, the team, the idea behind it. With us it stays in animal health, led by people who understand why you founded it. Whether you hand over and leave, hand over and stay, or just want to talk first: you set the pace.</span>
+            <span class="en">You’re thinking about succession — just not at any cost. You want the company to live on: the name, the team, the idea. With us it stays in animal health, run by people who understand why you started it. Hand it over and leave, hand it over and stay, or just talk first. You set the pace.</span>
           </p>
         </div>
       </article>
     </div>
   </div>
 </section>
+</div>
 
 <!-- INFRASTRUKTUR -->
 <section class="stack" id="infrastruktur">
@@ -2398,8 +3599,8 @@
       </div>
     </div>
     <p class="stack__intro reveal">
-      <span class="de">Buchhaltung, IT, Logistik, Controlling, HR — als Alleinunternehmer frisst dich das auf. Als Teil der Planet Group dockst du an eine Infrastruktur an, die all das schon kann. Modular: Du nutzt, was dir fehlt. Was du gut kannst, bleibt bei dir.</span>
-      <span class="en">Accounting, IT, logistics, controlling, HR — as a solo founder, that eats you alive. As part of Planet Group you plug into infrastructure that already does all of it. Modular: you use what you lack. What you’re good at stays with you.</span>
+      <span class="de">Supply Chain, IT, Logistik, Controlling, HR — als Alleinunternehmer frisst dich das auf. Als Teil der Planet Group dockst du an eine Infrastruktur an, die all das schon kann. Modular: Du nutzt, was dir fehlt. Was du gut kannst, bleibt bei dir.</span>
+      <span class="en">Supply chain, IT, logistics, controlling, HR — as a solo founder, that will eat you alive. Inside Planet Group you plug into a setup that already does all of it. Use what you need. Keep what you’re good at.</span>
     </p>
     <div class="stack__grid">
       <article class="stack__item flow reveal">
@@ -2407,7 +3608,7 @@
         <h3><span class="de">Branding</span><span class="en">Branding</span></h3>
         <p>
           <span class="de">Positionierung, Kampagnen, Assets — wir machen die Marke scharf, ohne dich zum Agentur-Kunden zu machen. Von Naming bis Launch, mit Leuten die Tiergesundheit verstehen.</span>
-          <span class="en">Positioning, campaigns, assets — we sharpen the brand without turning you into an agency client. From naming to launch, with people who understand animal health.</span>
+          <span class="en">Positioning, campaigns, assets — we make the brand sharp without turning you into an agency client. From naming to launch, with people who know animal health.</span>
         </p>
       </article>
       <article class="stack__item flow reveal">
@@ -2415,7 +3616,7 @@
         <h3><span class="de">Vertrieb</span><span class="en">Sales</span></h3>
         <p>
           <span class="de">Tierarzt-Außendienst und D2C — zwei Kanäle, ein System. Wir bringen Produkte in Praxen und direkt zu Tierhaltern, mit Strukturen die skalieren.</span>
-          <span class="en">Vet field force and D2C — two channels, one system. We get products into practices and directly to pet owners, with structures that scale.</span>
+          <span class="en">A vet field force and D2C — two channels, one system. We get product into clinics and straight to pet owners, on a setup that can scale.</span>
         </p>
       </article>
       <article class="stack__item flow reveal">
@@ -2423,7 +3624,7 @@
         <h3><span class="de">Marketing</span><span class="en">Marketing</span></h3>
         <p>
           <span class="de">Reichweite, die messbar ist. Campaigns, Content, Community — wir testen, lernen und skalieren, was wirkt. Weniger Bauchgefühl, mehr Loop.</span>
-          <span class="en">Reach you can measure. Campaigns, content, community — we test, learn, and scale what works. Less gut feel, more loop.</span>
+          <span class="en">Reach you can measure. Campaigns, content, community — we test, learn, and scale what works. Less gut feel. More of a loop.</span>
         </p>
       </article>
       <article class="stack__item flow reveal">
@@ -2431,15 +3632,23 @@
         <h3><span class="de">Logistik</span><span class="en">Logistics</span></h3>
         <p>
           <span class="de">Vom Wareneingang bis zur Praxis-Tür. Lager, Kommissionierung, Versand — damit dein Produkt ankommt, bevor jemand nachfragt.</span>
-          <span class="en">From goods receipt to the practice door. Warehousing, picking, shipping — so your product arrives before anyone has to chase it.</span>
+          <span class="en">From the warehouse door to the clinic. Storage, picking, shipping — so the product arrives before anyone has to chase it.</span>
+        </p>
+      </article>
+      <article class="stack__item flow reveal">
+        <span class="material-symbols-outlined icon--lg stack__icon" aria-hidden="true">factory</span>
+        <h3><span class="de">Supply Chain</span><span class="en">Supply Chain</span></h3>
+        <p>
+          <span class="de">Lieferanten, Rohstoffe, Verfügbarkeit. Wir sichern deine Kette ab und verhandeln Konditionen, die du allein nicht bekommst — damit nie ein Produkt fehlt, wenn die Nachfrage da ist.</span>
+          <span class="en">Suppliers, raw materials, availability. We lock in the chain and negotiate terms you wouldn’t get on your own — so you aren’t out of stock when demand shows up.</span>
         </p>
       </article>
       <article class="stack__item flow reveal">
         <span class="material-symbols-outlined icon--lg stack__icon" aria-hidden="true">calculate</span>
         <h3><span class="de">Controlling</span><span class="en">Controlling</span></h3>
         <p>
-          <span class="de">Zahlen, die du steuern kannst. Buchhaltung, Reporting, Forecasts — damit du entscheidest, statt nachzurechnen.</span>
-          <span class="en">Numbers you can steer by. Accounting, reporting, forecasts — so you decide instead of reconciling.</span>
+          <span class="de">Zahlen, die du steuern kannst. Reporting, Forecasts, Kennzahlen — damit du entscheidest, statt nachzurechnen.</span>
+          <span class="en">Numbers you can actually steer with. Reporting, forecasts, KPIs — so you make the call, instead of catching up on the books.</span>
         </p>
       </article>
       <article class="stack__item flow reveal">
@@ -2447,7 +3656,7 @@
         <h3><span class="de">Finance</span><span class="en">Finance</span></h3>
         <p>
           <span class="de">Kapital, Bewertung, Deals. Wenn Wachstum Finanzierung braucht oder eine Übernahme ansteht — wir kennen beides von innen.</span>
-          <span class="en">Capital, valuation, deals. When growth needs financing or an acquisition is on the table — we know both from the inside.</span>
+          <span class="en">Capital, valuation, deals. When growth needs financing, or an acquisition is on the table — we’ve been on both sides of that.</span>
         </p>
       </article>
       <article class="stack__item flow reveal">
@@ -2455,7 +3664,7 @@
         <h3><span class="de">IT Systeme</span><span class="en">IT Systems</span></h3>
         <p>
           <span class="de">Tools, die zusammenarbeiten. ERP, CRM, Shops, Integrationen — weniger Flickwerk, mehr Betriebssystem für dein Unternehmen.</span>
-          <span class="en">Tools that work together. ERP, CRM, shops, integrations — less patchwork, more of an operating system for your company.</span>
+          <span class="en">Tools that work together. ERP, CRM, shops, integrations — less patchwork, more of an operating system for the company.</span>
         </p>
       </article>
       <article class="stack__item flow reveal">
@@ -2463,7 +3672,47 @@
         <h3><span class="de">Recruiting</span><span class="en">Recruiting</span></h3>
         <p>
           <span class="de">Die richtigen Leute finden und halten. Recruiting, Onboarding, Prozesse — damit dein Team wächst, ohne dass HR dein Fulltime-Job wird.</span>
-          <span class="en">Find and keep the right people. Recruiting, onboarding, processes — so your team grows without HR becoming your full-time job.</span>
+          <span class="en">Find the right people and keep them. Recruiting, onboarding, process — so the team can grow without HR becoming your full-time job.</span>
+        </p>
+      </article>
+      <article class="stack__item flow reveal">
+        <span class="material-symbols-outlined icon--lg stack__icon" aria-hidden="true">verified</span>
+        <h3><span class="de">QM</span><span class="en">Quality</span></h3>
+        <p>
+          <span class="de">Prozesse, die halten. Audits, Chargendoku, Reklamationen — damit Qualität nicht vom Zufall abhängt, wenn die Stückzahl steigt.</span>
+          <span class="en">Process that holds. Audits, batch records, complaints — so quality doesn’t become luck when volume goes up.</span>
+        </p>
+      </article>
+      <article class="stack__item flow reveal">
+        <span class="material-symbols-outlined icon--lg stack__icon" aria-hidden="true">auto_awesome</span>
+        <h3><span class="de">K.I.</span><span class="en">AI</span></h3>
+        <p>
+          <span class="de">Automatisieren, wo es Sinn ergibt. Text, Daten, interne Abläufe — KI als Werkzeug, nicht als Show. Damit dein Team an dem arbeitet, was nur Menschen können.</span>
+          <span class="en">Automate where it actually helps. Copy, data, internal work — AI as a tool, not a show. So the team spends time on what only people can do.</span>
+        </p>
+      </article>
+      <article class="stack__item flow reveal">
+        <span class="material-symbols-outlined icon--lg stack__icon" aria-hidden="true">precision_manufacturing</span>
+        <h3><span class="de">Produktion und Verpackung</span><span class="en">Production &amp; packaging</span></h3>
+        <p>
+          <span class="de">Abfüllung, Konfektionierung, Packmittel. Wir bringen dein Produkt in eine Form, die Praxen und Lager verstehen — ohne dass du eine eigene Linie bauen musst.</span>
+          <span class="en">Filling, packing, packaging. We get the product into a format clinics and warehouses actually work with — without you having to build a line.</span>
+        </p>
+      </article>
+      <article class="stack__item flow reveal">
+        <span class="material-symbols-outlined icon--lg stack__icon" aria-hidden="true">policy</span>
+        <h3><span class="de">Regulatory Affairs</span><span class="en">Regulatory Affairs</span></h3>
+        <p>
+          <span class="de">Zulassung, Kennzeichnung, Vigilanz. Wir kennen die Regeln in der Tiergesundheit — damit dein Produkt darf, was es verspricht.</span>
+          <span class="en">Registration, labelling, vigilance. We know the rules in animal health — so the product is allowed to do what it claims.</span>
+        </p>
+      </article>
+      <article class="stack__item flow reveal">
+        <span class="material-symbols-outlined icon--lg stack__icon" aria-hidden="true">account_tree</span>
+        <h3><span class="de">Project Management</span><span class="en">Project Management</span></h3>
+        <p>
+          <span class="de">Viele Baustellen, ein Takt. Launch, Integration, Umbau — wir halten Termine und Abhängigkeiten, damit nichts zwischen den Stühlen liegt.</span>
+          <span class="en">A lot of moving pieces, one tempo. Launch, integration, rebuild — we keep dates and dependencies in line, so nothing falls between the cracks.</span>
         </p>
       </article>
     </div>
@@ -2482,173 +3731,43 @@
       </div>
     </div>
 
-    <ul class="brands__logos" data-brands-logos aria-label="Marken">
-      <li>
-        <div class="brands__logo-wrap">
-          <span class="brands__logo-index" aria-hidden="true">01</span>
-          <a class="brands__logo brands__logo--inuvet" href="#marke-inuvet" aria-label="Inuvet">
-            <svg viewBox="0 0 113.4 113.4" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" fill="none">
-              <g fill="#000">
-                <path d="M19.4 74.3c0 1.4-1.1 2.6-2.6 2.6s-2.6-1.2-2.6-2.6 1.1-2.5 2.6-2.5 2.5 1.2 2.5 2.5ZM14.7 78.9h4.3v15.4h-4.3z"/>
-                <path d="M23.1 78.9h3.8l.2 2.1c1.5-1.8 3.1-2.5 5.1-2.5s3.5.7 4.2 2.1c.5.9.7 2 .7 4.1v9.7h-4.3v-8.9c0-1.3 0-1.8-.3-2.3-.3-.6-.8-.9-1.6-.9-1.2 0-2.6 1.1-3.5 2.8v9.3h-4.3z"/>
-                <path d="M50.5 92.6c-1.4 1.5-2.8 2.1-4.7 2.1s-3.4-.8-4.2-2.2c-.5-.9-.7-2.1-.7-4.2v-9.5h4.3v8.7c0 2.6.5 3.4 1.9 3.4s2.3-.6 3.1-1.9v-10.2h4.3v15.4h-3.8l-.3-1.7z"/>
-                <path d="M56.8 78.9h4.8l3.6 10.3 3.6-10.3h4.3l-6.3 15.4h-3.9l-6.1-15.4z"/>
-                <path d="M78.1 87.9c.2 2.6 1.5 3.7 4.4 3.7s2.7-.3 4.4-1.2l1 2.8c-1.8 1.1-3.8 1.6-6.4 1.6-5.2 0-7.8-2.5-7.8-7.7s2.8-8.6 7.5-8.6 6.8 2.6 6.8 7.6v1.8h-9.9zm6.1-2.8c-.2-2.4-1.1-3.5-2.9-3.5s-2.9 1.1-3.2 3.5h6.1z"/>
-                <path d="M89.7 82.4l.3-3.4h2.5l.2-3.7 4-1.4v5.1h3.8l-.3 3.4h-3.5v5.6c0 2.8.2 3.3 1.6 3.3s1.3-.2 2.1-.5l.8 2.7c-1.5.9-3 1.3-4.5 1.3s-3-.6-3.7-1.8c-.4-.8-.6-2-.6-4.2v-6.5h-2.7z"/>
-                <path d="M81.4 32h-.3v1h.2c.5 0 .7-.3.7-.6s-.1-.5-.6-.5m.6 3.1-.8-1.5v1.5h-.8v-3.7h1.3c.9 0 1.2.4 1.2 1s-.3 1-.8 1c0 0 .2.3.3.5l.7 1.2h-1zM78.9 33.3c0 1.4 1.1 2.6 2.6 2.6s2.6-1.2 2.6-2.6-1.1-2.6-2.6-2.6-2.6 1.2-2.6 2.6m6.1 0c0 1.9-1.6 3.5-3.5 3.5s-3.6-1.5-3.6-3.5 1.6-3.5 3.6-3.5 3.5 1.5 3.5 3.5"/>
-              </g>
-              <g fill="#78b41b">
-                <path d="M28.7 54.5c1.3 5.2 5.6 9 11.1 10.7 4.1-4.1 6.1-9.5 4.8-14.7-1.3-5.2-5.6-9-11.1-10.7-4.1 4.1-6.1 9.5-4.8 14.7z"/>
-                <path d="M38.6 32.3c.7 5.3 4.4 9.7 9.7 12 4.6-3.6 7.2-8.6 6.6-14-.6-5.3-4.4-9.7-9.7-12-4.6 3.6-7.2 8.7-6.5 14z"/>
-                <path d="M84.6 54.5c-1.3 5.2-5.6 9-11.1 10.7-4.1-4.1-6.1-9.5-4.8-14.7 1.3-5.2 5.6-9 11.1-10.7 4.1 4.1 6.1 9.5 4.8 14.7z"/>
-                <path d="M74.8 32.3c-.7 5.3-4.4 9.7-9.7 12-4.6-3.6-7.2-8.6-6.6-14 .6-5.3 4.4-9.7 9.7-12 4.6 3.6 7.2 8.7 6.6 14z"/>
-              </g>
-            </svg>
-          </a>
-        </div>
-      </li>
-      <li>
-        <div class="brands__logo-wrap">
-          <span class="brands__logo-index" aria-hidden="true">02</span>
-          <a class="brands__logo brands__logo--eqx" href="#marke-eqx" aria-label="EQX">
-            <svg viewBox="0 0 212.6 85.04" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-              <polygon fill="#0f4" points="212.67 -.11 195.3 -.11 178.89 23.06 162.47 -.11 145.1 -.11 170.2 35.32 145.1 70.75 162.47 70.75 178.89 47.58 195.3 70.75 212.67 70.75 187.57 35.32 212.67 -.11"/>
-              <polygon fill="#006838" points="49.68 14.06 49.68 -.11 14.24 -.11 .07 -.11 .07 70.75 14.24 70.75 49.68 70.75 49.68 56.58 14.24 56.58 14.24 42.41 35.5 42.41 35.5 28.23 14.24 28.23 14.24 14.06 49.68 14.06"/>
-              <path fill="#006838" d="M134.72 35.32C134.72 15.78 118.82-.11 99.28-.11s-35.43 15.89-35.43 35.43c0 17.11 12.19 31.43 28.35 34.72v14.89h14.17v-14.89c16.15-3.29 28.35-17.61 28.35-34.72ZM99.28 56.58c-11.72 0-21.26-9.54-21.26-21.26s9.54-21.26 21.26-21.26 21.26 9.54 21.26 21.26-9.54 21.26-21.26 21.26Z"/>
-            </svg>
-          </a>
-        </div>
-      </li>
-      <li>
-        <div class="brands__cluster">
-          <div class="brands__logo-wrap">
-            <span class="brands__logo-index" aria-hidden="true">03</span>
-            <a class="brands__logo brands__logo--byox" href="#marke-byox" aria-label="Byox">
-              <svg viewBox="0 0 85.1 36.4" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                <g fill="#009fe3">
-                  <path d="M5 18.3c0 3.8 2.5 6.2 5.7 6.2s5.6-2.6 5.6-6.2-2.2-6.1-5.6-6.1-5.7 2.5-5.7 6.1M5.2 28.8H0V0h5.2v10.3c1.9-1.9 4-2.8 6.5-2.8 5.4 0 9.8 4.5 9.8 10.9s-4.7 10.9-9.9 10.9-4.5-.9-6.4-2.7v2.2z"/>
-                  <polygon points="37.7 8 31.8 21 26.4 8 21 8 28.9 27.2 24.7 36.4 30 36.4 43.1 8 37.7 8"/>
-                  <path d="M47.5 18.4c0 3.5 2.2 6 5.6 6s5.7-2.3 5.7-6-2.3-6-5.7-6-5.6 2.5-5.6 6M64 18.4c0 6-4.7 10.9-11 10.9s-10.8-4.8-10.8-10.9 5.1-10.9 10.8-10.9 11 4.8 11 10.9"/>
-                  <polygon points="78.2 8 74.1 13.7 70 8 63.9 8 71.1 17.8 63.2 28.8 69.2 28.8 74.1 22 79 28.8 85.1 28.8 77.1 17.8 84.2 8 78.2 8"/>
-                </g>
-              </svg>
-            </a>
-          </div>
-          <span class="brands__cluster-line" aria-hidden="true"></span>
-          <div class="brands__logo-wrap">
-            <span class="brands__logo-index" aria-hidden="true">03A</span>
-            <a class="brands__logo brands__logo--manukalind" href="#marke-byox" aria-label="ManukaLind">
-              <svg viewBox="0 0 59 88.9" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                <g fill="#00a76d">
-                  <polygon points="28.9 12.2 26.1 13.9 26.1 20.3 28.9 22 31.7 23.6 34.6 22 37.4 20.3 37.4 13.9 31.7 10.6 28.9 12.2"/>
-                  <polygon points="19.9 3.2 19.9 9.7 25.5 12.9 28.4 11.3 31.2 9.7 31.2 3.2 25.5 0 19.9 3.2"/>
-                  <polygon points="25.5 21.3 19.9 24.5 19.9 31 25.5 34.2 28.4 32.6 31.2 31 31.2 24.5 28.4 22.9 25.5 21.3"/>
-                  <polygon points="35.1 22.9 32.3 24.5 32.3 31 35.1 32.6 37.9 34.2 40.8 32.6 43.6 31 43.6 24.5 40.8 22.9 37.9 21.3 35.1 22.9"/>
-                  <polygon points="44.1 23.6 49.8 20.3 49.8 13.9 44.1 10.6 38.5 13.9 38.5 20.3 41.3 22 44.1 23.6"/>
-                  <polygon points="43.6 52.2 43.6 45.8 40.8 44.1 37.9 42.5 35.1 44.1 32.3 45.8 32.3 52.2 37.9 55.5 43.6 52.2"/>
-                  <polygon points="7.5 24.5 7.5 31 13.1 34.2 18.8 31 18.8 24.5 13.1 21.3 7.5 24.5"/>
-                  <polygon points="49.8 41.6 49.8 35.1 44.1 31.9 41.3 33.5 38.5 35.1 38.5 41.6 41.3 43.2 44.1 44.8 49.8 41.6"/>
-                  <polygon points="34.6 43.2 37.4 41.6 37.4 35.1 34.6 33.5 31.7 31.9 28.9 33.5 26.1 35.1 26.1 41.6 28.9 43.2 31.7 44.8 34.6 43.2"/>
-                  <polygon points="31.2 52.2 31.2 45.8 28.4 44.1 25.5 42.5 19.9 45.8 19.9 52.2 25.5 55.5 31.2 52.2"/>
-                </g>
-                <g fill="#231f20">
-                  <path d="M13.3 74.7h-2.3l-.8-6.8-2.7 5.6h-1.7l-2.7-5.6-.8 6.8H0l1.4-11h1.9l3.4 7.2 3.4-7.2h1.9l1.3 11z"/>
-                  <path d="M20.8 67.2h2.1v7.5h-2.1v-1.1c-.5.8-1.5 1.3-2.5 1.3-2.1 0-3.6-1.6-3.6-3.9s1.5-3.9 3.6-3.9 1.9.4 2.4 1.2v-1zm-.1 3.8c0-1.1-.9-2-2-2s-1.9.9-1.9 2 .8 2 1.9 2 1.9-.9 1.9-2z"/>
-                  <path d="M32.2 70.6v4.1h-2.1v-4c0-1.2-.7-1.7-1.4-1.7s-1.7.4-1.7 1.8v3.9h-2.1v-7.5h2.1v1.2c.4-1 1.5-1.4 2.2-1.4 2 0 3 1.3 3 3.6z"/>
-                  <path d="M39.2 67.2h2.1v7.5h-2.1v-1.2c-.3 1-1.5 1.4-2.2 1.4-2 0-3-1.3-3-3.6v-4.1h2.1v4c0 1.2.7 1.7 1.4 1.7s1.7-.4 1.7-1.8v-4z"/>
-                  <path d="M50.7 74.7h-2.6l-2.6-3.2v3.2h-2.1v-11.5h2.1v6.4l1.9-2.3h2.7l-2.9 3.3 3.6 4.2z"/>
-                  <path d="M56.9 67.2h2.1v7.5h-2.1v-1.1c-.5.8-1.5 1.3-2.5 1.3-2.1 0-3.6-1.6-3.6-3.9s1.5-3.9 3.6-3.9 1.9.4 2.4 1.2v-1zm-.1 3.8c0-1.1-.9-2-2-2s-1.9.9-1.9 2 .8 2 1.9 2 1.9-.9 1.9-2z"/>
-                  <path d="M17.6 86.9h4.2v2h-6.4v-11h2.2v9.1z"/>
-                  <path d="M22.8 78.8c0-.7.6-1.2 1.3-1.2s1.3.5 1.3 1.2-.6 1.3-1.3 1.3-1.3-.6-1.3-1.3zm.3 10.1v-7.5h2.1v7.5h-2.1z"/>
-                  <path d="M34.5 84.8v4.1h-2.1v-4c0-1.2-.7-1.7-1.4-1.7s-1.7.4-1.7 1.8v3.9h-2.1v-7.5h2.1v1.2c.4-1 1.5-1.4 2.2-1.4 2 0 3 1.3 3 3.6z"/>
-                  <path d="M42.1 77.3h2.1v11.5h-2.1v-.9c-.5.8-1.6 1.1-2.4 1.1-1.9 0-3.7-1.5-3.7-3.9s1.7-3.9 3.7-3.9 1.9.3 2.4 1.1v-5zm-.1 7.8c0-1.2-1-2-1.9-2s-1.9.9-1.9 2 .9 2 1.9 2 1.9-.8 1.9-2z"/>
-                </g>
-              </svg>
-            </a>
-          </div>
-        </div>
-      </li>
-      <li>
-        <div class="brands__logo-wrap">
-          <span class="brands__logo-index" aria-hidden="true">04</span>
-          <a class="brands__logo brands__logo--planimol" href="#marke-planimol" aria-label="Planimol">
-            <svg viewBox="0 0 148.82 35.43" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-              <g fill="#44303f">
-                <path d="M47.06 9.83c-.94-.44-2.01-.66-3.23-.66h-6.67v17.88h3.26v-6.6h3.41c1.22 0 2.29-.22 3.22-.67.93-.45 1.66-1.09 2.2-1.93.54-.84.8-1.85.8-3.04s-.26-2.22-.79-3.06c-.53-.84-1.26-1.48-2.2-1.92zm-.63 6.42c-.24.42-.58.74-1.01.97-.43.23-.94.35-1.54.35h-3.46v-5.52h3.46c.59 0 1.1.12 1.54.35.43.23.77.55 1.01.96.24.41.36.89.36 1.45s-.12 1.02-.36 1.44z"/>
-                <rect x="52.21" y="8.89" width="3.14" height="18.17"/>
-                <path d="M66.73 14.3c-.82-.39-1.76-.59-2.83-.59-.88 0-1.7.14-2.45.43s-1.4.68-1.96 1.19c-.55.5-.96 1.1-1.21 1.79l2.57 1.25c.24-.59.62-1.07 1.14-1.43.52-.36 1.12-.54 1.79-.54.72 0 1.3.19 1.74.56s.66.84.66 1.4v.42l-3.89.63c-1.02.16-1.87.43-2.54.82-.67.38-1.17.86-1.49 1.43-.32.57-.48 1.21-.48 1.93s.18 1.41.55 1.98c.37.57.89 1 1.56 1.31.67.3 1.46.46 2.38.46.72 0 1.38-.1 1.97-.3.59-.2 1.12-.49 1.58-.86.19-.15.36-.33.53-.52v1.39h2.98v-8.69c0-.93-.23-1.74-.68-2.44s-1.09-1.24-1.91-1.63zm-.97 9.06c-.28.5-.67.88-1.18 1.16-.5.28-1.08.42-1.74.42-.51 0-.94-.13-1.28-.4-.34-.26-.52-.62-.52-1.07s.15-.84.46-1.13c.3-.29.77-.49 1.39-.6l3.29-.56v.53c0 .59-.14 1.14-.42 1.63z"/>
-                <path d="M81.55 14.33c-.74-.42-1.6-.62-2.56-.62s-1.74.2-2.44.61c-.54.32-.96.75-1.26 1.29v-1.61h-2.95v13.06h3.14v-7.66c0-.58.11-1.07.34-1.49s.54-.74.94-.97c.4-.23.86-.35 1.37-.35s.99.12 1.38.35c.39.23.7.56.92.97s.34.91.34 1.49v7.66h3.14v-8.4c0-.98-.21-1.84-.62-2.58-.42-.74-1-1.32-1.74-1.74z"/>
-                <rect x="86.82" y="9.17" width="3.14" height="3.36"/>
-                <rect x="86.82" y="14" width="3.14" height="13.06"/>
-                <path d="M110.16 14.33c-.73-.42-1.56-.62-2.48-.62-1.04 0-1.96.26-2.76.78-.52.34-.95.8-1.3 1.36-.29-.5-.68-.94-1.2-1.3-.82-.56-1.76-.84-2.83-.84-.98 0-1.82.23-2.54.7-.48.31-.84.73-1.1 1.25v-1.65h-2.95v13.06h3.14v-7.66c0-.58.1-1.07.31-1.49s.5-.74.89-.97c.38-.23.82-.35 1.32-.35s.96.12 1.33.35c.38.23.67.56.88.97s.31.91.31 1.49v7.66h3.14v-7.66c0-.58.1-1.07.31-1.49.21-.42.5-.74.89-.97.38-.23.82-.35 1.32-.35.53 0 .98.12 1.34.35.37.23.66.56.86.97.21.42.31.91.31 1.49v7.66h3.14v-8.4c0-.98-.21-1.84-.62-2.58-.42-.74-.99-1.32-1.72-1.74z"/>
-                <path d="M125.1 14.6c-1.04-.59-2.2-.89-3.48-.89s-2.46.3-3.5.89c-1.04.59-1.87 1.4-2.48 2.42-.62 1.02-.92 2.19-.92 3.5s.31 2.48.92 3.5c.62 1.02 1.45 1.83 2.5 2.42s2.21.89 3.49.89 2.42-.3 3.46-.89c1.04-.59 1.87-1.4 2.5-2.42.62-1.02.94-2.19.94-3.5s-.31-2.5-.92-3.52c-.62-1.02-1.44-1.82-2.48-2.41zm-.35 7.95c-.31.6-.74 1.07-1.27 1.4-.54.34-1.16.5-1.86.5s-1.35-.17-1.9-.5c-.54-.34-.97-.8-1.28-1.4s-.47-1.28-.47-2.03.16-1.44.47-2.03.74-1.05 1.28-1.39c.54-.34 1.18-.52 1.9-.52s1.32.17 1.86.52c.54.34.96.81 1.27 1.39s.47 1.26.47 2.03-.16 1.43-.47 2.03z"/>
-                <rect x="130.93" y="8.89" width="3.14" height="18.17"/>
-                <path d="M143.61 10.28c-.19-.43-.44-.81-.77-1.14-.33-.33-.71-.58-1.14-.77s-.9-.28-1.39-.28c-.66 0-1.27.16-1.81.48-.55.32-.98.75-1.3 1.29s-.48 1.14-.48 1.8.16 1.25.48 1.8.76.98 1.3 1.3c.55.32 1.15.48 1.81.48s1.26-.16 1.8-.48c.54-.32.97-.76 1.29-1.3s.48-1.14.48-1.8c0-.49-.09-.96-.28-1.39zm-.82 2.85c-.26.44-.6.78-1.04 1.04-.43.25-.92.38-1.45.38s-1.03-.13-1.46-.38c-.43-.26-.78-.6-1.04-1.04-.26-.43-.38-.92-.38-1.45s.13-1.01.38-1.45c.26-.43.6-.78 1.04-1.04.43-.26.92-.38 1.46-.38s1.01.13 1.45.38c.43.26.78.6 1.04 1.04s.38.92.38 1.45-.13 1.02-.38 1.46z"/>
-                <path d="M141.61 11.61c.11-.19.16-.4.16-.64 0-.38-.12-.68-.37-.89s-.56-.32-.94-.32h-1.46v3.78h.71v-1.37h.69l.77 1.37h.81l-.88-1.5c.23-.1.4-.25.51-.44zm-.71-.23c-.11.11-.25.17-.44.17h-.74v-1.13h.74c.19 0 .33.05.44.15.11.1.16.24.16.41 0 .16-.05.29-.16.41z"/>
-              </g>
-              <g fill="#39b54a">
-                <path d="M7.97 12.4c1.96 0 3.54-1.59 3.54-3.54s-1.59-3.54-3.54-3.54-3.54 1.59-3.54 3.54 1.59 3.54 3.54 3.54z"/>
-                <path d="M16.83 5.32c-1.96 0-3.54 1.59-3.54 3.54s1.59 3.54 3.54 3.54 3.54-1.59 3.54-3.54-1.59-3.54-3.54-3.54z"/>
-                <path d="M23.03 18.6c1.96 0 3.54-1.59 3.54-3.54s-1.59-3.54-3.54-3.54-3.54 1.59-3.54 3.54 1.59 3.54 3.54 3.54z"/>
-                <path d="M23.03 20.37c-1.96 0-3.54 1.59-3.54 3.54s1.59 3.54 3.54 3.54 3.54-1.59 3.54-3.54-1.59-3.54-3.54-3.54z"/>
-                <path d="M15.06 14.17h-7.97c-2.94 0-5.32 2.38-5.32 5.32s2.38 5.32 5.32 5.32c0 2.93 2.38 5.31 5.31 5.31s5.31-2.38 5.32-5.31v-7.97c0-1.47-1.19-2.66-2.66-2.66z"/>
-              </g>
-            </svg>
-          </a>
-        </div>
-      </li>
-    </ul>
-
     <div class="brands__list">
       <article class="brands__brand brands__brand--solid brands__brand--solid-before reveal" id="marke-inuvet">
         <div class="brands__top">
-          <div>
-            <h3 class="brands__name">Inuvet</h3>
+          <div class="brands__head">
+            <h3 class="brands__name">
+              <span class="brands__mark brands__mark--inuvet" aria-hidden="true">
+                <svg viewBox="0 0 113.4 113.4" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" fill="none">
+                  <g fill="#000">
+                    <path d="M19.4 74.3c0 1.4-1.1 2.6-2.6 2.6s-2.6-1.2-2.6-2.6 1.1-2.5 2.6-2.5 2.5 1.2 2.5 2.5ZM14.7 78.9h4.3v15.4h-4.3z"/>
+                    <path d="M23.1 78.9h3.8l.2 2.1c1.5-1.8 3.1-2.5 5.1-2.5s3.5.7 4.2 2.1c.5.9.7 2 .7 4.1v9.7h-4.3v-8.9c0-1.3 0-1.8-.3-2.3-.3-.6-.8-.9-1.6-.9-1.2 0-2.6 1.1-3.5 2.8v9.3h-4.3z"/>
+                    <path d="M50.5 92.6c-1.4 1.5-2.8 2.1-4.7 2.1s-3.4-.8-4.2-2.2c-.5-.9-.7-2.1-.7-4.2v-9.5h4.3v8.7c0 2.6.5 3.4 1.9 3.4s2.3-.6 3.1-1.9v-10.2h4.3v15.4h-3.8l-.3-1.7z"/>
+                    <path d="M56.8 78.9h4.8l3.6 10.3 3.6-10.3h4.3l-6.3 15.4h-3.9l-6.1-15.4z"/>
+                    <path d="M78.1 87.9c.2 2.6 1.5 3.7 4.4 3.7s2.7-.3 4.4-1.2l1 2.8c-1.8 1.1-3.8 1.6-6.4 1.6-5.2 0-7.8-2.5-7.8-7.7s2.8-8.6 7.5-8.6 6.8 2.6 6.8 7.6v1.8h-9.9zm6.1-2.8c-.2-2.4-1.1-3.5-2.9-3.5s-2.9 1.1-3.2 3.5h6.1z"/>
+                    <path d="M89.7 82.4l.3-3.4h2.5l.2-3.7 4-1.4v5.1h3.8l-.3 3.4h-3.5v5.6c0 2.8.2 3.3 1.6 3.3s1.3-.2 2.1-.5l.8 2.7c-1.5.9-3 1.3-4.5 1.3s-3-.6-3.7-1.8c-.4-.8-.6-2-.6-4.2v-6.5h-2.7z"/>
+                    <path d="M81.4 32h-.3v1h.2c.5 0 .7-.3.7-.6s-.1-.5-.6-.5m.6 3.1-.8-1.5v1.5h-.8v-3.7h1.3c.9 0 1.2.4 1.2 1s-.3 1-.8 1c0 0 .2.3.3.5l.7 1.2h-1zM78.9 33.3c0 1.4 1.1 2.6 2.6 2.6s2.6-1.2 2.6-2.6-1.1-2.6-2.6-2.6-2.6 1.2-2.6 2.6m6.1 0c0 1.9-1.6 3.5-3.5 3.5s-3.6-1.5-3.6-3.5 1.6-3.5 3.6-3.5 3.5 1.5 3.5 3.5"/>
+                  </g>
+                  <g fill="#78b41b">
+                    <path d="M28.7 54.5c1.3 5.2 5.6 9 11.1 10.7 4.1-4.1 6.1-9.5 4.8-14.7-1.3-5.2-5.6-9-11.1-10.7-4.1 4.1-6.1 9.5-4.8 14.7z"/>
+                    <path d="M38.6 32.3c.7 5.3 4.4 9.7 9.7 12 4.6-3.6 7.2-8.6 6.6-14-.6-5.3-4.4-9.7-9.7-12-4.6 3.6-7.2 8.7-6.5 14z"/>
+                    <path d="M84.6 54.5c-1.3 5.2-5.6 9-11.1 10.7-4.1-4.1-6.1-9.5-4.8-14.7 1.3-5.2 5.6-9 11.1-10.7 4.1 4.1 6.1 9.5 4.8 14.7z"/>
+                    <path d="M74.8 32.3c-.7 5.3-4.4 9.7-9.7 12-4.6-3.6-7.2-8.6-6.6-14 .6-5.3 4.4-9.7 9.7-12 4.6 3.6 7.2 8.7 6.6 14z"/>
+                  </g>
+                </svg>
+              </span>
+              <span class="visually-hidden">Inuvet</span>
+            </h3>
             <span class="brands__since"><span class="de">seit 2011</span><span class="en">since 2011</span></span>
           </div>
-          <div>
+          <div class="brands__body">
             <p class="brands__copy">
-              <span class="de">der Ursprung: heute ein global agierendes Tiergesundheitsunternehmen, seit 15 Jahren, aus eigener Kraft, ohne Fremdkapital von Investoren.</span>
-              <span class="en">the origin: today a globally operating animal-health company, for 15 years, built under its own steam, without outside investor capital.</span>
+              <span class="de">der Ursprung: heute ein global agierendes Unternehmen für Tiergesundheit, seit 2011, aus eigener Kraft, ohne Fremdkapital von Investoren.</span>
+              <span class="en">Where it started: a global animal-health company, since 2011, built without outside investors.</span>
             </p>
-          </div>
-        </div>
-        <div class="brands__metrics">
-          <div class="brands__metric">
-            <span class="brands__metric-label"><span class="de">Umsatzanstieg</span><span class="en">Revenue growth</span></span>
-            <span class="brands__metric-value"><span class="counter" data-target="840" data-prefix="+" data-suffix="&nbsp;%" data-start="0">+0&nbsp;%</span></span>
-            <div class="brands__spark-wrap">
-              <svg class="brands__spark" viewBox="0 0 160 40" preserveAspectRatio="none" aria-hidden="true">
-                <path class="brands__spark-area" d="M0 30.2 Q10.0 29.9 20 28.5 Q30.0 25.1 40 22.4 Q50.0 21.7 60 21.0 Q70.0 18.9 80 18.6 Q90.0 17.7 100 15.8 Q110.0 14.7 120 15.2 Q130.0 10.8 140 6.7 Q150.0 5.0 160 6.0 V40 H0 Z"/>
-                <path class="brands__spark-line" pathLength="1" d="M0 30.2 Q10.0 29.9 20 28.5 Q30.0 25.1 40 22.4 Q50.0 21.7 60 21.0 Q70.0 18.9 80 18.6 Q90.0 17.7 100 15.8 Q110.0 14.7 120 15.2 Q130.0 10.8 140 6.7 Q150.0 5.0 160 6.0"/>
-              </svg>
-              <span class="brands__spark-dot" style="--dot-y: 15.0%" aria-hidden="true"></span>
-            </div>
-            <div class="brands__metric-years"><span>2011</span><span>2026</span></div>
-          </div>
-          <div class="brands__metric">
-            <span class="brands__metric-label"><span class="de">Produkte</span><span class="en">Products</span></span>
-            <span class="brands__metric-value"><span class="counter" data-target="64" data-start="0">0</span></span>
-            <div class="brands__spark-wrap">
-              <svg class="brands__spark" viewBox="0 0 160 40" preserveAspectRatio="none" aria-hidden="true">
-                <path class="brands__spark-area" d="M0 26.9 Q10.0 24.3 20 24.7 Q30.0 21.5 40 19.6 Q50.0 17.9 60 16.3 Q70.0 16.9 80 15.3 Q90.0 15.6 100 15.0 Q110.0 14.5 120 13.2 Q130.0 12.3 140 11.0 Q150.0 7.3 160 5.0 V40 H0 Z"/>
-                <path class="brands__spark-line" pathLength="1" d="M0 26.9 Q10.0 24.3 20 24.7 Q30.0 21.5 40 19.6 Q50.0 17.9 60 16.3 Q70.0 16.9 80 15.3 Q90.0 15.6 100 15.0 Q110.0 14.5 120 13.2 Q130.0 12.3 140 11.0 Q150.0 7.3 160 5.0"/>
-              </svg>
-              <span class="brands__spark-dot" style="--dot-y: 12.5%" aria-hidden="true"></span>
-            </div>
-            <div class="brands__metric-range"><span>12</span><span>64</span></div>
-          </div>
-          <div class="brands__metric">
-            <span class="brands__metric-label"><span class="de">Mitarbeitende</span><span class="en">Employees</span></span>
-            <span class="brands__metric-value"><span class="counter" data-target="110" data-start="0">0</span></span>
-            <div class="brands__spark-wrap">
-              <svg class="brands__spark" viewBox="0 0 160 40" preserveAspectRatio="none" aria-hidden="true">
-                <path class="brands__spark-area" d="M0 31.6 Q10.0 31.1 20 31.6 Q30.0 27.0 40 24.4 Q50.0 24.1 60 25.0 Q70.0 21.7 80 18.6 Q90.0 17.9 100 18.9 Q110.0 16.3 120 13.9 Q130.0 12.0 140 12.3 Q150.0 8.5 160 7.0 V40 H0 Z"/>
-                <path class="brands__spark-line" pathLength="1" d="M0 31.6 Q10.0 31.1 20 31.6 Q30.0 27.0 40 24.4 Q50.0 24.1 60 25.0 Q70.0 21.7 80 18.6 Q90.0 17.9 100 18.9 Q110.0 16.3 120 13.9 Q130.0 12.0 140 12.3 Q150.0 8.5 160 7.0"/>
-              </svg>
-              <span class="brands__spark-dot" style="--dot-y: 17.5%" aria-hidden="true"></span>
-            </div>
-            <div class="brands__metric-range"><span>18</span><span>110</span></div>
+            <a class="brands__link" href="https://inuvet.com" target="_blank" rel="noopener">
+              inuvet.com
+              <span class="material-symbols-outlined" aria-hidden="true">arrow_outward</span>
+            </a>
           </div>
         </div>
       </article>
@@ -2664,8 +3783,8 @@
     <div class="quote-scroll__content reveal">
       <blockquote class="quote-scroll__quote">
         <p class="quote-scroll__text">
-          <span class="de">… plötzlich ging es ganz schnell.</span>
-          <span class="en">…and suddenly everything moved very fast.</span>
+          <span class="de">»Wir wachsen, ohne uns zu verbiegen.«</span>
+          <span class="en">»We grow without losing who we are.«</span>
         </p>
       </blockquote>
       <footer class="quote-scroll__who">
@@ -2683,140 +3802,168 @@
     <div class="brands__list">
       <article class="brands__brand brands__brand--solid brands__brand--solid-after reveal" id="marke-eqx">
         <div class="brands__top">
-          <div>
-            <h3 class="brands__name">EQX</h3>
-            <span class="brands__since"><span class="de">seit 2016</span><span class="en">since 2016</span></span>
+          <div class="brands__head">
+            <h3 class="brands__name">
+              <span class="brands__mark brands__mark--eqx" aria-hidden="true">
+                <svg viewBox="0 0 212.6 85.04" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                  <polygon fill="#0f4" points="212.67 -.11 195.3 -.11 178.89 23.06 162.47 -.11 145.1 -.11 170.2 35.32 145.1 70.75 162.47 70.75 178.89 47.58 195.3 70.75 212.67 70.75 187.57 35.32 212.67 -.11"/>
+                  <polygon fill="#006838" points="49.68 14.06 49.68 -.11 14.24 -.11 .07 -.11 .07 70.75 14.24 70.75 49.68 70.75 49.68 56.58 14.24 56.58 14.24 42.41 35.5 42.41 35.5 28.23 14.24 28.23 14.24 14.06 49.68 14.06"/>
+                  <path fill="#006838" d="M134.72 35.32C134.72 15.78 118.82-.11 99.28-.11s-35.43 15.89-35.43 35.43c0 17.11 12.19 31.43 28.35 34.72v14.89h14.17v-14.89c16.15-3.29 28.35-17.61 28.35-34.72ZM99.28 56.58c-11.72 0-21.26-9.54-21.26-21.26s9.54-21.26 21.26-21.26 21.26 9.54 21.26 21.26-9.54 21.26-21.26 21.26Z"/>
+                </svg>
+              </span>
+              <span class="visually-hidden">EQX</span>
+            </h3>
+            <span class="brands__since"><span class="de">seit 2023</span><span class="en">since 2023</span></span>
           </div>
-          <div>
+          <div class="brands__body">
             <p class="brands__copy">
               <span class="de">natürliche Ergänzungsfuttermittel für Pferde, in Tierarztqualität: entwickelt mit Tierärzten, Biologen und Pharmazeuten, empfohlen von Tierärzten und Weltklasse-Reitern.</span>
-              <span class="en">natural complementary feed for horses, in veterinary quality: developed with veterinarians, biologists and pharmacists, recommended by veterinarians and world-class riders.</span>
+              <span class="en">natural horse supplements at vet standard, developed with vets, biologists and pharmacists — recommended by vets and world-class riders.</span>
             </p>
-          </div>
-        </div>
-        <div class="brands__metrics">
-          <div class="brands__metric">
-            <span class="brands__metric-label"><span class="de">Umsatzanstieg</span><span class="en">Revenue growth</span></span>
-            <span class="brands__metric-value"><span class="counter" data-target="320" data-prefix="+" data-suffix="&nbsp;%" data-start="0">+0&nbsp;%</span></span>
-            <div class="brands__spark-wrap">
-              <svg class="brands__spark" viewBox="0 0 160 40" preserveAspectRatio="none" aria-hidden="true">
-                <path class="brands__spark-area" d="M0 23.4 Q10.0 22.3 20 20.2 Q30.0 18.9 40 19.5 Q50.0 21.5 60 23.7 Q70.0 21.6 80 20.1 Q90.0 17.3 100 13.7 Q110.0 12.7 120 11.8 Q130.0 10.7 140 7.4 Q150.0 6.0 160 5.0 V40 H0 Z"/>
-                <path class="brands__spark-line" pathLength="1" d="M0 23.4 Q10.0 22.3 20 20.2 Q30.0 18.9 40 19.5 Q50.0 21.5 60 23.7 Q70.0 21.6 80 20.1 Q90.0 17.3 100 13.7 Q110.0 12.7 120 11.8 Q130.0 10.7 140 7.4 Q150.0 6.0 160 5.0"/>
-              </svg>
-              <span class="brands__spark-dot" style="--dot-y: 12.5%" aria-hidden="true"></span>
-            </div>
-            <div class="brands__metric-years"><span>2016</span><span>2026</span></div>
-          </div>
-          <div class="brands__metric">
-            <span class="brands__metric-label"><span class="de">Produkte</span><span class="en">Products</span></span>
-            <span class="brands__metric-value"><span class="counter" data-target="28" data-start="0">0</span></span>
-            <div class="brands__spark-wrap">
-              <svg class="brands__spark" viewBox="0 0 160 40" preserveAspectRatio="none" aria-hidden="true">
-                <path class="brands__spark-area" d="M0 27.4 Q10.0 25.0 20 23.2 Q30.0 24.2 40 22.6 Q50.0 20.3 60 19.2 Q70.0 19.7 80 18.6 Q90.0 16.4 100 17.1 Q110.0 12.5 120 9.8 Q130.0 12.1 140 11.4 Q150.0 9.8 160 6.0 V40 H0 Z"/>
-                <path class="brands__spark-line" pathLength="1" d="M0 27.4 Q10.0 25.0 20 23.2 Q30.0 24.2 40 22.6 Q50.0 20.3 60 19.2 Q70.0 19.7 80 18.6 Q90.0 16.4 100 17.1 Q110.0 12.5 120 9.8 Q130.0 12.1 140 11.4 Q150.0 9.8 160 6.0"/>
-              </svg>
-              <span class="brands__spark-dot" style="--dot-y: 15.0%" aria-hidden="true"></span>
-            </div>
-            <div class="brands__metric-range"><span>6</span><span>28</span></div>
+            <a class="brands__link" href="https://eqx.vet" target="_blank" rel="noopener">
+              eqx.vet
+              <span class="material-symbols-outlined" aria-hidden="true">arrow_outward</span>
+            </a>
           </div>
         </div>
       </article>
-      <article class="brands__brand reveal" id="marke-byox">
+      <article class="brands__brand reveal" id="marke-manukalind">
         <div class="brands__top">
-          <div>
-            <h3 class="brands__name">Byox</h3>
+          <div class="brands__head">
+            <h3 class="brands__name">
+              <span class="brands__mark brands__mark--manukalind" aria-hidden="true">
+                <svg viewBox="0 0 59 88.9" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <g fill="#00a76d">
+                      <polygon points="28.9 12.2 26.1 13.9 26.1 20.3 28.9 22 31.7 23.6 34.6 22 37.4 20.3 37.4 13.9 31.7 10.6 28.9 12.2"/>
+                      <polygon points="19.9 3.2 19.9 9.7 25.5 12.9 28.4 11.3 31.2 9.7 31.2 3.2 25.5 0 19.9 3.2"/>
+                      <polygon points="25.5 21.3 19.9 24.5 19.9 31 25.5 34.2 28.4 32.6 31.2 31 31.2 24.5 28.4 22.9 25.5 21.3"/>
+                      <polygon points="35.1 22.9 32.3 24.5 32.3 31 35.1 32.6 37.9 34.2 40.8 32.6 43.6 31 43.6 24.5 40.8 22.9 37.9 21.3 35.1 22.9"/>
+                      <polygon points="44.1 23.6 49.8 20.3 49.8 13.9 44.1 10.6 38.5 13.9 38.5 20.3 41.3 22 44.1 23.6"/>
+                      <polygon points="43.6 52.2 43.6 45.8 40.8 44.1 37.9 42.5 35.1 44.1 32.3 45.8 32.3 52.2 37.9 55.5 43.6 52.2"/>
+                      <polygon points="7.5 24.5 7.5 31 13.1 34.2 18.8 31 18.8 24.5 13.1 21.3 7.5 24.5"/>
+                      <polygon points="49.8 41.6 49.8 35.1 44.1 31.9 41.3 33.5 38.5 35.1 38.5 41.6 41.3 43.2 44.1 44.8 49.8 41.6"/>
+                      <polygon points="34.6 43.2 37.4 41.6 37.4 35.1 34.6 33.5 31.7 31.9 28.9 33.5 26.1 35.1 26.1 41.6 28.9 43.2 31.7 44.8 34.6 43.2"/>
+                      <polygon points="31.2 52.2 31.2 45.8 28.4 44.1 25.5 42.5 19.9 45.8 19.9 52.2 25.5 55.5 31.2 52.2"/>
+                    </g>
+                    <g fill="#231f20">
+                      <path d="M13.3 74.7h-2.3l-.8-6.8-2.7 5.6h-1.7l-2.7-5.6-.8 6.8H0l1.4-11h1.9l3.4 7.2 3.4-7.2h1.9l1.3 11z"/>
+                      <path d="M20.8 67.2h2.1v7.5h-2.1v-1.1c-.5.8-1.5 1.3-2.5 1.3-2.1 0-3.6-1.6-3.6-3.9s1.5-3.9 3.6-3.9 1.9.4 2.4 1.2v-1zm-.1 3.8c0-1.1-.9-2-2-2s-1.9.9-1.9 2 .8 2 1.9 2 1.9-.9 1.9-2z"/>
+                      <path d="M32.2 70.6v4.1h-2.1v-4c0-1.2-.7-1.7-1.4-1.7s-1.7.4-1.7 1.8v3.9h-2.1v-7.5h2.1v1.2c.4-1 1.5-1.4 2.2-1.4 2 0 3 1.3 3 3.6z"/>
+                      <path d="M39.2 67.2h2.1v7.5h-2.1v-1.2c-.3 1-1.5 1.4-2.2 1.4-2 0-3-1.3-3-3.6v-4.1h2.1v4c0 1.2.7 1.7 1.4 1.7s1.7-.4 1.7-1.8v-4z"/>
+                      <path d="M50.7 74.7h-2.6l-2.6-3.2v3.2h-2.1v-11.5h2.1v6.4l1.9-2.3h2.7l-2.9 3.3 3.6 4.2z"/>
+                      <path d="M56.9 67.2h2.1v7.5h-2.1v-1.1c-.5.8-1.5 1.3-2.5 1.3-2.1 0-3.6-1.6-3.6-3.9s1.5-3.9 3.6-3.9 1.9.4 2.4 1.2v-1zm-.1 3.8c0-1.1-.9-2-2-2s-1.9.9-1.9 2 .8 2 1.9 2 1.9-.9 1.9-2z"/>
+                      <path d="M17.6 86.9h4.2v2h-6.4v-11h2.2v9.1z"/>
+                      <path d="M22.8 78.8c0-.7.6-1.2 1.3-1.2s1.3.5 1.3 1.2-.6 1.3-1.3 1.3-1.3-.6-1.3-1.3zm.3 10.1v-7.5h2.1v7.5h-2.1z"/>
+                      <path d="M34.5 84.8v4.1h-2.1v-4c0-1.2-.7-1.7-1.4-1.7s-1.7.4-1.7 1.8v3.9h-2.1v-7.5h2.1v1.2c.4-1 1.5-1.4 2.2-1.4 2 0 3 1.3 3 3.6z"/>
+                      <path d="M42.1 77.3h2.1v11.5h-2.1v-.9c-.5.8-1.6 1.1-2.4 1.1-1.9 0-3.7-1.5-3.7-3.9s1.7-3.9 3.7-3.9 1.9.3 2.4 1.1v-5zm-.1 7.8c0-1.2-1-2-1.9-2s-1.9.9-1.9 2 .9 2 1.9 2 1.9-.8 1.9-2z"/>
+                    </g>
+                  </svg>
+              </span>
+              <span class="visually-hidden">ManukaLind</span>
+            </h3>
             <span class="brands__since"><span class="de">seit 2019</span><span class="en">since 2019</span></span>
           </div>
-          <div>
+          <div class="brands__body">
             <p class="brands__copy">
-              <span class="de">Wundversorgung für Menschen, mit dem Bestseller ManukaLind: in Apotheken erhältlich, von Arztpraxen empfohlen. Der Beweis, dass unsere Kompetenz aus der Tiergesundheit auch im Humanbereich trägt.</span>
-              <span class="en">Wound care for people, with the bestseller ManukaLind: available in pharmacies, recommended by medical practices. Proof that our animal-health expertise also holds in the human space.</span>
+              <span class="de">Wundversorgung für Menschen: in Apotheken erhältlich, von Arztpraxen empfohlen. Der Beweis, dass unsere Kompetenz aus der Tiergesundheit auch im Humanbereich trägt.</span>
+              <span class="en">Wound care for people, sold in pharmacies, recommended by doctors. Proof that what we know from animal health also holds for humans.</span>
             </p>
-          </div>
-        </div>
-        <div class="brands__metrics">
-          <div class="brands__metric">
-            <span class="brands__metric-label"><span class="de">Umsatzanstieg</span><span class="en">Revenue growth</span></span>
-            <span class="brands__metric-value"><span class="counter" data-target="190" data-prefix="+" data-suffix="&nbsp;%" data-start="0">+0&nbsp;%</span></span>
-            <div class="brands__spark-wrap">
-              <svg class="brands__spark" viewBox="0 0 160 40" preserveAspectRatio="none" aria-hidden="true">
-                <path class="brands__spark-area" d="M0 28.8 Q10.0 26.3 20 25.2 Q30.0 25.3 40 24.8 Q50.0 27.3 60 30.0 Q70.0 26.0 80 23.2 Q90.0 19.7 100 16.1 Q110.0 14.7 120 10.9 Q130.0 10.9 140 9.1 Q150.0 8.1 160 5.0 V40 H0 Z"/>
-                <path class="brands__spark-line" pathLength="1" d="M0 28.8 Q10.0 26.3 20 25.2 Q30.0 25.3 40 24.8 Q50.0 27.3 60 30.0 Q70.0 26.0 80 23.2 Q90.0 19.7 100 16.1 Q110.0 14.7 120 10.9 Q130.0 10.9 140 9.1 Q150.0 8.1 160 5.0"/>
-              </svg>
-              <span class="brands__spark-dot" style="--dot-y: 12.5%" aria-hidden="true"></span>
-            </div>
-            <div class="brands__metric-years"><span>2019</span><span>2026</span></div>
-          </div>
-          <div class="brands__metric">
-            <span class="brands__metric-label"><span class="de">Produkte</span><span class="en">Products</span></span>
-            <span class="brands__metric-value"><span class="counter" data-target="16" data-start="0">0</span></span>
-            <div class="brands__spark-wrap">
-              <svg class="brands__spark" viewBox="0 0 160 40" preserveAspectRatio="none" aria-hidden="true">
-                <path class="brands__spark-area" d="M0 22.5 Q10.0 22.9 20 22.5 Q30.0 21.6 40 18.4 Q50.0 19.2 60 18.2 Q70.0 14.4 80 12.1 Q90.0 11.7 100 13.0 Q110.0 11.9 120 8.1 Q130.0 9.0 140 7.5 Q150.0 5.2 160 4.0 V40 H0 Z"/>
-                <path class="brands__spark-line" pathLength="1" d="M0 22.5 Q10.0 22.9 20 22.5 Q30.0 21.6 40 18.4 Q50.0 19.2 60 18.2 Q70.0 14.4 80 12.1 Q90.0 11.7 100 13.0 Q110.0 11.9 120 8.1 Q130.0 9.0 140 7.5 Q150.0 5.2 160 4.0"/>
-              </svg>
-              <span class="brands__spark-dot" style="--dot-y: 10.0%" aria-hidden="true"></span>
-            </div>
-            <div class="brands__metric-range"><span>3</span><span>16</span></div>
+            <a class="brands__link" href="https://manukalind.com" target="_blank" rel="noopener">
+              ManukaLind.com
+              <span class="material-symbols-outlined" aria-hidden="true">arrow_outward</span>
+            </a>
           </div>
         </div>
       </article>
 
       <article class="brands__brand reveal" id="marke-planimol">
         <div class="brands__top">
-          <div>
-            <h3 class="brands__name">Planimol</h3>
+          <div class="brands__head">
+            <h3 class="brands__name">
+              <span class="brands__mark brands__mark--planimol" aria-hidden="true">
+                <svg viewBox="0 0 148.82 35.43" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                  <g fill="#44303f">
+                    <path d="M47.06 9.83c-.94-.44-2.01-.66-3.23-.66h-6.67v17.88h3.26v-6.6h3.41c1.22 0 2.29-.22 3.22-.67.93-.45 1.66-1.09 2.2-1.93.54-.84.8-1.85.8-3.04s-.26-2.22-.79-3.06c-.53-.84-1.26-1.48-2.2-1.92zm-.63 6.42c-.24.42-.58.74-1.01.97-.43.23-.94.35-1.54.35h-3.46v-5.52h3.46c.59 0 1.1.12 1.54.35.43.23.77.55 1.01.96.24.41.36.89.36 1.45s-.12 1.02-.36 1.44z"/>
+                    <rect x="52.21" y="8.89" width="3.14" height="18.17"/>
+                    <path d="M66.73 14.3c-.82-.39-1.76-.59-2.83-.59-.88 0-1.7.14-2.45.43s-1.4.68-1.96 1.19c-.55.5-.96 1.1-1.21 1.79l2.57 1.25c.24-.59.62-1.07 1.14-1.43.52-.36 1.12-.54 1.79-.54.72 0 1.3.19 1.74.56s.66.84.66 1.4v.42l-3.89.63c-1.02.16-1.87.43-2.54.82-.67.38-1.17.86-1.49 1.43-.32.57-.48 1.21-.48 1.93s.18 1.41.55 1.98c.37.57.89 1 1.56 1.31.67.3 1.46.46 2.38.46.72 0 1.38-.1 1.97-.3.59-.2 1.12-.49 1.58-.86.19-.15.36-.33.53-.52v1.39h2.98v-8.69c0-.93-.23-1.74-.68-2.44s-1.09-1.24-1.91-1.63zm-.97 9.06c-.28.5-.67.88-1.18 1.16-.5.28-1.08.42-1.74.42-.51 0-.94-.13-1.28-.4-.34-.26-.52-.62-.52-1.07s.15-.84.46-1.13c.3-.29.77-.49 1.39-.6l3.29-.56v.53c0 .59-.14 1.14-.42 1.63z"/>
+                    <path d="M81.55 14.33c-.74-.42-1.6-.62-2.56-.62s-1.74.2-2.44.61c-.54.32-.96.75-1.26 1.29v-1.61h-2.95v13.06h3.14v-7.66c0-.58.11-1.07.34-1.49s.54-.74.94-.97c.4-.23.86-.35 1.37-.35s.99.12 1.38.35c.39.23.7.56.92.97s.34.91.34 1.49v7.66h3.14v-8.4c0-.98-.21-1.84-.62-2.58-.42-.74-1-1.32-1.74-1.74z"/>
+                    <rect x="86.82" y="9.17" width="3.14" height="3.36"/>
+                    <rect x="86.82" y="14" width="3.14" height="13.06"/>
+                    <path d="M110.16 14.33c-.73-.42-1.56-.62-2.48-.62-1.04 0-1.96.26-2.76.78-.52.34-.95.8-1.3 1.36-.29-.5-.68-.94-1.2-1.3-.82-.56-1.76-.84-2.83-.84-.98 0-1.82.23-2.54.7-.48.31-.84.73-1.1 1.25v-1.65h-2.95v13.06h3.14v-7.66c0-.58.1-1.07.31-1.49s.5-.74.89-.97c.38-.23.82-.35 1.32-.35s.96.12 1.33.35c.38.23.67.56.88.97s.31.91.31 1.49v7.66h3.14v-7.66c0-.58.1-1.07.31-1.49.21-.42.5-.74.89-.97.38-.23.82-.35 1.32-.35.53 0 .98.12 1.34.35.37.23.66.56.86.97.21.42.31.91.31 1.49v7.66h3.14v-8.4c0-.98-.21-1.84-.62-2.58-.42-.74-.99-1.32-1.72-1.74z"/>
+                    <path d="M125.1 14.6c-1.04-.59-2.2-.89-3.48-.89s-2.46.3-3.5.89c-1.04.59-1.87 1.4-2.48 2.42-.62 1.02-.92 2.19-.92 3.5s.31 2.48.92 3.5c.62 1.02 1.45 1.83 2.5 2.42s2.21.89 3.49.89 2.42-.3 3.46-.89c1.04-.59 1.87-1.4 2.5-2.42.62-1.02.94-2.19.94-3.5s-.31-2.5-.92-3.52c-.62-1.02-1.44-1.82-2.48-2.41zm-.35 7.95c-.31.6-.74 1.07-1.27 1.4-.54.34-1.16.5-1.86.5s-1.35-.17-1.9-.5c-.54-.34-.97-.8-1.28-1.4s-.47-1.28-.47-2.03.16-1.44.47-2.03.74-1.05 1.28-1.39c.54-.34 1.18-.52 1.9-.52s1.32.17 1.86.52c.54.34.96.81 1.27 1.39s.47 1.26.47 2.03-.16 1.43-.47 2.03z"/>
+                    <rect x="130.93" y="8.89" width="3.14" height="18.17"/>
+                    <path d="M143.61 10.28c-.19-.43-.44-.81-.77-1.14-.33-.33-.71-.58-1.14-.77s-.9-.28-1.39-.28c-.66 0-1.27.16-1.81.48-.55.32-.98.75-1.3 1.29s-.48 1.14-.48 1.8.16 1.25.48 1.8.76.98 1.3 1.3c.55.32 1.15.48 1.81.48s1.26-.16 1.8-.48c.54-.32.97-.76 1.29-1.3s.48-1.14.48-1.8c0-.49-.09-.96-.28-1.39zm-.82 2.85c-.26.44-.6.78-1.04 1.04-.43.25-.92.38-1.45.38s-1.03-.13-1.46-.38c-.43-.26-.78-.6-1.04-1.04-.26-.43-.38-.92-.38-1.45s.13-1.01.38-1.45c.26-.43.6-.78 1.04-1.04.43-.26.92-.38 1.46-.38s1.01.13 1.45.38c.43.26.78.6 1.04 1.04s.38.92.38 1.45-.13 1.02-.38 1.46z"/>
+                    <path d="M141.61 11.61c.11-.19.16-.4.16-.64 0-.38-.12-.68-.37-.89s-.56-.32-.94-.32h-1.46v3.78h.71v-1.37h.69l.77 1.37h.81l-.88-1.5c.23-.1.4-.25.51-.44zm-.71-.23c-.11.11-.25.17-.44.17h-.74v-1.13h.74c.19 0 .33.05.44.15.11.1.16.24.16.41 0 .16-.05.29-.16.41z"/>
+                  </g>
+                  <g fill="#39b54a">
+                    <path d="M7.97 12.4c1.96 0 3.54-1.59 3.54-3.54s-1.59-3.54-3.54-3.54-3.54 1.59-3.54 3.54 1.59 3.54 3.54 3.54z"/>
+                    <path d="M16.83 5.32c-1.96 0-3.54 1.59-3.54 3.54s1.59 3.54 3.54 3.54 3.54-1.59 3.54-3.54-1.59-3.54-3.54-3.54z"/>
+                    <path d="M23.03 18.6c1.96 0 3.54-1.59 3.54-3.54s-1.59-3.54-3.54-3.54-3.54 1.59-3.54 3.54 1.59 3.54 3.54 3.54z"/>
+                    <path d="M23.03 20.37c-1.96 0-3.54 1.59-3.54 3.54s1.59 3.54 3.54 3.54 3.54-1.59 3.54-3.54-1.59-3.54-3.54-3.54z"/>
+                    <path d="M15.06 14.17h-7.97c-2.94 0-5.32 2.38-5.32 5.32s2.38 5.32 5.32 5.32c0 2.93 2.38 5.31 5.31 5.31s5.31-2.38 5.32-5.31v-7.97c0-1.47-1.19-2.66-2.66-2.66z"/>
+                  </g>
+                </svg>
+              </span>
+              <span class="visually-hidden">Planimol</span>
+            </h3>
             <span class="brands__since"><span class="de">seit 2021</span><span class="en">since 2021</span></span>
           </div>
-          <div>
+          <div class="brands__body">
             <p class="brands__copy">
               <span class="de">die natürliche Tierapotheke für Hunde, von Tierärzten entwickelt: pflanzlich, hochdosiert, ohne unnötige Zusätze — für Magen, Darm, Gelenke, Haut und Wohlbefinden.</span>
-              <span class="en">the natural animal pharmacy for dogs, developed by veterinarians: plant-based, highly dosed, without unnecessary additives — for stomach, gut, joints, skin and wellbeing.</span>
+              <span class="en">a natural pharmacy for dogs, developed with vets: plant-based, high-dose, no junk — for gut, joints, skin and how they feel day to day.</span>
             </p>
-          </div>
-        </div>
-        <div class="brands__metrics">
-          <div class="brands__metric">
-            <span class="brands__metric-label"><span class="de">Umsatzanstieg</span><span class="en">Revenue growth</span></span>
-            <span class="brands__metric-value"><span class="counter" data-target="140" data-prefix="+" data-suffix="&nbsp;%" data-start="0">+0&nbsp;%</span></span>
-            <div class="brands__spark-wrap">
-              <svg class="brands__spark" viewBox="0 0 160 40" preserveAspectRatio="none" aria-hidden="true">
-                <path class="brands__spark-area" d="M0 21.5 Q10.0 21.6 20 20.0 Q30.0 20.2 40 19.0 Q50.0 16.6 60 16.6 Q70.0 15.2 80 14.7 Q90.0 13.6 100 13.6 Q110.0 12.3 120 8.1 Q130.0 6.9 140 6.8 Q150.0 4.0 160 3.0 V40 H0 Z"/>
-                <path class="brands__spark-line" pathLength="1" d="M0 21.5 Q10.0 21.6 20 20.0 Q30.0 20.2 40 19.0 Q50.0 16.6 60 16.6 Q70.0 15.2 80 14.7 Q90.0 13.6 100 13.6 Q110.0 12.3 120 8.1 Q130.0 6.9 140 6.8 Q150.0 4.0 160 3.0"/>
-              </svg>
-              <span class="brands__spark-dot" style="--dot-y: 7.5%" aria-hidden="true"></span>
-            </div>
-            <div class="brands__metric-years"><span>2021</span><span>2026</span></div>
-          </div>
-          <div class="brands__metric">
-            <span class="brands__metric-label"><span class="de">Produkte</span><span class="en">Products</span></span>
-            <span class="brands__metric-value"><span class="counter" data-target="11" data-start="0">0</span></span>
-            <div class="brands__spark-wrap">
-              <svg class="brands__spark" viewBox="0 0 160 40" preserveAspectRatio="none" aria-hidden="true">
-                <path class="brands__spark-area" d="M0 23.4 Q10.0 22.5 20 22.4 Q30.0 20.1 40 18.4 Q50.0 18.1 60 18.3 Q70.0 16.1 80 14.3 Q90.0 14.7 100 14.9 Q110.0 12.7 120 8.8 Q130.0 9.2 140 9.6 Q150.0 7.8 160 5.0 V40 H0 Z"/>
-                <path class="brands__spark-line" pathLength="1" d="M0 23.4 Q10.0 22.5 20 22.4 Q30.0 20.1 40 18.4 Q50.0 18.1 60 18.3 Q70.0 16.1 80 14.3 Q90.0 14.7 100 14.9 Q110.0 12.7 120 8.8 Q130.0 9.2 140 9.6 Q150.0 7.8 160 5.0"/>
-              </svg>
-              <span class="brands__spark-dot" style="--dot-y: 12.5%" aria-hidden="true"></span>
-            </div>
-            <div class="brands__metric-range"><span>2</span><span>11</span></div>
+            <a class="brands__link" href="https://planimol.com" target="_blank" rel="noopener">
+              Planimol.com
+              <span class="material-symbols-outlined" aria-hidden="true">arrow_outward</span>
+            </a>
           </div>
         </div>
       </article>
     </div>
 
-    <p class="brands__scope reveal">
-      <span class="de">Wir suchen Unternehmen aus der Tiergesundheit im weitesten Sinne — von Nutraceuticals über Technologie bis Services.</span>
-      <span class="en">We’re looking for companies in animal health in the broadest sense — from nutraceuticals to technology to services.</span>
-    </p>
   </div>
 </section>
+
+<!-- GRUPPEN-ZAHLEN — drei Zeilen auf Blau, Zahl links, Aussage rechts -->
+<div data-band-blue data-band-delay="0.25">
+<section class="figures" id="zahlen" aria-label="Kennzahlen der Gruppe">
+  <div class="container">
+    <p class="figures__note reveal">
+      <span class="de">Vier Marken, alle selbst aufgebaut. Wir suchen Unternehmen aus der Tiergesundheit im weitesten Sinne — von Nutraceuticals über Technologie bis Services. Du hast eine spannende Story? Meld dich.</span>
+      <span class="en">Four brands, all built by us. We’re looking for companies in animal health in the broadest sense — nutraceuticals, technology, services. Got a story? Tell us.</span>
+    </p>
+    <div class="figures__row reveal">
+      <p class="figures__value">0</p>
+      <p class="figures__label">
+        <span class="de">verkaufte Unternehmen — keine Fondslaufzeit, keine Exit-Uhr</span>
+        <span class="en">companies sold. No fund clock. No exit date</span>
+      </p>
+    </div>
+    <div class="figures__row reveal">
+      <p class="figures__value">100&nbsp;%</p>
+      <p class="figures__label">
+        <span class="de">der Marken laufen unter ihrem eigenen Namen weiter</span>
+        <span class="en">keep their own name</span>
+      </p>
+    </div>
+    <div class="figures__row reveal">
+      <p class="figures__value">100&nbsp;%</p>
+      <p class="figures__label">
+        <span class="de">Eigenkapital — Haltedauer unbegrenzt</span>
+        <span class="en">our own money. We can hold forever</span>
+      </p>
+    </div>
+  </div>
+</section>
+</div>
 
 <!-- TEAM -->
 <div class="team-section" id="team">
   <div class="container">
     <div class="section-head section-head--reveal reveal">
       <div>
-        <h2><span class="de">Die Macher dahinter.</span><span class="en">The makers behind it.</span></h2>
+        <h2><span class="de">Die Macher dahinter.</span><span class="en">Who’s behind this.</span></h2>
       </div>
     </div>
     <div class="team-strip" data-team-strip>
@@ -2827,18 +3974,18 @@
           <p class="team-strip__role">CEO</p>
           <p class="team-strip__bio">
             <span class="de">Mitgründer von Inuvet und der Planet Group. Tiernarr durch und durch: teilt sein Leben mit Hunden, Katzen und mehreren Pferden. Tiergesundheit ist für ihn kein Geschäftsmodell, sondern Alltag.</span>
-            <span class="en">Co-founder of Inuvet and Planet Group. An animal lover through and through, sharing his life with dogs, cats and several horses. Animal health isn't a business model for him — it's daily life.</span>
+            <span class="en">Co-founder of Inuvet and Planet Group. An animal person through and through — dogs, cats, a few horses. Animal health isn’t a business model for him. It’s daily life.</span>
           </p>
         </div>
       </article>
       <article class="team-strip__person reveal">
         <div class="team-strip__shift">
-          <div class="team-strip__photo" style="background-image: url('assets/images/Inuvet_Team-Event-2023_137.jpg');" role="img" aria-label="Christoph"></div>
+          <div class="team-strip__photo" style="background-image: url('assets/images/3---Inuvet-Sommerfest-2026_Tag-01_00111.jpg');" role="img" aria-label="Christoph"></div>
           <h3>Christoph</h3>
           <p class="team-strip__role">CEO</p>
           <p class="team-strip__bio">
             <span class="de">Mitgründer von Inuvet und der Planet Group. Sohn einer Tierarztfamilie — Eltern und Schwester sind Tierärzte. Bei ihm steht am Ende immer das Tier im Mittelpunkt.</span>
-            <span class="en">Co-founder of Inuvet and Planet Group. Son of a family of vets — his parents and sister included. For him, the animal always comes first.</span>
+            <span class="en">Co-founder of Inuvet and Planet Group. He grew up in a family of vets — parents and sister. For him, the animal always comes first.</span>
           </p>
         </div>
       </article>
@@ -2849,7 +3996,7 @@
           <p class="team-strip__role">CFO</p>
           <p class="team-strip__bio">
             <span class="de">15 Jahre Beteiligungen bei einem der erfolgreichsten Private-Equity-Fonds im DACH-Raum. Heute nutzt er diese Erfahrung fürs Gegenteil: eine Gruppe, die kauft, um zu behalten.</span>
-            <span class="en">15 years of investments at one of the DACH region's most successful private-equity funds. Today he uses that experience for the opposite: a group that buys to keep.</span>
+            <span class="en">Fifteen years investing at one of the most successful PE funds in DACH. He uses that experience now for the opposite: a group that buys to keep.</span>
           </p>
         </div>
       </article>
@@ -2859,8 +4006,8 @@
           <h3>Felix</h3>
           <p class="team-strip__role">COO</p>
           <p class="team-strip__bio">
-            <span class="de">Head of Operations. Sorgt dafür, dass alle Zahnräder ineinandergreifen — Buchhaltung, Logistik, Einkauf. Wenn hinter den Kulissen etwas hakt, bringt er es zum Laufen.</span>
-            <span class="en">Head of Operations. Keeps all the gears meshing — accounting, logistics, procurement. When something jams behind the scenes, he gets it running.</span>
+            <span class="de">Head of Operations. Sorgt dafür, dass alle Zahnräder ineinandergreifen — Logistik, Supply Chain, Controlling. Wenn hinter den Kulissen etwas hakt, bringt er es zum Laufen.</span>
+            <span class="en">Head of Operations. Makes sure the pieces mesh — logistics, supply chain, controlling. If something jams behind the scenes, he gets it running.</span>
           </p>
         </div>
       </article>
@@ -2871,18 +4018,18 @@
           <p class="team-strip__role">CBO</p>
           <p class="team-strip__bio">
             <span class="de">Verantwortet Branding und Markenarchitektur. Sorgt dafür, dass jede Marke ihren eigenen Charakter behält — damit dein Unternehmen keine beliebige Nummer im Portfolio wird.</span>
-            <span class="en">Leads branding and brand architecture. Makes sure every brand keeps its own character — so your company never becomes just another number in the portfolio.</span>
+            <span class="en">Looks after branding and brand architecture. Makes sure each brand keeps its own character — so your company never becomes just another number in a portfolio.</span>
           </p>
         </div>
       </article>
       <article class="team-strip__person reveal">
         <div class="team-strip__shift">
-          <div class="team-strip__photo" style="background-image: url('assets/images/298---Inuvet-Sommerfest-2026_Tag-01_298.jpg');" role="img" aria-label="Siggi"></div>
-          <h3>Siggi</h3>
+          <div class="team-strip__photo" style="background-image: url('assets/images/298---Inuvet-Sommerfest-2026_Tag-01_298.jpg');" role="img" aria-label="Hootch"></div>
+          <h3>Hootch</h3>
           <p class="team-strip__role">DOG</p>
           <p class="team-strip__bio">
-            <span class="de">Steht für die vielen Hunde im Team — fast jeder Zweite hat einen, alle dürfen mit ins Büro. Der beste Beweis, dass wir die Tierliebe ernst meinen.</span>
-            <span class="en">Stands for the many dogs on the team — nearly every second one of us has one, all welcome at the office. The best proof our love of animals is real.</span>
+            <span class="de">Steht für die vielen Hunde im Team — fast jeder Zweite hat einen, alle dürfen mit ins Büro. Wir meinen es ernst mit der Tierliebe.</span>
+            <span class="en">He stands for the dogs on the team — almost half of us have one, and they come to the office. We’re serious about loving animals.</span>
           </p>
         </div>
       </article>
@@ -2897,42 +4044,89 @@
       <div>
         <h2>
           <span class="de">Wie eine Partnerschaft mit uns aussieht, entscheiden wir gemeinsam.</span>
-          <span class="en">How a partnership with us looks is something we decide together.</span>
+          <span class="en">We’ll figure out the partnership together.</span>
         </h2>
       </div>
     </div>
     <ul class="fit__list">
       <li class="fit__item reveal">
         <div class="fit__cue" aria-hidden="true">
-          <span class="fit__index">01</span>
           <span class="fit__rule"></span>
         </div>
         <p class="fit__text">
           <span class="de">100%-Verkauf. Du übergibst komplett — sofort oder mit Übergangsphase.</span>
-          <span class="en">100% sale. You hand over completely — immediately or with a transition phase.</span>
+          <span class="en">A full sale. You hand everything over — now, or with a transition.</span>
         </p>
       </li>
       <li class="fit__item reveal">
         <div class="fit__cue" aria-hidden="true">
-          <span class="fit__index">02</span>
           <span class="fit__rule"></span>
         </div>
         <p class="fit__text">
           <span class="de">Teilverkauf. Du gibst einen Teil ab und führst dein Unternehmen als Teil der Gruppe weiter.</span>
-          <span class="en">Partial sale. You sell a share and continue to lead your company as part of the group.</span>
+          <span class="en">A partial sale. You sell a stake and keep running the company as part of the group.</span>
         </p>
       </li>
       <li class="fit__item reveal">
         <div class="fit__cue" aria-hidden="true">
-          <span class="fit__index">03</span>
           <span class="fit__rule"></span>
         </div>
         <p class="fit__text">
           <span class="de">Rückbeteiligung. Auf Wunsch bleibst du beteiligt — die Details gehören ins Gespräch, nicht auf eine Webseite.</span>
-          <span class="en">Retained equity. If you want, you stay invested — the details belong in a conversation, not on a website.</span>
+          <span class="en">You keep a stake, if you want. Those details belong in a conversation, not on a website.</span>
         </p>
       </li>
     </ul>
+    <div class="section-head section-head--reveal reveal fit__subhead">
+      <div>
+        <h2>
+          <span class="de">Und deine Rolle? Was davon passt zu dir?</span>
+          <span class="en">And you — which of these?</span>
+        </h2>
+      </div>
+    </div>
+    <ul class="fit__list">
+      <li class="fit__item reveal">
+        <div class="fit__cue" aria-hidden="true">
+          <span class="fit__rule"></span>
+        </div>
+        <p class="fit__text">
+          <span class="de">Weiter Verantwortung übernehmen?</span>
+          <span class="en">Stay in charge?</span>
+        </p>
+      </li>
+      <li class="fit__item reveal">
+        <div class="fit__cue" aria-hidden="true">
+          <span class="fit__rule"></span>
+        </div>
+        <p class="fit__text">
+          <span class="de">Als Berater begleiten?</span>
+          <span class="en">Stay on as advisor?</span>
+        </p>
+      </li>
+      <li class="fit__item reveal">
+        <div class="fit__cue" aria-hidden="true">
+          <span class="fit__rule"></span>
+        </div>
+        <p class="fit__text">
+          <span class="de">Gesellschafter bleiben?</span>
+          <span class="en">Stay a shareholder?</span>
+        </p>
+      </li>
+      <li class="fit__item reveal">
+        <div class="fit__cue" aria-hidden="true">
+          <span class="fit__rule"></span>
+        </div>
+        <p class="fit__text">
+          <span class="de">Den Ruhestand genießen?</span>
+          <span class="en">Enjoy retirement?</span>
+        </p>
+      </li>
+    </ul>
+    <p class="fit__payoff reveal">
+      <span class="de">Dein Einsatz soll sich auszahlen. Natürlich bekommst du einen fairen Preis — und die Gewissheit, dass dein Unternehmen, deine Mitarbeiter und deine Idee in guten Händen sind.</span>
+      <span class="en">This should pay off for you. A fair price, of course — and the certainty that your company, your people and your idea are in good hands.</span>
+    </p>
   </div>
 </section>
 
@@ -2943,49 +4137,36 @@
       <div>
         <h2>
           <span class="de">Wir nehmen nicht jeden. Vielleicht aber dich.</span>
-          <span class="en">We don’t take everyone. Maybe you, though.</span>
+          <span class="en">We’re picky. You might be a fit.</span>
         </h2>
       </div>
     </div>
     <ul class="fit__list">
       <li class="fit__item reveal">
         <div class="fit__cue" aria-hidden="true">
-          <span class="fit__index">01</span>
           <span class="fit__rule"></span>
         </div>
         <p class="fit__text">
-          <span class="de">Wenn dein Unternehmen zwischen 1 und 5&nbsp;Mio.&nbsp;€ Umsatz macht.</span>
-          <span class="en">If your company does between €1 and €5&nbsp;million in revenue.</span>
+          <span class="de">Wenn dein Unternehmen profitabel ist — oder klar auf dem Weg dahin</span>
+          <span class="en">You’re profitable — or clearly heading there</span>
         </p>
       </li>
       <li class="fit__item reveal">
         <div class="fit__cue" aria-hidden="true">
-          <span class="fit__index">02</span>
           <span class="fit__rule"></span>
         </div>
         <p class="fit__text">
-          <span class="de">Wenn es profitabel ist — oder klar auf dem Weg dahin.</span>
-          <span class="en">If it’s profitable — or clearly on the way there.</span>
+          <span class="de">Wenn dein Unternehmen zur Tiergesundheit im weitesten Sinne gehört.</span>
+          <span class="en">You’re in animal health. Broadly speaking.</span>
         </p>
       </li>
       <li class="fit__item reveal">
         <div class="fit__cue" aria-hidden="true">
-          <span class="fit__index">03</span>
           <span class="fit__rule"></span>
         </div>
         <p class="fit__text">
-          <span class="de">Wenn es zur Tiergesundheit im weitesten Sinne gehört.</span>
-          <span class="en">If it belongs to animal health in the broadest sense.</span>
-        </p>
-      </li>
-      <li class="fit__item reveal">
-        <div class="fit__cue" aria-hidden="true">
-          <span class="fit__index">04</span>
-          <span class="fit__rule"></span>
-        </div>
-        <p class="fit__text">
-          <span class="de">Wenn du dich in unseren <a class="fit__mark" href="#grundsaetze">Grundsätzen</a> wiederfindest.</span>
-          <span class="en">If you recognize yourself in our <a class="fit__mark" href="#grundsaetze">principles</a>.</span>
+          <span class="de">Wenn du dich in unseren <a class="fit__mark" href="#grundsaetze">Grundsätzen<span class="material-symbols-outlined fit__mark-arrow" aria-hidden="true">arrow_outward</span></a> wiederfindest.</span>
+          <span class="en">Our <a class="fit__mark" href="#grundsaetze">principles<span class="material-symbols-outlined fit__mark-arrow" aria-hidden="true">arrow_outward</span></a> feel like yours.</span>
         </p>
       </li>
     </ul>
@@ -3006,7 +4187,7 @@
     </div>
     <p class="fit__intro reveal">
       <span class="de">Wir haben Transaktionserfahrung im Team — vom Erstgespräch bis zur Unterschrift führen wir dich schnell und sauber durch den Prozess. Aber der Prozess ist nicht der Punkt. Der Punkt ist, was danach kommt.</span>
-      <span class="en">We have transaction experience on the team — from the first conversation to the signature, we take you through the process quickly and cleanly. But the process isn’t the point. The point is what comes after.</span>
+      <span class="en">We’ve done deals. From the first conversation through to signature, we keep it moving, and we keep it clean. But the process isn’t the point. What happens after is.</span>
     </p>
     <ul class="fit__list">
       <li class="fit__item reveal">
@@ -3015,8 +4196,8 @@
           <span class="fit__rule"></span>
         </div>
         <p class="fit__text">
-          <span class="de">Melde dich. <a class="fit__mark" href="#kontakt" data-channel="call">Anruf</a>, <a class="fit__mark" href="#kontakt" data-channel="whatsapp">WhatsApp</a>, <a class="fit__mark" href="mailto:hello@plnt.group">Mail</a> — was dir am liebsten ist. Kein Formular-Marathon.</span>
-          <span class="en">Get in touch. <a class="fit__mark" href="#kontakt" data-channel="call">Call</a>, <a class="fit__mark" href="#kontakt" data-channel="whatsapp">WhatsApp</a>, <a class="fit__mark" href="mailto:hello@plnt.group">email</a> — whichever you prefer. No form marathon.</span>
+          <span class="de">Du füllst den <a class="fit__mark" href="#fragebogen">Fragebogen<span class="material-symbols-outlined fit__mark-arrow" aria-hidden="true">arrow_outward</span></a> aus. Sechs Fragen, drei Minuten — danach wissen wir beide, worum es geht.</span>
+          <span class="en">You fill out the <a class="fit__mark" href="#fragebogen">questionnaire<span class="material-symbols-outlined fit__mark-arrow" aria-hidden="true">arrow_outward</span></a>. Six questions, three minutes. After that, we both know what this is about.</span>
         </p>
       </li>
       <li class="fit__item reveal">
@@ -3025,8 +4206,8 @@
           <span class="fit__rule"></span>
         </div>
         <p class="fit__text">
-          <span class="de">Wir entwickeln ein gemeinsames Zielbild. Wo steht dein Unternehmen, wo willst du hin, wo sind deine Blind Spots — Logistik, Marketing, Operations?</span>
-          <span class="en">We build a shared target picture. Where does your company stand, where do you want to go, where are your blind spots — logistics, marketing, operations?</span>
+          <span class="de">Wir lesen deine Antworten und melden uns innerhalb von 2 Werktagen persönlich. Kein Callcenter, kein automatischer Kalender.</span>
+          <span class="en">We read your answers and get in touch within two business days. No call center. No calendar link.</span>
         </p>
       </li>
       <li class="fit__item reveal">
@@ -3035,8 +4216,18 @@
           <span class="fit__rule"></span>
         </div>
         <p class="fit__text">
+          <span class="de">Wir entwickeln ein gemeinsames Zielbild. Wo steht dein Unternehmen, wo willst du hin, wo sind deine Blind Spots — Logistik, Marketing, Operations?</span>
+          <span class="en">We get on the same page. Where the company stands, where you want it to go, where the blind spots are — logistics, marketing, operations.</span>
+        </p>
+      </li>
+      <li class="fit__item reveal">
+        <div class="fit__cue" aria-hidden="true">
+          <span class="fit__index">04</span>
+          <span class="fit__rule"></span>
+        </div>
+        <p class="fit__text">
           <span class="de">Du bekommst einen konkreten Vorschlag. Wie eine Partnerschaft aussehen kann — offen und nachvollziehbar. Und dann entscheidest du.</span>
-          <span class="en">You get a concrete proposal. What a partnership can look like — open and transparent. And then you decide.</span>
+          <span class="en">You get a real proposal. What a partnership could look like — open, easy to follow. Then you decide.</span>
         </p>
       </li>
     </ul>
@@ -3048,71 +4239,27 @@
   <div class="container">
     <div class="section-head section-head--reveal reveal">
       <div>
-        <h2><span class="de">Schreib uns.</span><span class="en">Write to us.</span></h2>
+        <h2><span class="de">Passt dein Unternehmen zu uns?</span><span class="en">Is this a fit?</span></h2>
       </div>
     </div>
-    <div class="contact-layout">
+    <div class="contact-layout contact-layout--entry">
       <div class="contact-intro reveal">
         <p>
-          <span class="de">Idee, Beteiligung, Zielunternehmen — oder einfach Interesse. Hinterlass eine Nachricht. Wir melden uns.</span>
-          <span class="en">An idea, equity, a target company — or just interest. Leave a message. We’ll get back to you.</span>
+          <span class="de">Sechs Fragen, drei Minuten. Danach wissen wir beide, ob es sich lohnt zu reden — und du hast für dich ein paar Dinge sortiert.</span>
+          <span class="en">Six questions. Three minutes. After that we both know if it’s worth talking — and you’ll have sorted a few things out for yourself.</span>
         </p>
-        <a class="contact-intro__mail" href="mailto:hello@plnt.group">hello@plnt.group</a>
       </div>
 
-      <div>
-        <form class="contact-form reveal" data-contact-form data-contact-to="hello@plnt.group" novalidate>
-          <div class="contact-form__row">
-            <div class="contact-field">
-              <label for="c-name"><span class="de">Name</span><span class="en">Name</span></label>
-              <input id="c-name" name="name" type="text" autocomplete="name" required placeholder="Alex Mertens">
-            </div>
-            <div class="contact-field">
-              <label for="c-mail"><span class="de">E-Mail</span><span class="en">Email</span></label>
-              <input id="c-mail" name="email" type="email" autocomplete="email" required placeholder="alex@company.com">
-            </div>
-          </div>
-          <div class="contact-field">
-            <label for="c-msg"><span class="de">Nachricht</span><span class="en">Message</span></label>
-            <textarea
-              id="c-msg"
-              name="message"
-              rows="5"
-              required
-              data-ph-de="Was möchtest du mit uns bauen?"
-              data-ph-en="What do you want to build with us?"
-              placeholder="Was möchtest du mit uns bauen?"
-            ></textarea>
-          </div>
-          <!-- Honeypot (FormSubmit: _honey) -->
-          <input type="text" name="_honey" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;opacity:0;height:0;width:0;">
-          <div class="contact-form__foot">
-            <p class="contact-form__note">
-              <span class="de">Keine Newsletter. Nur eine Antwort von uns.</span>
-              <span class="en">No newsletters. Just a reply from us.</span>
-            </p>
-            <button type="submit" class="btn contact-form__submit">
-              <span class="de">Nachricht senden</span>
-              <span class="en">Send message</span>
-              <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span>
-            </button>
-          </div>
-          <p class="contact-form__error" data-contact-error role="alert">
-            <span class="de">Senden fehlgeschlagen. Bitte nochmal versuchen oder direkt an hello@plnt.group schreiben.</span>
-            <span class="en">Sending failed. Please try again or email hello@plnt.group directly.</span>
-          </p>
-        </form>
-
-        <div class="contact-success" data-contact-success aria-live="polite" tabindex="-1" hidden>
-          <span class="contact-success__icon" aria-hidden="true">
-            <span class="material-symbols-outlined">check</span>
-          </span>
-          <h3><span class="de">Nachricht gesendet.</span><span class="en">Message sent.</span></h3>
-          <p>
-            <span class="de">Danke — wir haben deine Nachricht erhalten und melden uns in Kürze.</span>
-            <span class="en">Thank you — we’ve received your message and will get back to you shortly.</span>
-          </p>
-        </div>
+      <div class="contact-entry reveal">
+        <a class="btn contact-entry__cta" href="#fragebogen">
+          <span class="de">Jetzt in 3 Minuten herausfinden</span>
+          <span class="en">See if we’re a fit</span>
+          <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span>
+        </a>
+        <p class="contact-entry__note">
+          <span class="de">Kein Termin, kein Verkaufsgespräch. Wir sichten deine Antworten und melden uns innerhalb von 2 Werktagen.</span>
+          <span class="en">No meeting. No sales call. We read your answers and get in touch within two business days.</span>
+        </p>
       </div>
     </div>
   </div>
@@ -3136,7 +4283,6 @@
     </footer>
   </div>
 </section>
-
 <script>
 function toggleLang() {
   document.body.classList.toggle('lang-en');
@@ -3167,49 +4313,64 @@ function toggleLang() {
 (function() {
   const toggle = document.querySelector('.nav-toggle');
   const menuOverlay = document.querySelector('.nav-overlay');
-  const principlesOverlay = document.getElementById('grundsaetze');
   const nav = document.querySelector('.nav');
-  const openers = document.querySelectorAll('a[href="#grundsaetze"]');
+  const overlays = [
+    document.getElementById('grundsaetze'),
+    document.getElementById('unternehmensziel'),
+    document.getElementById('fragebogen'),
+  ].filter(Boolean);
   let lastFocus = null;
+  let activeOverlay = null;
 
   function setToggleOpen(open) {
     toggle.classList.toggle('is-open', open);
     nav.classList.toggle('overlay-open', open);
     toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
   }
+  function anyOverlayOpen() {
+    return overlays.some((o) => o.classList.contains('is-open'));
+  }
   function openMenu() {
-    if (principlesOverlay?.classList.contains('is-open')) closePrinciples();
+    if (anyOverlayOpen()) closeOverlay();
     menuOverlay.classList.add('is-open');
     setToggleOpen(true);
   }
   function closeMenu() {
     menuOverlay.classList.remove('is-open');
-    if (!principlesOverlay?.classList.contains('is-open')) setToggleOpen(false);
+    if (!anyOverlayOpen()) setToggleOpen(false);
   }
-  function openPrinciples(e) {
+  function openOverlay(overlay, e) {
+    if (!overlay) return;
     if (e) e.preventDefault();
     if (menuOverlay.classList.contains('is-open')) closeMenu();
+    if (activeOverlay && activeOverlay !== overlay) closeOverlay({ restoreFocus: false });
     lastFocus = document.activeElement;
-    principlesOverlay.classList.add('is-open');
-    principlesOverlay.setAttribute('aria-hidden', 'false');
+    activeOverlay = overlay;
+    overlay.classList.add('is-open');
+    overlay.setAttribute('aria-hidden', 'false');
     document.body.classList.add('is-principles-open');
     setToggleOpen(true);
     toggle.focus({ preventScroll: true });
   }
-  function closePrinciples() {
-    if (!principlesOverlay?.classList.contains('is-open')) return;
-    principlesOverlay.classList.remove('is-open');
-    principlesOverlay.setAttribute('aria-hidden', 'true');
-    document.body.classList.remove('is-principles-open');
-    if (!menuOverlay.classList.contains('is-open')) setToggleOpen(false);
-    if (lastFocus && typeof lastFocus.focus === 'function') {
+  function closeOverlay(opts) {
+    const restoreFocus = !opts || opts.restoreFocus !== false;
+    const overlay = activeOverlay || overlays.find((o) => o.classList.contains('is-open'));
+    if (!overlay) return;
+    overlay.classList.remove('is-open');
+    overlay.setAttribute('aria-hidden', 'true');
+    if (!anyOverlayOpen()) {
+      document.body.classList.remove('is-principles-open');
+      if (!menuOverlay.classList.contains('is-open')) setToggleOpen(false);
+    }
+    activeOverlay = null;
+    if (restoreFocus && lastFocus && typeof lastFocus.focus === 'function') {
       lastFocus.focus({ preventScroll: true });
     }
   }
 
   toggle.addEventListener('click', () => {
-    if (principlesOverlay?.classList.contains('is-open')) {
-      closePrinciples();
+    if (anyOverlayOpen()) {
+      closeOverlay();
       return;
     }
     menuOverlay.classList.contains('is-open') ? closeMenu() : openMenu();
@@ -3218,19 +4379,18 @@ function toggleLang() {
     link.addEventListener('click', closeMenu);
   });
 
-  if (principlesOverlay) {
-    openers.forEach((link) => {
-      link.addEventListener('click', openPrinciples);
+  overlays.forEach((overlay) => {
+    document.querySelectorAll(`a[href="#${overlay.id}"]`).forEach((link) => {
+      link.addEventListener('click', (e) => openOverlay(overlay, e));
     });
-    document.addEventListener('keydown', (e) => {
-      if (e.key !== 'Escape') return;
-      if (principlesOverlay.classList.contains('is-open')) closePrinciples();
-      else if (menuOverlay.classList.contains('is-open')) closeMenu();
-    });
-    if (window.location.hash === '#grundsaetze') {
-      openPrinciples();
-    }
-  }
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key !== 'Escape') return;
+    if (anyOverlayOpen()) closeOverlay();
+    else if (menuOverlay.classList.contains('is-open')) closeMenu();
+  });
+  const hashOverlay = overlays.find((o) => window.location.hash === `#${o.id}`);
+  if (hashOverlay) openOverlay(hashOverlay);
 })();
 
 (function() {
@@ -3243,9 +4403,11 @@ function toggleLang() {
     const prefix = el.dataset.prefix || '';
     const suffix = (el.dataset.suffix || '').replace(/&nbsp;/g, '\u00a0');
     const pad = parseInt(el.dataset.pad || '0', 10);
+    const group = el.dataset.group || '';
     function format(n) {
       let s = String(n);
       if (pad > 0) s = s.padStart(pad, '0');
+      else if (group) s = s.replace(/\B(?=(\d{3})+(?!\d))/g, group);
       return prefix + s + suffix;
     }
     if (reduced) {
@@ -3320,7 +4482,13 @@ function toggleLang() {
 
     let blue = 0;
     blueBands.forEach(band => {
-      blue = Math.max(blue, bandMix(band.getBoundingClientRect(), vh, fade));
+      const rect = band.getBoundingClientRect();
+      const delay = parseFloat(band.getAttribute('data-band-delay') || '0');
+      const shift = Number.isFinite(delay) ? delay * vh : 0;
+      blue = Math.max(blue, bandMix({
+        top: rect.top + shift,
+        bottom: rect.bottom,
+      }, vh, fade));
     });
 
     let dark = 0;
@@ -3395,37 +4563,117 @@ function toggleLang() {
   window.addEventListener('resize', onScroll);
 })();
 
-/* Kontakt — FormSubmit → hello@plnt.group + Success-/Error-State */
+/*
+  Fragebogen — ein Schritt pro Screen, Auswahl springt selbst weiter.
+  Versand gesammelt über FormSubmit, danach der Danke-Screen statt eines Kalenders.
+*/
 (function() {
-  const form = document.querySelector('[data-contact-form]');
-  const success = document.querySelector('[data-contact-success]');
-  const errorEl = document.querySelector('[data-contact-error]');
-  if (!form || !success) return;
+  const root = document.querySelector('[data-quiz]');
+  if (!root) return;
 
-  const endpoint = `https://formsubmit.co/ajax/${encodeURIComponent(form.dataset.contactTo || 'hello@plnt.group')}`;
+  const form = root.querySelector('[data-quiz-form]');
+  const steps = [...root.querySelectorAll('[data-quiz-step]')];
+  const back = root.querySelector('[data-quiz-back]');
+  const next = root.querySelector('[data-quiz-next]');
+  const fill = root.querySelector('[data-quiz-fill]');
+  const bar = root.querySelector('[data-quiz-bar]');
+  const done = root.querySelector('[data-quiz-done]');
+  const errorEl = root.querySelector('[data-quiz-error]');
+  const scroller = root.closest('.principles-overlay__scroll');
+  if (!form || !steps.length) return;
 
-  const msg = form.querySelector('#c-msg');
+  const endpoint = `https://formsubmit.co/ajax/${encodeURIComponent(form.dataset.quizTo || 'torsten@plnt.group')}`;
+  const total = steps.length;
+  let index = 0;
+  let advanceTimer = null;
+
+  root.querySelectorAll('[data-quiz-total]').forEach((el) => { el.textContent = total; });
+
+  const radiosOf = (step) => [...step.querySelectorAll('input[type="radio"]')];
+  const isChoice = (step) => radiosOf(step).length > 0;
+  const isAnswered = (step) => !isChoice(step) || radiosOf(step).some((r) => r.checked);
+
+  function setNextLabel() {
+    const last = index === total - 1;
+    const de = next.querySelector('[data-quiz-next-de]');
+    const en = next.querySelector('[data-quiz-next-en]');
+    if (de) de.textContent = last ? 'Absenden' : 'Weiter';
+    if (en) en.textContent = last ? 'Send' : 'Continue';
+  }
+
+  function render() {
+    const step = steps[index];
+    steps.forEach((s, i) => {
+      s.classList.remove('is-active');
+      s.hidden = i !== index;
+    });
+    void step.offsetWidth; /* Reflow, sonst startet die Einblendung nicht neu */
+    step.classList.add('is-active');
+
+    root.querySelectorAll('[data-quiz-current]').forEach((el) => { el.textContent = index + 1; });
+    if (fill) fill.style.width = `${((index + 1) / total) * 100}%`;
+    if (back) back.hidden = index === 0;
+    next.disabled = !isAnswered(step);
+    setNextLabel();
+    scroller?.scrollTo({ top: 0 });
+
+    /* Freitext und Kontakt bekommen den Fokus, Auswahlschritte nicht — dort stört er */
+    if (!isChoice(step)) {
+      step.querySelector('textarea, input')?.focus({ preventScroll: true });
+    }
+  }
+
+  function go(to) {
+    clearTimeout(advanceTimer);
+    index = Math.max(0, Math.min(total - 1, to));
+    render();
+  }
+
+  form.addEventListener('change', (e) => {
+    if (e.target.type !== 'radio') return;
+    next.disabled = false;
+    if (index === total - 1) return;
+    clearTimeout(advanceTimer);
+    advanceTimer = setTimeout(() => go(index + 1), 280);
+  });
+
+  back?.addEventListener('click', () => go(index - 1));
+
+  /* Enter im Freitext soll eine Zeile machen, nicht absenden */
+  form.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && e.target.tagName === 'TEXTAREA') e.stopPropagation();
+  });
+
+  const textarea = form.querySelector('.quiz__textarea');
   function syncPlaceholder() {
-    if (!msg) return;
+    if (!textarea) return;
     const en = document.body.classList.contains('lang-en');
-    msg.placeholder = en
-      ? (msg.dataset.phEn || msg.placeholder)
-      : (msg.dataset.phDe || msg.placeholder);
+    textarea.placeholder = en
+      ? (textarea.dataset.phEn || textarea.placeholder)
+      : (textarea.dataset.phDe || textarea.placeholder);
   }
   syncPlaceholder();
-  document.addEventListener('langchange', syncPlaceholder);
+  document.addEventListener('langchange', () => { syncPlaceholder(); setNextLabel(); });
 
   function showError(on) {
-    if (!errorEl) return;
-    errorEl.classList.toggle('is-visible', !!on);
+    errorEl?.classList.toggle('is-visible', !!on);
   }
 
-  function showSuccess() {
-    form.classList.add('is-sent');
-    success.hidden = false;
-    success.classList.add('is-visible');
-    success.focus?.();
-    success.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  function payload() {
+    const data = {};
+    steps.forEach((step) => {
+      const key = step.dataset.quizKey;
+      if (!key) return;
+      const picked = radiosOf(step).find((r) => r.checked);
+      if (picked) data[key] = picked.value;
+    });
+    const val = (n) => (form.elements[n]?.value || '').trim();
+    data['Beweggrund'] = val('beweggrund') || '—';
+    data['Name'] = val('name');
+    data['Unternehmen'] = val('unternehmen');
+    data['E-Mail'] = val('email');
+    data['Telefon'] = val('telefon') || '—';
+    return data;
   }
 
   form.addEventListener('submit', async (e) => {
@@ -3433,17 +4681,29 @@ function toggleLang() {
     const honey = form.querySelector('[name="_honey"]');
     if (honey && honey.value) return;
 
-    const name = (form.name.value || '').trim();
-    const email = (form.email.value || '').trim();
-    const message = (form.message.value || '').trim();
-    if (!name || !email || !message) {
-      form.reportValidity();
+    if (index < total - 1) {
+      if (!isAnswered(steps[index])) return;
+      go(index + 1);
+      return;
+    }
+
+    const required = ['name', 'unternehmen', 'email'];
+    let firstBad = null;
+    required.forEach((n) => {
+      const field = form.elements[n];
+      const ok = field.checkValidity() && field.value.trim();
+      field.setAttribute('aria-invalid', ok ? 'false' : 'true');
+      if (!ok && !firstBad) firstBad = field;
+    });
+    if (firstBad) {
+      firstBad.focus();
       return;
     }
 
     showError(false);
-    form.classList.add('is-sending');
+    next.disabled = true;
 
+    const data = payload();
     try {
       const res = await fetch(endpoint, {
         method: 'POST',
@@ -3452,54 +4712,93 @@ function toggleLang() {
           Accept: 'application/json'
         },
         body: JSON.stringify({
-          name,
-          email,
-          message,
-          _replyto: email,
-          _subject: `Planet Kontakt — ${name}`,
+          ...data,
+          _replyto: data['E-Mail'],
+          _subject: `Planet Fragebogen — ${data['Unternehmen']} (${data['Weg'] || 'ohne Angabe'})`,
           _template: 'table',
           _captcha: false
         })
       });
-      const data = await res.json().catch(() => ({}));
-      const failed = !res.ok || data.success === false || data.success === 'false';
-      if (failed) throw new Error(data.message || 'send failed');
-      showSuccess();
+      const json = await res.json().catch(() => ({}));
+      const failed = !res.ok || json.success === false || json.success === 'false';
+      if (failed) throw new Error(json.message || 'send failed');
+
+      form.hidden = true;
+      if (bar) bar.hidden = true;
+      done.hidden = false;
+      done.focus?.();
     } catch (err) {
       showError(true);
-    } finally {
-      form.classList.remove('is-sending');
+      next.disabled = false;
     }
   });
+
+  render();
 })();
 
-/* Zitat Variante B — Foto immer sichtbar, langsamer Parallax; Nav hell auf Foto */
+/* Zitate — soft Fade (quote-type) + Parallax-Band (quote-scroll); Nav teilt --quote-bg */
 (function() {
-  const root = document.querySelector('[data-quote-scroll]');
-  if (!root) return;
+  const softRoots = [...document.querySelectorAll('[data-quote-type]')];
+  const scrollRoots = [...document.querySelectorAll('[data-quote-scroll]')];
+  if (!softRoots.length && !scrollRoots.length) return;
   const nav = document.querySelector('.nav');
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+  function smoothstep(t) {
+    t = Math.max(0, Math.min(1, t));
+    return t * t * (3 - 2 * t);
+  }
+
   function update() {
     const vh = window.innerHeight;
-    const rect = root.getBoundingClientRect();
-    const inView = rect.bottom > 0 && rect.top < vh;
+    let navQuote = 0;
 
-    /* Nav-Chrome: hart umschalten — kein weiches Einblenden des Bildbands */
-    const navOn = inView && rect.top < vh * 0.72 && rect.bottom > vh * 0.28;
-    if (nav) nav.style.setProperty('--quote-bg', navOn ? '1' : '0');
+    softRoots.forEach(root => {
+      const rect = root.getBoundingClientRect();
+      let opacity = 0;
+      if (rect.bottom > 0 && rect.top < vh) {
+        if (reduced) {
+          opacity = 1;
+        } else {
+          const enter = smoothstep((vh - rect.top - vh * 0.58) / (vh * 0.32));
+          const leave = smoothstep((rect.bottom - vh * 0.22) / (vh * 0.4));
+          opacity = Math.min(enter, leave);
+        }
+      }
+      root.style.setProperty('--quote-bg', opacity.toFixed(4));
 
-    if (reduced || !inView) {
-      root.style.setProperty('--quote-y', '0px');
-      return;
-    }
+      /* Bild driftet nach unten, also gegen die Scrollrichtung des Inhalts */
+      if (reduced) {
+        root.style.setProperty('--quote-shift', '0px');
+      } else {
+        const progress = Math.max(0, Math.min(1, (vh - rect.top) / (rect.height + vh)));
+        root.style.setProperty('--quote-shift', `${Math.round((progress - 0.5) * vh * 0.2)}px`);
+      }
 
-    /* Bild hängt hinterher → wirkt langsamer als der normal scrollende Text */
-    const traveled = vh - rect.top;
-    const total = rect.height + vh;
-    const progress = Math.max(0, Math.min(1, traveled / total));
-    const shiftY = Math.round((progress - 0.5) * vh * 0.28);
-    root.style.setProperty('--quote-y', `${shiftY}px`);
+      navQuote = Math.max(navQuote, opacity);
+    });
+
+    scrollRoots.forEach(root => {
+      const rect = root.getBoundingClientRect();
+      const inView = rect.bottom > 0 && rect.top < vh;
+      if (inView && rect.top < vh * 0.72 && rect.bottom > vh * 0.28) {
+        navQuote = Math.max(navQuote, 1);
+      }
+
+      if (reduced || !inView) {
+        root.style.setProperty('--quote-y', '0px');
+        return;
+      }
+
+      /* Bild hängt hinterher → wirkt langsamer als der normal scrollende Text */
+      const traveled = vh - rect.top;
+      const total = rect.height + vh;
+      const progress = Math.max(0, Math.min(1, traveled / total));
+      const shiftY = Math.round((progress - 0.5) * vh * 0.28);
+      root.style.setProperty('--quote-y', `${shiftY}px`);
+    });
+
+    if (nav) nav.style.setProperty('--quote-bg', navQuote.toFixed(4));
   }
 
   let tick = false;
@@ -3563,22 +4862,6 @@ function toggleLang() {
   window.addEventListener('resize', onScroll);
 })();
 
-
-(function() {
-  const logos = document.querySelector('[data-brands-logos]');
-  if (!logos) return;
-  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if (reduced || !('IntersectionObserver' in window)) {
-    logos.classList.add('is-in');
-    return;
-  }
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      logos.classList.toggle('is-in', entry.isIntersecting);
-    });
-  }, { threshold: 0.35, rootMargin: '0px 0px -8% 0px' });
-  observer.observe(logos);
-})();
 
 (function() {
   const revealSelectors = '.reveal, .reveal-slide-left, .reveal-slide-right, .reveal-scale';

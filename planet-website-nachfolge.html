@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Planet — Gesunde Tiere. Starke Marken. (v2)</title>
-<!-- Experimentelle Variante — Änderungen hier testen, ohne planet-website.html zu berühren. -->
+<title>Planet — Unternehmensnachfolge in der Tiergesundheit</title>
+<!-- Nachfolge-Variante — Zielgruppe: Unternehmer, die ihr Unternehmen in gute Hände geben wollen. -->
 <link rel="stylesheet" href="https://use.typekit.net/phj5hyp.css?v=2026-05-25">
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="planet.css">
@@ -137,7 +137,7 @@
     line-height: 0.9;
     letter-spacing: -0.025em;
     color: var(--planet-white);
-    max-width: min(12ch, 100%);
+    max-width: min(18ch, 100%);
     margin-bottom: 0;
     opacity: 0;
     animation: hero-rise 1400ms var(--ease-out) 700ms both;
@@ -312,7 +312,7 @@
     .stance { padding: var(--space-8) 0; }
   }
 
-  /* Zwei Wege — transparent, damit Scroll-Blau weich ausfadet (keine Kante) */
+  /* Tempo / Übergabe — transparent, damit Scroll-Blau weich ausfadet (keine Kante) */
   .paths {
     padding: var(--space-10) 0;
   }
@@ -331,6 +331,7 @@
   }
   #wege.paths-scroll .section-head h2,
   #wege.paths-scroll .paths__way h2,
+  #wege.paths-scroll .paths__lead,
   #wege.paths-scroll .paths__body p {
     color: color-mix(
       in srgb,
@@ -341,9 +342,15 @@
   .paths .section-head {
     margin-bottom: var(--space-6);
   }
+  .paths__lead {
+    font-size: var(--text-body);
+    line-height: 1.45;
+    max-width: 52ch;
+    margin: 0 0 var(--space-6);
+  }
   .paths__grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr;
     gap: var(--space-6) var(--space-7);
     align-items: start;
   }
@@ -351,9 +358,15 @@
   .paths__way.flow > * + * { --flow-space: var(--space-3); }
   .paths__head {
     display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-2);
+    min-width: 0;
+  }
+  .paths__cue {
+    display: flex;
     align-items: center;
     gap: var(--space-3);
-    min-width: 0;
   }
   .paths__index {
     flex: none;
@@ -385,10 +398,13 @@
   }
   .paths__way:nth-child(1).is-visible .paths__rule { transition-delay: 80ms; }
   .paths__way:nth-child(2).is-visible .paths__rule { transition-delay: 200ms; }
+  .paths__way:nth-child(3).is-visible .paths__rule { transition-delay: 320ms; }
   .paths__way h2 {
-    /* gleiche Type Scale wie .section-head h2 */
-    max-width: 18ch;
+    font-size: var(--text-h3);
+    min-width: 0;
+    max-width: none;
     margin: 0;
+    overflow-wrap: break-word;
   }
   @media (max-width: 640px) {
     .paths__way h2 {
@@ -403,7 +419,8 @@
   }
   .paths__way:nth-child(1).reveal { transition-delay: 0ms; }
   .paths__way:nth-child(2).reveal { transition-delay: 120ms; }
-  @media (max-width: 1024px) {
+  .paths__way:nth-child(3).reveal { transition-delay: 240ms; }
+  @media (max-width: 1200px) {
     .paths__grid {
       grid-template-columns: 1fr;
       gap: 0;
@@ -2848,7 +2865,7 @@
     <a class="nav-overlay-link" href="#haltung"><span class="de">Haltung</span><span class="en">Who we are</span></a>
     <a class="nav-overlay-link" href="#unterschied"><span class="de">Unterschied</span><span class="en">Why us</span></a>
     <a class="nav-overlay-link" href="#mission"><span class="de">Mission</span><span class="en">Mission</span></a>
-    <a class="nav-overlay-link" href="#wege"><span class="de">Zwei Wege</span><span class="en">Two paths</span></a>
+    <a class="nav-overlay-link" href="#wege"><span class="de">Tempo</span><span class="en">Pace</span></a>
     <a class="nav-overlay-link" href="#infrastruktur"><span class="de">Infrastruktur</span><span class="en">Infrastructure</span></a>
     <a class="nav-overlay-link" href="#marken"><span class="de">Marken</span><span class="en">Brands</span></a>
     <a class="nav-overlay-link" href="#team"><span class="de">Team</span><span class="en">Team</span></a>
@@ -2972,8 +2989,8 @@
       </div>
 
       <h2 class="visually-hidden" id="quiz-title">
-        <span class="de">Passt dein Unternehmen zu uns?</span>
-        <span class="en">Is this a fit?</span>
+        <span class="de">Ist Planet die richtige Nachfolge?</span>
+        <span class="en">Are we the right successor?</span>
       </h2>
 
       <!-- Empfänger: Torsten sichtet die Fragebögen und lädt persönlich ein -->
@@ -3034,30 +3051,30 @@
           </div>
         </fieldset>
 
-        <!-- 3 — spiegelt die Sektion „Zwei Wege“ -->
-        <fieldset class="quiz__step" data-quiz-step data-quiz-key="Weg" hidden>
+        <!-- 3 — Rolle / Tempo, nicht Wachstum vs Nachfolge: diese Seite ist nur Nachfolge -->
+        <fieldset class="quiz__step" data-quiz-step data-quiz-key="Rolle" hidden>
           <legend class="quiz__q">
-            <span class="de">Worum geht es dir — Wachstum oder Nachfolge?</span>
-            <span class="en">Growth, or succession?</span>
+            <span class="de">Wie stellst du dir deine Rolle vor?</span>
+            <span class="en">How do you see your role?</span>
           </legend>
           <div class="quiz__options">
             <label class="quiz__option">
-              <input type="radio" name="weg" value="Wachstum">
+              <input type="radio" name="rolle" value="übergeben und gehen">
               <span class="quiz__option-key" aria-hidden="true">A</span>
-              <span class="quiz__option-text"><span class="de">Wachstum</span><span class="en">Growth</span></span>
+              <span class="quiz__option-text"><span class="de">Übergeben und gehen</span><span class="en">Hand it over and leave</span></span>
             </label>
             <label class="quiz__option">
-              <input type="radio" name="weg" value="Nachfolge">
+              <input type="radio" name="rolle" value="übergeben und bleiben">
               <span class="quiz__option-key" aria-hidden="true">B</span>
-              <span class="quiz__option-text"><span class="de">Nachfolge</span><span class="en">Succession</span></span>
+              <span class="quiz__option-text"><span class="de">Übergeben und bleiben</span><span class="en">Hand it over and stay</span></span>
             </label>
             <label class="quiz__option">
-              <input type="radio" name="weg" value="beides">
+              <input type="radio" name="rolle" value="erstmal nur reden">
               <span class="quiz__option-key" aria-hidden="true">C</span>
-              <span class="quiz__option-text"><span class="de">Beides</span><span class="en">Both</span></span>
+              <span class="quiz__option-text"><span class="de">Erstmal nur reden</span><span class="en">Just talk first</span></span>
             </label>
             <label class="quiz__option">
-              <input type="radio" name="weg" value="noch offen">
+              <input type="radio" name="rolle" value="noch offen">
               <span class="quiz__option-key" aria-hidden="true">D</span>
               <span class="quiz__option-text"><span class="de">Noch offen</span><span class="en">Still open</span></span>
             </label>
@@ -3067,8 +3084,8 @@
         <!-- 4 — Zeithorizont -->
         <fieldset class="quiz__step" data-quiz-step data-quiz-key="Zeithorizont" hidden>
           <legend class="quiz__q">
-            <span class="de">Bis wann willst du etwas verändern?</span>
-            <span class="en">What’s your timeline?</span>
+            <span class="de">Wann stellst du dir die Übergabe vor?</span>
+            <span class="en">When do you see the handoff?</span>
           </legend>
           <div class="quiz__options">
             <label class="quiz__option">
@@ -3108,9 +3125,9 @@
             class="quiz__textarea"
             name="beweggrund"
             rows="5"
-            data-ph-de="Zum Beispiel: Ich mache seit 14 Jahren alles selbst und merke, dass ich an eine Grenze komme."
-            data-ph-en="For example: I’ve done everything myself for 14 years and I’m hitting a wall."
-            placeholder="Zum Beispiel: Ich mache seit 14 Jahren alles selbst und merke, dass ich an eine Grenze komme."
+            data-ph-de="Zum Beispiel: Ich habe 20 Jahre aufgebaut und suche jemanden, der das Unternehmen so weiterführt, wie ich es gemeint habe."
+            data-ph-en="For example: I built this over 20 years and I’m looking for someone who’ll keep it the way I meant it."
+            placeholder="Zum Beispiel: Ich habe 20 Jahre aufgebaut und suche jemanden, der das Unternehmen so weiterführt, wie ich es gemeint habe."
           ></textarea>
         </fieldset>
 
@@ -3146,6 +3163,10 @@
             </div>
           </div>
         </fieldset>
+
+        <!-- Immer Nachfolge — diese Seite hat keinen Wachstumspfad -->
+        <input type="hidden" name="weg" value="Nachfolge">
+        <input type="hidden" name="quelle" value="Nachfolge-Seite">
 
         <!-- Honeypot (FormSubmit: _honey) -->
         <input type="text" name="_honey" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;opacity:0;height:0;width:0;">
@@ -3241,10 +3262,10 @@
     <div class="hero-full__overlay"></div>
   </div>
   <div class="hero-full__content flow">
-    <h1><span class="de">Gesunde Tiere. Starke Marken.</span><span class="en">Healthy animals. Strong brands.</span></h1>
+    <h1><span class="de">Dein Unternehmen soll weiterleben.</span><span class="en">Your company should live on.</span></h1>
     <p class="hero-full__sub">
-      <span class="de">Planet ist die Unternehmergruppe für Tiergesundheit — und hilft dir, dein Unternehmen weiterzubauen.</span>
-      <span class="en">We’re founders in animal health. We help you keep building.</span>
+      <span class="de">Du denkst über Nachfolge nach — aber nicht um jeden Preis.</span>
+      <span class="en">You’re thinking about succession. You won’t sell to just anyone.</span>
     </p>
   </div>
   <a class="hero-full__scroll" href="#stats" aria-label="Scroll">
@@ -3306,8 +3327,8 @@
           <span class="fit__rule"></span>
         </div>
         <p class="fit__text">
-          <span class="de">Du trägst jeden Tag Verantwortung.</span>
-          <span class="en">You own it, every day.</span>
+          <span class="de">Du hast ein Team aufgebaut.</span>
+          <span class="en">You built a team around it.</span>
         </p>
       </li>
       <li class="fit__item reveal">
@@ -3315,8 +3336,8 @@
           <span class="fit__rule"></span>
         </div>
         <p class="fit__text">
-          <span class="de">Du gehst Risiken ein.</span>
-          <span class="en">The risk is yours.</span>
+          <span class="de">Du willst, dass Name und Idee weiterleben.</span>
+          <span class="en">You want the name and the idea to live on.</span>
         </p>
       </li>
       <li class="fit__item reveal">
@@ -3324,14 +3345,14 @@
           <span class="fit__rule"></span>
         </div>
         <p class="fit__text">
-          <span class="de">Du hast Rückschläge weggesteckt und Erfolge gefeiert.</span>
-          <span class="en">You’ve taken the knocks. You’ve had the wins.</span>
+          <span class="de">Du suchst Menschen, denen du das anvertrauen kannst.</span>
+          <span class="en">You’re looking for people you can trust with it.</span>
         </p>
       </li>
     </ul>
     <p class="stance-lines__close reveal">
-      <span class="de">Wir kennen jeden dieser Sätze. Aus eigener Erfahrung.</span>
-      <span class="en">We know. We’ve been there.</span>
+      <span class="de">Wir wissen, was das bedeutet.</span>
+      <span class="en">We know what that means.</span>
     </p>
   </div>
 </section>
@@ -3369,8 +3390,8 @@
           <span class="en">Maybe you started the company because something was missing: a product that didn’t exist for your animal. Same for us.</span>
         </p>
         <p>
-          <span class="de">Aus dieser Tierliebe ist die Planet Group gewachsen — ein Unternehmen mit einer Mission: Tiere natürlich gesund machen. Und mit einer Leidenschaft: Unternehmen beim Wachsen begleiten. Deins vielleicht auch.</span>
-          <span class="en">Out of that love of animals, Planet Group grew — a company with a mission: keep animals healthy, naturally. And a passion: help companies grow. Yours, maybe.</span>
+          <span class="de">Aus dieser Tierliebe ist die Planet Group gewachsen — ein Unternehmen mit einer Mission: Tiere natürlich gesund machen. Und mit einer Haltung: Unternehmen weiterführen, nicht weiterverkaufen. Deins vielleicht auch.</span>
+          <span class="en">Out of that love of animals, Planet Group grew — a company with a mission: keep animals healthy, naturally. And a stance: we keep companies. We don’t flip them. Yours, maybe.</span>
         </p>
       </div>
     </div>
@@ -3388,8 +3409,8 @@
           <span class="en">When you sit down with us, there is no PE fund across the table. No bank. Founders who own the group, 100%. Nobody who has to sell what you built in eight years. Nobody who only sees the numbers and misses the animals.</span>
         </p>
         <p>
-          <span class="de">Und ja: Geld verdienen wollen wir trotzdem — wie du auch. Wir spielen mit offenen Karten. Das kannst du von uns erwarten.</span>
-          <span class="en">And yes — we want to make money. Same as you. We’ll put that on the table. You can hold us to it.</span>
+          <span class="de">Wir wollen, dass dein Unternehmen weiterlebt: der Name, das Team, die Idee dahinter. Bei uns bleibt es in der Tiergesundheit — geführt von Menschen, die verstehen, warum du es gegründet hast.</span>
+          <span class="en">We want the company to live on: the name, the team, the idea. With us it stays in animal health — run by people who understand why you started it.</span>
         </p>
       </div>
       <div class="stance__media reveal-scale">
@@ -3461,7 +3482,7 @@
           </div>
           <div class="compare__cells">
             <span class="compare__a"><span class="de">Effizienz und Optimierung der Kosten</span><span class="en">Cut costs. Squeeze the rest.</span></span>
-            <span class="compare__b"><span class="de">Aufbau: Vertrieb, Marketing, Operations</span><span class="en">Build: sales, marketing, operations</span></span>
+            <span class="compare__b"><span class="de">Name, Team und Kultur bleiben</span><span class="en">The name, the team, the culture stay</span></span>
           </div>
         </div>
         <div class="compare__row">
@@ -3475,8 +3496,8 @@
         </div>
       </div>
       <p class="compare__closing">
-        <span class="de">Dein Lebenswerk verdient eine Zukunft. Nicht bei einem Finanzinvestor. Sondern mit Unternehmern, die weiterbauen statt weiterverkaufen.</span>
-        <span class="en">What you built deserves a future. Not parked with a financial investor. With founders who keep building, instead of looking for the next buyer.</span>
+        <span class="de">Dein Lebenswerk verdient eine Zukunft. Nicht bei einem Finanzinvestor. Sondern mit Unternehmern, die weiterführen statt weiterverkaufen.</span>
+        <span class="en">What you built deserves a future. Not parked with a financial investor. With founders who keep the company — instead of looking for the next buyer.</span>
       </p>
     </div>
   </div>
@@ -3511,20 +3532,20 @@
     <div class="section-head section-head--reveal reveal">
       <div>
         <h2>
-          <span class="de">Du wirst Teil einer <a class="fit__mark" href="#unternehmensziel">Mission<span class="material-symbols-outlined fit__mark-arrow" aria-hidden="true">arrow_outward</span></a></span>
-          <span class="en">You join a <a class="fit__mark" href="#unternehmensziel">mission<span class="material-symbols-outlined fit__mark-arrow" aria-hidden="true">arrow_outward</span></a></span>
+          <span class="de">Dein Unternehmen bleibt Teil einer <a class="fit__mark" href="#unternehmensziel">Mission<span class="material-symbols-outlined fit__mark-arrow" aria-hidden="true">arrow_outward</span></a></span>
+          <span class="en">Your company stays part of a <a class="fit__mark" href="#unternehmensziel">mission<span class="material-symbols-outlined fit__mark-arrow" aria-hidden="true">arrow_outward</span></a></span>
         </h2>
       </div>
     </div>
     <div class="stance__grid">
       <div class="mission__body flow reveal-slide-left">
         <p>
-          <span class="de">Gemeinsam verbessern wir das Leben von Tieren — mit starken Marken, innovativen Produkten und echtem Engagement. Wir bauen Unternehmen nicht nur für den Erfolg, sondern für eine <a class="fit__mark" href="#unternehmensziel">Mission<span class="material-symbols-outlined fit__mark-arrow" aria-hidden="true">arrow_outward</span></a>.</span>
-          <span class="en">We make animals’ lives better — with strong brands, products that work, and real commitment. We don’t build companies just to win. We build them for a <a class="fit__mark" href="#unternehmensziel">mission<span class="material-symbols-outlined fit__mark-arrow" aria-hidden="true">arrow_outward</span></a>.</span>
+          <span class="de">Gemeinsam verbessern wir das Leben von Tieren — mit starken Marken, innovativen Produkten und echtem Engagement. Auch wenn du übergibst: die Marke bleibt in der Tiergesundheit, in einer <a class="fit__mark" href="#unternehmensziel">Mission<span class="material-symbols-outlined fit__mark-arrow" aria-hidden="true">arrow_outward</span></a>.</span>
+          <span class="en">We make animals’ lives better — with strong brands, products that work, and real commitment. Even after you hand it over, the brand stays in animal health, inside a <a class="fit__mark" href="#unternehmensziel">mission<span class="material-symbols-outlined fit__mark-arrow" aria-hidden="true">arrow_outward</span></a>.</span>
         </p>
         <p>
-          <span class="de">Unser Unternehmensziel heißt Glück. Wir glauben, dass erfolgreiche Unternehmen bei glücklichen Menschen beginnen. Deshalb fördern wir nicht nur Unternehmenswachstum, sondern auch persönliches Wachstum — Unternehmer lernen bei uns voneinander.</span>
-          <span class="en">Our goal as a company is happiness. We believe good companies start with happy people. So we don’t just grow the business — we grow the people who run it. Founders learn from each other here.</span>
+          <span class="de">Unser Unternehmensziel heißt Glück. Wir glauben, dass erfolgreiche Unternehmen bei glücklichen Menschen beginnen. Deshalb geht es bei einer Nachfolge mit uns nicht nur um den Deal — sondern darum, dass Team, Kultur und Idee weiterleben.</span>
+          <span class="en">Our goal as a company is happiness. We believe good companies start with happy people. So succession with us isn’t just a deal — it’s making sure the team, the culture and the idea live on.</span>
         </p>
       </div>
       <div class="stance__media reveal-scale">
@@ -3551,35 +3572,58 @@
     <div class="section-head section-head--reveal reveal">
       <div>
         <h2>
-          <span class="de">Zwei Wege. Welcher ist deiner?</span>
-          <span class="en">Two paths. Which is yours?</span>
+          <span class="de">Du bestimmst das Tempo.</span>
+          <span class="en">You set the pace.</span>
         </h2>
       </div>
     </div>
+    <p class="paths__lead reveal">
+      <span class="de">Du denkst über Unternehmensnachfolge nach — aber nicht um jeden Preis. Dein Unternehmen soll weiterleben: der Name, das Team, die Idee dahinter. Bei uns bleibt es in der Tiergesundheit, geführt von Menschen, die verstehen, warum du es gegründet hast. Ob du übergibst und gehst, übergibst und bleibst, oder erstmal nur reden willst: Du bestimmst das Tempo.</span>
+      <span class="en">You’re thinking about succession. You won’t sell to just anyone. You want the company to live on: the name, the team, the idea. With us it stays in animal health, run by people who understand why you started it. Hand it over and leave, hand it over and stay, or just talk first. You set the pace.</span>
+    </p>
     <div class="paths__grid reveal">
       <article class="paths__way paths__way--a flow reveal">
         <div class="paths__head">
-          <span class="paths__index" aria-hidden="true">01</span>
-          <span class="paths__rule" aria-hidden="true"></span>
-          <h2><span class="de">Wachstum</span><span class="en">Growth</span></h2>
+          <div class="paths__cue" aria-hidden="true">
+            <span class="paths__index">01</span>
+            <span class="paths__rule"></span>
+          </div>
+          <h2><span class="de">Übergeben und gehen</span><span class="en">Hand it over and leave</span></h2>
         </div>
         <div class="paths__body flow">
           <p>
-            <span class="de">Du hast ein Unternehmen aufgebaut, das läuft. Aber du machst noch alles selbst: Logistik, Finanzen, IT, Personal. Zeit, die dir fehlt — für Marke, Produkt und Wachstum. Als Teil der Planet Group gibst du genau das ab. Du bleibst Unternehmer in deinem Unternehmen, mit einer Gruppe die dir den Rücken freihält.</span>
-            <span class="en">You’ve built a company that works. You’re still running logistics, finance, IT and HR yourself. That’s time you don’t have for brand, product and growth. Join Planet Group and hand that over. You stay the founder. We watch your back.</span>
+            <span class="de">Du übergibst. Wir führen weiter — Name, Team und Idee bleiben. Du gehst, wenn du bereit bist.</span>
+            <span class="en">You hand it over. We keep going — name, team and idea stay. You leave when you’re ready.</span>
           </p>
         </div>
       </article>
       <article class="paths__way paths__way--b flow reveal">
         <div class="paths__head">
-          <span class="paths__index" aria-hidden="true">02</span>
-          <span class="paths__rule" aria-hidden="true"></span>
-          <h2><span class="de">Nachfolge</span><span class="en">Succession</span></h2>
+          <div class="paths__cue" aria-hidden="true">
+            <span class="paths__index">02</span>
+            <span class="paths__rule"></span>
+          </div>
+          <h2><span class="de">Übergeben und bleiben</span><span class="en">Hand it over and stay</span></h2>
         </div>
         <div class="paths__body flow">
           <p>
-            <span class="de">Du denkst über Unternehmensnachfolge nach — aber nicht um jeden Preis. Dein Unternehmen soll weiterleben: der Name, das Team, die Idee dahinter. Bei uns bleibt es in der Tiergesundheit, geführt von Menschen, die verstehen, warum du es gegründet hast. Ob du übergibst und gehst, übergibst und bleibst, oder erstmal nur reden willst: Du bestimmst das Tempo.</span>
-            <span class="en">You’re thinking about succession — just not at any cost. You want the company to live on: the name, the team, the idea. With us it stays in animal health, run by people who understand why you started it. Hand it over and leave, hand it over and stay, or just talk first. You set the pace.</span>
+            <span class="de">Du übergibst — und bleibst so lange du willst: in der Führung, als Berater, als Gesellschafter. Die Rolle klären wir gemeinsam.</span>
+            <span class="en">You hand it over — and stay as long as you want: in charge, as an advisor, as a shareholder. We figure out the role together.</span>
+          </p>
+        </div>
+      </article>
+      <article class="paths__way paths__way--c flow reveal">
+        <div class="paths__head">
+          <div class="paths__cue" aria-hidden="true">
+            <span class="paths__index">03</span>
+            <span class="paths__rule"></span>
+          </div>
+          <h2><span class="de">Erstmal nur reden</span><span class="en">Just talk first</span></h2>
+        </div>
+        <div class="paths__body flow">
+          <p>
+            <span class="de">Noch keine Entscheidung. Ein Gespräch reicht, um zu spüren, ob die Haltung stimmt — bevor irgendetwas formal wird.</span>
+            <span class="en">No decision yet. A conversation is enough to feel whether the stance is right — before anything gets formal.</span>
           </p>
         </div>
       </article>
@@ -3594,14 +3638,14 @@
     <div class="section-head section-head--reveal reveal">
       <div>
         <h2>
-          <span class="de">Mach was du willst. Wir machen den Rest.</span>
-          <span class="en">Do what you want. We’ll handle the rest.</span>
+          <span class="de">Was du aufgebaut hast, bleibt handlungsfähig.</span>
+          <span class="en">What you built keeps running.</span>
         </h2>
       </div>
     </div>
     <p class="stack__intro reveal">
-      <span class="de">Supply Chain, IT, Logistik, Controlling, HR — als Alleinunternehmer frisst dich das auf. Als Teil der Planet Group dockst du an eine Infrastruktur an, die all das schon kann. Modular: Du nutzt, was dir fehlt. Was du gut kannst, bleibt bei dir.</span>
-      <span class="en">Supply chain, IT, logistics, controlling, HR — as a solo founder, that will eat you alive. Inside Planet Group you plug into a setup that already does all of it. Use what you need. Keep what you’re good at.</span>
+      <span class="de">Supply Chain, IT, Logistik, Controlling, HR — das läuft weiter, auch wenn du das Tagesgeschäft abgibst. Dein Team dockt an eine Infrastruktur an, die all das schon kann. Modular: Was fehlt, kommt dazu. Was sitzt, bleibt.</span>
+      <span class="en">Supply chain, IT, logistics, controlling, HR — that keeps running, even when you step back from the day-to-day. Your team plugs into a setup that already does all of it. Use what you need. Keep what already works.</span>
     </p>
     <div class="stack__grid">
       <article class="stack__item flow reveal">
@@ -3656,8 +3700,8 @@
         <span class="material-symbols-outlined icon--lg stack__icon" aria-hidden="true">account_balance</span>
         <h3><span class="de">Finance</span><span class="en">Finance</span></h3>
         <p>
-          <span class="de">Kapital, Bewertung, Deals. Wenn Wachstum Finanzierung braucht oder eine Übernahme ansteht — wir kennen beides von innen.</span>
-          <span class="en">Capital, valuation, deals. When growth needs financing, or an acquisition is on the table — we’ve been on both sides of that.</span>
+          <span class="de">Kapital, Bewertung, Deals. Wenn eine Nachfolge ansteht — wir kennen den Prozess von innen, ohne Fonds-Uhr im Nacken.</span>
+          <span class="en">Capital, valuation, deals. When succession is on the table — we’ve been inside that process, with no fund clock on our back.</span>
         </p>
       </article>
       <article class="stack__item flow reveal">
@@ -3931,8 +3975,8 @@
 <section class="figures" id="zahlen" aria-label="Kennzahlen der Gruppe">
   <div class="container">
     <p class="figures__note reveal">
-      <span class="de">Vier Marken, alle selbst aufgebaut. Wir suchen Unternehmen aus der Tiergesundheit im weitesten Sinne — von Nutraceuticals über Technologie bis Services. Du hast eine spannende Story? Meld dich.</span>
-      <span class="en">Four brands, all built by us. We’re looking for companies in animal health in the broadest sense — nutraceuticals, technology, services. Got a story? Tell us.</span>
+      <span class="de">Vier Marken, alle selbst aufgebaut. Wir übernehmen Unternehmen aus der Tiergesundheit im weitesten Sinne — von Nutraceuticals über Technologie bis Services. Du denkst über Nachfolge nach? Meld dich.</span>
+      <span class="en">Four brands, all built by us. We take on companies in animal health in the broadest sense — nutraceuticals, technology, services. Thinking about succession? Tell us.</span>
     </p>
     <div class="figures__row reveal">
       <p class="figures__value">0</p>
@@ -4044,8 +4088,8 @@
     <div class="section-head section-head--reveal reveal">
       <div>
         <h2>
-          <span class="de">Wie eine Partnerschaft mit uns aussieht, entscheiden wir gemeinsam.</span>
-          <span class="en">We’ll figure out the partnership together.</span>
+          <span class="de">Wie die Übergabe mit uns aussieht, entscheiden wir gemeinsam.</span>
+          <span class="en">We’ll figure out the handoff together.</span>
         </h2>
       </div>
     </div>
@@ -4081,8 +4125,8 @@
     <div class="section-head section-head--reveal reveal fit__subhead">
       <div>
         <h2>
-          <span class="de">Und deine Rolle? Was davon passt zu dir?</span>
-          <span class="en">And you — which of these?</span>
+          <span class="de">Und deine Rolle danach?</span>
+          <span class="en">And your role after?</span>
         </h2>
       </div>
     </div>
@@ -4102,7 +4146,7 @@
         </div>
         <p class="fit__text">
           <span class="de">Als Berater begleiten?</span>
-          <span class="en">Stay on as advisor?</span>
+          <span class="en">Stay on as an advisor?</span>
         </p>
       </li>
       <li class="fit__item reveal">
@@ -4126,7 +4170,7 @@
     </ul>
     <p class="fit__payoff reveal">
       <span class="de">Dein Einsatz soll sich auszahlen. Natürlich bekommst du einen fairen Preis — und die Gewissheit, dass dein Unternehmen, deine Mitarbeiter und deine Idee in guten Händen sind.</span>
-      <span class="en">This should pay off for you. A fair price, of course — and the certainty that your company, your people and your idea are in good hands.</span>
+      <span class="en">This should work for you. A fair price, of course — and the certainty that your company, your people and your idea are in good hands.</span>
     </p>
   </div>
 </section>
@@ -4143,6 +4187,15 @@
       </div>
     </div>
     <ul class="fit__list">
+      <li class="fit__item reveal">
+        <div class="fit__cue" aria-hidden="true">
+          <span class="fit__rule"></span>
+        </div>
+        <p class="fit__text">
+          <span class="de">Wenn dir Name, Team und Idee wichtiger sind als der höchste Preis.</span>
+          <span class="en">If the name, the team and the idea matter more than the highest bid.</span>
+        </p>
+      </li>
       <li class="fit__item reveal">
         <div class="fit__cue" aria-hidden="true">
           <span class="fit__rule"></span>
@@ -4187,8 +4240,8 @@
       </div>
     </div>
     <p class="fit__intro reveal">
-      <span class="de">Wir haben Transaktionserfahrung im Team — vom Erstgespräch bis zur Unterschrift führen wir dich schnell und sauber durch den Prozess. Aber der Prozess ist nicht der Punkt. Der Punkt ist, was danach kommt.</span>
-      <span class="en">We’ve done deals. From the first conversation through to signature, we keep it moving, and we keep it clean. But the process isn’t the point. What happens after is.</span>
+          <span class="de">Wir haben Transaktionserfahrung im Team — vom Erstgespräch bis zur Unterschrift führen wir dich schnell und sauber durch den Prozess. Aber der Prozess ist nicht der Punkt. Der Punkt ist, dass dein Unternehmen danach weiterlebt.</span>
+          <span class="en">We’ve done deals. From the first conversation through to signature, we keep it moving, and we keep it clean. But the process isn’t the point. What happens after is: the company lives on.</span>
     </p>
     <ul class="fit__list">
       <li class="fit__item reveal">
@@ -4217,8 +4270,8 @@
           <span class="fit__rule"></span>
         </div>
         <p class="fit__text">
-          <span class="de">Wir entwickeln ein gemeinsames Zielbild. Wo steht dein Unternehmen, wo willst du hin, wo sind deine Blind Spots — Logistik, Marketing, Operations?</span>
-          <span class="en">We get on the same page. Where the company stands, where you want it to go, where the blind spots are — logistics, marketing, operations.</span>
+          <span class="de">Wir klären, wie die Übergabe aussehen kann — und was danach mit Marke, Team und deiner Rolle passiert.</span>
+          <span class="en">We work out what the handoff could look like — and what happens next with the brand, the team, and your role.</span>
         </p>
       </li>
       <li class="fit__item reveal">
@@ -4227,8 +4280,8 @@
           <span class="fit__rule"></span>
         </div>
         <p class="fit__text">
-          <span class="de">Du bekommst einen konkreten Vorschlag. Wie eine Partnerschaft aussehen kann — offen und nachvollziehbar. Und dann entscheidest du.</span>
-          <span class="en">You get a real proposal. What a partnership could look like — open, easy to follow. Then you decide.</span>
+          <span class="de">Du bekommst einen konkreten Vorschlag. Wie die Nachfolge aussehen kann — offen und nachvollziehbar. Und dann entscheidest du.</span>
+          <span class="en">You get a real proposal. What succession could look like — open, easy to follow. Then you decide.</span>
         </p>
       </li>
     </ul>
@@ -4240,14 +4293,14 @@
   <div class="container">
     <div class="section-head section-head--reveal reveal">
       <div>
-        <h2><span class="de">Passt dein Unternehmen zu uns?</span><span class="en">Is this a fit?</span></h2>
+        <h2><span class="de">Ist Planet die richtige Nachfolge?</span><span class="en">Are we the right successor?</span></h2>
       </div>
     </div>
     <div class="contact-layout contact-layout--entry">
       <div class="contact-intro reveal">
         <p>
-          <span class="de">Sechs Fragen, drei Minuten. Danach wissen wir beide, ob es sich lohnt zu reden — und du hast für dich ein paar Dinge sortiert.</span>
-          <span class="en">Six questions. Three minutes. After that we both know if it’s worth talking — and you’ll have sorted a few things out for yourself.</span>
+          <span class="de">Sechs Fragen, drei Minuten. Danach wissen wir beide, ob eine Nachfolge mit uns Sinn ergibt — und du hast für dich ein paar Dinge sortiert.</span>
+          <span class="en">Six questions. Three minutes. After that we both know if succession with us makes sense — and you’ll have sorted a few things out for yourself.</span>
         </p>
       </div>
 
@@ -4674,6 +4727,9 @@ function toggleLang() {
     data['Unternehmen'] = val('unternehmen');
     data['E-Mail'] = val('email');
     data['Telefon'] = val('telefon') || '—';
+    data['Weg'] = 'Nachfolge';
+    data['Quelle'] = 'Nachfolge-Seite';
+    data['Rolle'] = data['Rolle'] || val('rolle') || '—';
     return data;
   }
 
@@ -4715,7 +4771,7 @@ function toggleLang() {
         body: JSON.stringify({
           ...data,
           _replyto: data['E-Mail'],
-          _subject: `Planet Fragebogen — ${data['Unternehmen']} (${data['Weg'] || 'ohne Angabe'})`,
+          _subject: `Planet Fragebogen Nachfolge — ${data['Unternehmen']}`,
           _template: 'table',
           _captcha: false
         })
