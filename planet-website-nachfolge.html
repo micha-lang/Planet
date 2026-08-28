@@ -4,6 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Planet — Unternehmensnachfolge in der Tiergesundheit</title>
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="assets/favicon-32.png" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
 <!-- Nachfolge-Variante — Zielgruppe: Unternehmer, die ihr Unternehmen in gute Hände geben wollen. -->
 <link rel="stylesheet" href="https://use.typekit.net/phj5hyp.css?v=2026-05-25">
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap" rel="stylesheet">
@@ -3212,49 +3215,6 @@
   </div>
 </div>
 
-<!-- IMPRESSUM / DATENSCHUTZ — :target-Overlays, Platzhalter bis juristische Texte liegen -->
-<div class="legal-overlay" id="impressum" role="dialog" aria-modal="true" aria-labelledby="impressum-title">
-  <div class="legal-overlay__scroll">
-    <div class="legal-overlay__inner">
-      <a class="legal-overlay__close" href="#top"><span class="de">Schließen</span><span class="en">Close</span></a>
-      <h2 class="legal-overlay__title" id="impressum-title"><span class="de">Impressum</span><span class="en">Imprint</span></h2>
-      <div class="legal-overlay__body">
-        <p>
-          <span class="de">Platzhalter — der verbindliche Impressumstext wird juristisch geliefert und hier eingesetzt.</span>
-          <span class="en">Placeholder — the binding imprint text will be provided legally and inserted here.</span>
-        </p>
-        <p>
-          <span class="de">PLNT Group<br>hello@plnt.group</span>
-          <span class="en">PLNT Group<br>hello@plnt.group</span>
-        </p>
-      </div>
-      <p class="legal-overlay__note">
-        <span class="de">Noch kein rechtsgültiger Inhalt.</span>
-        <span class="en">Not yet legally binding content.</span>
-      </p>
-    </div>
-  </div>
-</div>
-
-<div class="legal-overlay" id="datenschutz" role="dialog" aria-modal="true" aria-labelledby="datenschutz-title">
-  <div class="legal-overlay__scroll">
-    <div class="legal-overlay__inner">
-      <a class="legal-overlay__close" href="#top"><span class="de">Schließen</span><span class="en">Close</span></a>
-      <h2 class="legal-overlay__title" id="datenschutz-title"><span class="de">Datenschutz</span><span class="en">Privacy</span></h2>
-      <div class="legal-overlay__body">
-        <p>
-          <span class="de">Platzhalter — die verbindliche Datenschutzerklärung wird juristisch geliefert und hier eingesetzt.</span>
-          <span class="en">Placeholder — the binding privacy policy will be provided legally and inserted here.</span>
-        </p>
-      </div>
-      <p class="legal-overlay__note">
-        <span class="de">Noch kein rechtsgültiger Inhalt.</span>
-        <span class="en">Not yet legally binding content.</span>
-      </p>
-    </div>
-  </div>
-</div>
-
 <!-- HERO -->
 <section class="hero-full" id="top">
   <div class="hero-full__media" aria-hidden="true">
@@ -4327,14 +4287,6 @@
       <div class="planet-outro__sphere" aria-hidden="true"></div>
       <a class="planet-outro__logo" href="#top">Planet</a>
     </div>
-    <footer class="planet-legal">
-      <nav class="container planet-legal__grid" aria-label="Legal">
-        <span class="planet-legal__item planet-legal__item--copy">© 2026 PLNT Group</span>
-        <a class="planet-legal__item planet-legal__item--impressum" href="#impressum"><span class="de">Impressum</span><span class="en">Imprint</span></a>
-        <a class="planet-legal__item planet-legal__item--privacy" href="#datenschutz"><span class="de">Datenschutz</span><span class="en">Privacy</span></a>
-        <a class="planet-legal__item planet-legal__item--mail" href="mailto:hello@plnt.group">hello@plnt.group</a>
-      </nav>
-    </footer>
   </div>
 </section>
 <script>
@@ -4935,31 +4887,6 @@ function toggleLang() {
     }, { threshold: 0.15, rootMargin: '0px 0px -60px 0px' });
     document.querySelectorAll(revealSelectors).forEach(el => observer.observe(el));
   }
-})();
-
-/* Legal-Texte erst ganz am Seitenende einblenden */
-(function() {
-  const legal = document.querySelector('.planet-legal');
-  if (!legal) return;
-  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if (reduced) {
-    legal.classList.add('is-visible');
-    return;
-  }
-
-  let done = false;
-  function updateLegal() {
-    if (done) return;
-    const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
-    if (maxScroll <= 0 || window.scrollY >= maxScroll - 12) {
-      legal.classList.add('is-visible');
-      done = true;
-    }
-  }
-
-  updateLegal();
-  window.addEventListener('scroll', updateLegal, { passive: true });
-  window.addEventListener('resize', updateLegal);
 })();
 </script>
 </body>
